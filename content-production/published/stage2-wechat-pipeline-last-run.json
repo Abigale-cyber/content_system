@@ -1,0 +1,45 @@
+{
+  "workflow_id": "stage2-wechat-pipeline",
+  "workflow_input": "content-production/inbox/20260403-wechat-collect-url.txt",
+  "ran_at": "2026-04-03T23:19:10",
+  "results": {
+    "wechat-collect": {
+      "output_path": "/Users/Abigale/All_project/career/content-production/inbox/20251124-如果生活乏味-那就把自己扔进街区-gzh-brief.md",
+      "metadata": {
+        "slug": "如果生活乏味-那就把自己扔进街区",
+        "title": "如果生活乏味，那就把自己扔进街区",
+        "author": "三联人文城市",
+        "source_url": "https://mp.weixin.qq.com/s/E0zgcF3ZIZ8XLKZEJcxmyg",
+        "archive_path": "/Users/Abigale/All_project/career/content-production/inbox/raw/wechat/20251124-如果生活乏味-那就把自己扔进街区.html"
+      }
+    },
+    "case-writer-hybrid": {
+      "output_path": "/Users/Abigale/All_project/career/content-production/drafts/如果生活乏味-那就把自己扔进街区-article.md",
+      "metadata": {
+        "slug": "如果生活乏味-那就把自己扔进街区",
+        "topic": "如果生活乏味，那就把自己扔进街区"
+      }
+    },
+    "generate-image": {
+      "output_path": "/Users/Abigale/All_project/career/content-production/ready/如果生活乏味-那就把自己扔进街区-img-1.png",
+      "metadata": {
+        "slug": "如果生活乏味-那就把自己扔进街区",
+        "source_article": "/Users/Abigale/All_project/career/content-production/drafts/如果生活乏味-那就把自己扔进街区-article.md",
+        "provider": "local",
+        "fallback_reason": "generate image: [OpenRouter] 网络请求失败，请检查网络连接\n提示: 确认网络连接正常，API 地址正确"
+      }
+    },
+    "wechat-formatter": {
+      "output_path": "/Users/Abigale/All_project/career/content-production/ready/如果生活乏味-那就把自己扔进街区-wechat.html",
+      "metadata": {
+        "slug": "如果生活乏味-那就把自己扔进街区",
+        "source_markdown": "/Users/Abigale/All_project/career/content-production/drafts/如果生活乏味-那就把自己扔进街区-article.md",
+        "provider": "wechat-formatter-skill",
+        "studio_article_dir": "/Users/Abigale/All_project/career/wechat-studio/content/articles/如果生活乏味-那就把自己扔进街区",
+        "synced_to_workbench": true,
+        "template": "default",
+        "title": "如果生活乏味，那就把自己扔进街区"
+      }
+    }
+  }
+}

@@ -1,0 +1,197 @@
+{
+  "source": {
+    "originalName": "ai-content-system-article.md",
+    "markdownPath": "content/articles/ai-content-system/source.md",
+    "uploadedAt": "2026-04-03 23:02:38",
+    "warnings": []
+  },
+  "layout": {
+    "theme": "spring-whisper",
+    "template": "xiumi-minimal-living",
+    "themeFile": "",
+    "referenceUrl": "",
+    "warning": "",
+    "extractionMeta": {},
+    "updatedAt": "2026-04-05 15:33:53"
+  },
+  "tone": {
+    "theme": "spring-whisper",
+    "primaryColor": "#3db8a9",
+    "saturation": 118,
+    "opacity": 88,
+    "updatedAt": "2026-04-05 15:33:53"
+  },
+  "typography": {
+    "template": "xiumi-minimal-living",
+    "titleStyle": "standard",
+    "bodySize": 17,
+    "lineHeight": 1.85,
+    "paragraphGap": 16,
+    "sectionStyle": "editorial",
+    "imageRadius": 13,
+    "imageSpacing": 22,
+    "updatedAt": "2026-04-05 15:33:53"
+  },
+  "cover": {
+    "candidatePath": "",
+    "generated": null,
+    "history": [],
+    "customPrompt": "",
+    "updatedAt": ""
+  },
+  "coverModules": {
+    "current": null,
+    "history": [],
+    "style": "collage-editorial",
+    "updatedAt": ""
+  },
+  "inlineImages": {
+    "items": [
+      {
+        "slot": 1,
+        "label": "导语",
+        "targetId": "h2:5",
+        "targetKind": "h2",
+        "targetLineIndex": 5,
+        "targetLabel": "导语",
+        "preset": "infographic-bento",
+        "customPrompt": "",
+        "style": "theme style focus-green, primary color #17d9c2, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 导语",
+        "prompt": "为文章生成 Bento Grid 风格的信息图提示词。\n标题：AI 一人公司为什么必须先搭内容系统\n摘要：导语\n核心要点：导语\n风格：theme style focus-green, primary color #17d9c2, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 导语\n画幅：3:4\n\n要求：\n1. 采用多个模块卡片组织信息\n2. 模块之间层级清晰、留白明确\n3. 适合总览、综述、多主题总结",
+        "previewUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON6jicbaHSEOblTkoOYP3mLLt61icaniaXBgukO7BTBYOZltyDpe5z7MlMsgiaqoHRuPTvoqHZlEsgbsg5Vxo6iasNo9HvP3ORJac2jQ/0?wx_fmt=jpeg",
+        "draftUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON6jicbaHSEOblTkoOYP3mLLt61icaniaXBgukO7BTBYOZltyDpe5z7MlMsgiaqoHRuPTvoqHZlEsgbsg5Vxo6iasNo9HvP3ORJac2jQ/0?wx_fmt=jpeg",
+        "mediaId": "YZiaWkQEcudqYwi5TLHu4KoOUEuX1emi_BpCNzVPkbURHJi_SyrtVf-L8qD6cZo0",
+        "width": 0,
+        "height": 0,
+        "localPath": "content/articles/ai-content-system/studio-assets/inline-1-20260403-225500.png",
+        "createdAt": "2026-04-03 22:55:01"
+      },
+      {
+        "slot": 2,
+        "label": "问题提出",
+        "targetId": "h2:11",
+        "targetKind": "h2",
+        "targetLineIndex": 11,
+        "targetLabel": "问题提出",
+        "preset": "infographic-bento",
+        "customPrompt": "",
+        "style": "theme style elegant-gold, primary color #b3832f, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 问题提出",
+        "prompt": "为文章生成 Bento Grid 风格的信息图提示词。\n标题：AI 一人公司为什么必须先搭内容系统\n摘要：问题提出\n核心要点：问题提出\n风格：theme style elegant-gold, primary color #b3832f, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 问题提出\n画幅：3:4\n\n要求：\n1. 采用多个模块卡片组织信息\n2. 模块之间层级清晰、留白明确\n3. 适合总览、综述、多主题总结",
+        "previewUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON6x2J8ic9boc6ZMSmicFNMHOgOPQbA6L0ib07JXBcIok8DYicib8r2ufibdkvFR8vyIxKuhVxf2LAjiaUVZ5Swc0NejFlNmGHQeeWmoPs/0?wx_fmt=jpeg",
+        "draftUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON6x2J8ic9boc6ZMSmicFNMHOgOPQbA6L0ib07JXBcIok8DYicib8r2ufibdkvFR8vyIxKuhVxf2LAjiaUVZ5Swc0NejFlNmGHQeeWmoPs/0?wx_fmt=jpeg",
+        "mediaId": "YZiaWkQEcudqYwi5TLHu4PDFsG5xYiRIkjqaCe9HNvqO3wby64tMzBpZHkouHAVj",
+        "width": 0,
+        "height": 0,
+        "localPath": "content/articles/ai-content-system/studio-assets/inline-2-20260403-224309.png",
+        "createdAt": "2026-04-03 22:43:10",
+        "batchId": "20260403-224235"
+      }
+    ],
+    "history": [
+      {
+        "slot": 1,
+        "label": "导语",
+        "targetId": "h2:5",
+        "targetKind": "h2",
+        "targetLineIndex": 5,
+        "targetLabel": "导语",
+        "preset": "infographic-bento",
+        "customPrompt": "",
+        "style": "theme style focus-green, primary color #17d9c2, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 导语",
+        "prompt": "为文章生成 Bento Grid 风格的信息图提示词。\n标题：AI 一人公司为什么必须先搭内容系统\n摘要：导语\n核心要点：导语\n风格：theme style focus-green, primary color #17d9c2, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 导语\n画幅：3:4\n\n要求：\n1. 采用多个模块卡片组织信息\n2. 模块之间层级清晰、留白明确\n3. 适合总览、综述、多主题总结",
+        "previewUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON6jicbaHSEOblTkoOYP3mLLt61icaniaXBgukO7BTBYOZltyDpe5z7MlMsgiaqoHRuPTvoqHZlEsgbsg5Vxo6iasNo9HvP3ORJac2jQ/0?wx_fmt=jpeg",
+        "draftUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON6jicbaHSEOblTkoOYP3mLLt61icaniaXBgukO7BTBYOZltyDpe5z7MlMsgiaqoHRuPTvoqHZlEsgbsg5Vxo6iasNo9HvP3ORJac2jQ/0?wx_fmt=jpeg",
+        "mediaId": "YZiaWkQEcudqYwi5TLHu4KoOUEuX1emi_BpCNzVPkbURHJi_SyrtVf-L8qD6cZo0",
+        "width": 0,
+        "height": 0,
+        "localPath": "content/articles/ai-content-system/studio-assets/inline-1-20260403-225500.png",
+        "createdAt": "2026-04-03 22:55:01"
+      },
+      {
+        "slot": 2,
+        "label": "问题提出",
+        "targetId": "h2:11",
+        "targetKind": "h2",
+        "targetLineIndex": 11,
+        "targetLabel": "问题提出",
+        "preset": "infographic-bento",
+        "customPrompt": "",
+        "style": "theme style elegant-gold, primary color #b3832f, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 问题提出",
+        "prompt": "为文章生成 Bento Grid 风格的信息图提示词。\n标题：AI 一人公司为什么必须先搭内容系统\n摘要：问题提出\n核心要点：问题提出\n风格：theme style elegant-gold, primary color #b3832f, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 问题提出\n画幅：3:4\n\n要求：\n1. 采用多个模块卡片组织信息\n2. 模块之间层级清晰、留白明确\n3. 适合总览、综述、多主题总结",
+        "previewUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON6x2J8ic9boc6ZMSmicFNMHOgOPQbA6L0ib07JXBcIok8DYicib8r2ufibdkvFR8vyIxKuhVxf2LAjiaUVZ5Swc0NejFlNmGHQeeWmoPs/0?wx_fmt=jpeg",
+        "draftUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON6x2J8ic9boc6ZMSmicFNMHOgOPQbA6L0ib07JXBcIok8DYicib8r2ufibdkvFR8vyIxKuhVxf2LAjiaUVZ5Swc0NejFlNmGHQeeWmoPs/0?wx_fmt=jpeg",
+        "mediaId": "YZiaWkQEcudqYwi5TLHu4PDFsG5xYiRIkjqaCe9HNvqO3wby64tMzBpZHkouHAVj",
+        "width": 0,
+        "height": 0,
+        "localPath": "content/articles/ai-content-system/studio-assets/inline-2-20260403-224309.png",
+        "createdAt": "2026-04-03 22:43:10",
+        "batchId": "20260403-224235"
+      },
+      {
+        "slot": 1,
+        "label": "导语",
+        "targetId": "h2:5",
+        "targetKind": "h2",
+        "targetLineIndex": 5,
+        "targetLabel": "导语",
+        "preset": "infographic-bento",
+        "customPrompt": "",
+        "style": "theme style elegant-gold, primary color #b3832f, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 导语",
+        "prompt": "为文章生成 Bento Grid 风格的信息图提示词。\n标题：AI 一人公司为什么必须先搭内容系统\n摘要：导语\n核心要点：导语\n风格：theme style elegant-gold, primary color #b3832f, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 导语\n画幅：3:4\n\n要求：\n1. 采用多个模块卡片组织信息\n2. 模块之间层级清晰、留白明确\n3. 适合总览、综述、多主题总结",
+        "previewUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON6AuicRyjAH6XJ6cEJjXSibEkOrH8pkRVRZ78PEGicQPNN6VVnqwylwDL5ZtFibibfbRS5HvH5TfXm5ytHHzTgdckUZ3jqXgFk4K8r0/0?wx_fmt=jpeg",
+        "draftUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON6AuicRyjAH6XJ6cEJjXSibEkOrH8pkRVRZ78PEGicQPNN6VVnqwylwDL5ZtFibibfbRS5HvH5TfXm5ytHHzTgdckUZ3jqXgFk4K8r0/0?wx_fmt=jpeg",
+        "mediaId": "YZiaWkQEcudqYwi5TLHu4EMETZhdEbKYZj0rTO4Vg_pADQH6lhpvLRlNt-uhwj9t",
+        "width": 0,
+        "height": 0,
+        "localPath": "content/articles/ai-content-system/studio-assets/inline-1-20260403-220837.png",
+        "createdAt": "2026-04-03 22:08:38",
+        "batchId": "20260403-220801"
+      },
+      {
+        "slot": 2,
+        "label": "问题提出",
+        "targetId": "h2:11",
+        "targetKind": "h2",
+        "targetLineIndex": 11,
+        "targetLabel": "问题提出",
+        "preset": "infographic-bento",
+        "customPrompt": "",
+        "style": "theme style elegant-gold, primary color #b3832f, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 问题提出",
+        "prompt": "为文章生成 Bento Grid 风格的信息图提示词。\n标题：AI 一人公司为什么必须先搭内容系统\n摘要：问题提出\n核心要点：问题提出\n风格：theme style elegant-gold, primary color #b3832f, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 问题提出\n画幅：3:4\n\n要求：\n1. 采用多个模块卡片组织信息\n2. 模块之间层级清晰、留白明确\n3. 适合总览、综述、多主题总结",
+        "previewUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON5hYDRiazFWSG7DMqGiaL7oBwPuQCBymjeuKnAeGL1ibts0DMJ6KhLC8dxgdpDiaXIoKXiat9WNt9725j2lDlGKu8Qw5fEw1fC21b6o/0?wx_fmt=jpeg",
+        "draftUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON5hYDRiazFWSG7DMqGiaL7oBwPuQCBymjeuKnAeGL1ibts0DMJ6KhLC8dxgdpDiaXIoKXiat9WNt9725j2lDlGKu8Qw5fEw1fC21b6o/0?wx_fmt=jpeg",
+        "mediaId": "YZiaWkQEcudqYwi5TLHu4IlI5FfxMw3tb5H22MH26UmOEYOtWDofSuxD4qInmO0o",
+        "width": 0,
+        "height": 0,
+        "localPath": "content/articles/ai-content-system/studio-assets/inline-2-20260403-220918.png",
+        "createdAt": "2026-04-03 22:09:18",
+        "batchId": "20260403-220801"
+      }
+    ],
+    "positions": {
+      "1": "h2:5",
+      "2": "h2:11"
+    },
+    "customPrompt": "",
+    "updatedAt": "2026-04-05 15:33:53"
+  },
+  "sectionModules": {
+    "items": [],
+    "history": [],
+    "customPrompt": "",
+    "updatedAt": ""
+  },
+  "draft": {
+    "mediaId": "",
+    "title": "",
+    "pushedAt": "",
+    "lastError": "",
+    "theme": "",
+    "themeFile": "",
+    "template": ""
+  },
+  "preview": {
+    "initialized": true,
+    "updatedAt": "2026-04-05 15:33:53"
+  }
+}

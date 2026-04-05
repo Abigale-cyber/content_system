@@ -1,0 +1,19 @@
+{
+  "id": "stage1-pipeline",
+  "name": "Stage 1 Main Pipeline",
+  "description": "观点 brief -> case-writer-hybrid -> generate-image -> wechat-formatter",
+  "steps": [
+    {
+      "skill": "case-writer-hybrid",
+      "input": "workflow_input"
+    },
+    {
+      "skill": "generate-image",
+      "input": "step:case-writer-hybrid"
+    },
+    {
+      "skill": "wechat-formatter",
+      "input": "step:case-writer-hybrid"
+    }
+  ]
+}

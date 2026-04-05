@@ -1,0 +1,23 @@
+{
+  "id": "stage2-wechat-pipeline",
+  "name": "Stage 2 WeChat Collect Pipeline",
+  "description": "公众号 URL -> wechat-collect -> case-writer-hybrid -> generate-image -> wechat-formatter",
+  "steps": [
+    {
+      "skill": "wechat-collect",
+      "input": "workflow_input"
+    },
+    {
+      "skill": "case-writer-hybrid",
+      "input": "step:wechat-collect"
+    },
+    {
+      "skill": "generate-image",
+      "input": "step:case-writer-hybrid"
+    },
+    {
+      "skill": "wechat-formatter",
+      "input": "step:case-writer-hybrid"
+    }
+  ]
+}

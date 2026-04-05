@@ -1,0 +1,39 @@
+{
+  "workflow_id": "stage1-pipeline",
+  "workflow_input": "content-production/inbox/20260403-ai-content-system-brief.md",
+  "ran_at": "2026-04-04T12:38:05",
+  "results": {
+    "case-writer-hybrid": {
+      "output_path": "/Users/Abigale/All_project/content_system/content-production/drafts/ai-content-system-article.md",
+      "metadata": {
+        "slug": "ai-content-system",
+        "topic": "AI 一人公司为什么必须先搭内容系统"
+      }
+    },
+    "generate-image": {
+      "output_path": "/Users/Abigale/All_project/content_system/content-production/ready/ai-content-system-img-1.png",
+      "metadata": {
+        "slug": "ai-content-system",
+        "source_article": "/Users/Abigale/All_project/content_system/content-production/drafts/ai-content-system-article.md",
+        "provider": "generate-image-skill",
+        "preset": "infographic-bento",
+        "style": "wechat article companion image, editorial infographic, structured information design, clean hierarchy, concise typography, soft neutral background, minimal decorative noise; emphasize key points: 论证 1：为什么内容系统决定的是“被看见”和“被理解”的持续能力，而不是单篇文章的漂亮程度 | 论证 2：为什么临时写内容不可持续，真正的问题不是懒，而是没有流水线 | 论证 3：为什么内容系统会反向推动产品迭代、用户理解和商业转化",
+        "prompt": "为文章生成 Bento Grid 风格的信息图提示词。\n标题：AI 一人公司为什么必须先搭内容系统\n摘要：很多 AI 一人公司并不是输在不会做产品，而是输在没有稳定的内容分发系统。 如果没有一条可复用的内容流水线，创始人每天都在临时找选题、临时写稿…\n核心要点：很多 AI 一人公司并不是输在不会做产品，而是输在没有稳定的内容分发系统。 如果没有一条可复用的内容流水线，创始人每天都在临时找选题、临时写稿…\n风格：wechat article companion image, editorial infographic, structured information design, clean hierarchy, concise typography, soft neutral background, minimal decorative noise; emphasize key points: 论证 1：为什么内容系统决定的是“被看见”和“被理解”的持续能力，而不是单篇文章的漂亮程度 | 论证 2：为什么临时写内容不可持续，真正的问题不是懒，而是没有流水线 | 论证 3：为什么内容系统会反向推动产品迭代、用户理解和商业转化\n画幅：3:4\n\n要求：\n1. 采用多个模块卡片组织信息\n2. 模块之间层级清晰、留白明确\n3. 适合总览、综述、多主题总结",
+        "media_id": "YZiaWkQEcudqYwi5TLHu4BUsitdHeu8Jnt3xDhSaUm72QDX6oGfcImsVg3W6rpMa",
+        "width": 0,
+        "height": 0
+      }
+    },
+    "wechat-formatter": {
+      "output_path": "/Users/Abigale/All_project/content_system/content-production/ready/ai-content-system-wechat.html",
+      "metadata": {
+        "slug": "ai-content-system",
+        "source_markdown": "/Users/Abigale/All_project/content_system/content-production/drafts/ai-content-system-article.md",
+        "provider": "wechat-formatter-skill",
+        "theme": "elegant-gold",
+        "template": "default",
+        "title": "AI 一人公司为什么必须先搭内容系统"
+      }
+    }
+  }
+}

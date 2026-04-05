@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>内容 Skills 关系图谱</title>
+  <style>
+    :root {
+      --bg: #f6f8fc;
+      --panel: rgba(255, 255, 255, 0.88);
+      --panel-strong: #ffffff;
+      --border: rgba(15, 23, 42, 0.08);
+      --text: #0f172a;
+      --muted: #64748b;
+      --shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
+      --collect: #f59e0b;
+      --translate: #14b8a6;
+      --create: #60a5fa;
+      --visual: #8b5cf6;
+      --video: #ec4899;
+      --distribute: #22c55e;
+      --active: #2563eb;
+      --deferred: #94a3b8;
+      --link: rgba(148, 163, 184, 0.52);
+      --link-active: rgba(37, 99, 235, 0.92);
+      --link-deferred: rgba(148, 163, 184, 0.34);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(96, 165, 250, 0.14), transparent 28%),
+        radial-gradient(circle at top right, rgba(236, 72, 153, 0.1), transparent 24%),
+        linear-gradient(180deg, #f8fbff 0%, #f6f8fc 100%);
+    }
+
+    .page {
+      width: min(1400px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 40px 0 56px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--active);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+    }
+
+    h1 {
+      margin: 16px 0 10px;
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      max-width: 960px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.75;
+    }
+
+    .stats {
+      margin: 28px auto 18px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      max-width: 980px;
+    }
+
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px 16px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 30px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px 16px;
+      margin: 10px 0 30px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+    }
+
+    .board {
+      position: relative;
+      padding: 28px;
+      border-radius: 30px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.86));
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .board::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
+      background-size: 100% 84px, 84px 100%;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 22px;
+      position: relative;
+      z-index: 3;
+    }
+
+    .controls button {
+      appearance: none;
+      border: 1px solid rgba(37, 99, 235, 0.14);
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .controls button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+
+    .controls button.is-active {
+      background: var(--active);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.22);
+    }
+
+    .diagram {
+      position: relative;
+      min-height: 1120px;
+      z-index: 1;
+    }
+
+    #link-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .rows {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: 22px;
+    }
+
+    .layer {
+      position: relative;
+      padding: 20px 18px 18px;
+      border-radius: 26px;
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      background: rgba(255, 255, 255, 0.68);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    .layer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .layer-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .layer-title .dot {
+      width: 12px;
+      height: 12px;
+    }
+
+    .layer-meta {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .skill-grid {
+      display: grid;
+      grid-template-columns: repeat(var(--columns, 6), minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .skill-card {
+      position: relative;
+      min-height: 92px;
+      border-radius: 18px;
+      padding: 14px 14px 12px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.98));
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.06);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+    }
+
+    .skill-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      border-radius: 18px 0 0 18px;
+      background: var(--accent);
+    }
+
+    .skill-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px rgba(15, 23, 42, 0.1);
+    }
+
+    .skill-card[data-state="deferred"] {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.92));
+    }
+
+    .skill-card[data-dimmed="true"] {
+      opacity: 0.28;
+      transform: scale(0.985);
+    }
+
+    .skill-card[data-highlighted="true"] {
+      opacity: 1;
+      border-color: rgba(37, 99, 235, 0.4);
+      box-shadow: 0 18px 36px rgba(37, 99, 235, 0.14);
+    }
+
+    .skill-name {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .skill-desc {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+    }
+
+    .pill.active {
+      background: rgba(37, 99, 235, 0.08);
+      color: var(--active);
+    }
+
+    .pill.combo {
+      background: rgba(15, 23, 42, 0.06);
+      color: #334155;
+    }
+
+    .pill.deferred {
+      background: rgba(148, 163, 184, 0.14);
+      color: #64748b;
+    }
+
+    .workflows {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .workflow-card {
+      background: var(--panel-strong);
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 18px 18px 16px;
+    }
+
+    .workflow-card h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+    }
+
+    .workflow-card p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .flow-steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .step {
+      position: relative;
+      padding: 7px 10px;
+      border-radius: 999px;
+      color: #0f172a;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: #fff;
+    }
+
+    .workflow-note {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 1200px) {
+      .skill-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .workflows {
+        grid-template-columns: 1fr;
+      }
+
+      .diagram {
+        min-height: 1360px;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .page {
+        width: min(100vw - 20px, 100%);
+        padding-top: 24px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .board {
+        padding: 18px;
+      }
+
+      .skill-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .diagram {
+        min-height: 1760px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div class="eyebrow">参考图谱风格重绘 · 单文件 HTML</div>
+      <h1>内容 Skills 关系图谱</h1>
+      <p class="subtitle">
+        基于当前 `docs/` 中定义的 35 个 Skills、6 层架构与 3 条主链路绘制。
+        上半部分是跨层关系图，下半部分是典型工作流；可点击顶部按钮切换高亮当前重点链路。
+      </p>
+      <div class="stats">
+        <div class="stat"><strong>35</strong><span>内容 Skills</span></div>
+        <div class="stat"><strong>6</strong><span>递进层级</span></div>
+        <div class="stat"><strong>3</strong><span>当前主链路</span></div>
+        <div class="stat"><strong>6</strong><span>暂缓场景</span></div>
+      </div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <section class="board">
+      <div class="controls" id="controls"></div>
+      <div class="diagram" id="diagram">
+        <svg id="link-layer" aria-hidden="true"></svg>
+        <div class="rows" id="rows"></div>
+      </div>
+
+      <div class="workflows" id="workflows"></div>
+
+      <div class="footer-note">
+        当前重点是阶段 1～3：`case-writer-hybrid` + `generate-image` + `wechat-formatter`，
+        `wechat-collect` 接入采集，再以 `feishu-bitable-sync` → `xiaohongshu-note-generator` 做分发。
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const layerMeta = {
+      collect: { label: "采集层", color: "var(--collect)", count: 8, desc: "抓取外部素材与监控入口" },
+      translate: { label: "翻译层", color: "var(--translate)", count: 1, desc: "外文内容本地化旁路" },
+      create: { label: "创作层", color: "var(--create)", count: 9, desc: "写作、改写、竞写与脚本生成" },
+      visual: { label: "排版与视觉层", color: "var(--visual)", count: 7, desc: "排版、配图、封面、短视频生成" },
+      video: { label: "视频与音频层", color: "var(--video)", count: 4, desc: "TTS、合成、拆解与反馈" },
+      distribute: { label: "分发与同步层", color: "var(--distribute)", count: 6, desc: "飞书中枢、平台发布、组合编排" }
+    };
+
+    const skills = [
+      { id: "daily-content-curator", layer: "collect", desc: "播客 / YouTube 转写", state: "deferred" },
+      { id: "x-viral-collector", layer: "collect", desc: "X 热门长文采集", state: "deferred" },
+      { id: "ai-income-stories", layer: "collect", desc: "AI 赚钱案例采集", state: "deferred" },
+      { id: "attentionvc-ai-daily", layer: "collect", desc: "AttentionVC AI 日报", state: "deferred" },
+      { id: "wechat-collect", layer: "collect", desc: "公众号文章采集", state: "active" },
+      { id: "wechat-subscribe", layer: "collect", desc: "公众号订阅管理", state: "optional" },
+      { id: "wechat-topic-monitor", layer: "collect", desc: "公众号选题监控入口", state: "optional" },
+      { id: "meme-search", layer: "collect", desc: "全网梗图搜索", state: "deferred" },
+
+      { id: "tiered-translate", layer: "translate", desc: "快速 / 标准 / 精翻", state: "deferred" },
+
+      { id: "article-rewriter", layer: "create", desc: "外文 URL 精读改写", state: "deferred" },
+      { id: "case-writer-hybrid", layer: "create", desc: "观点 + 案例 + 三路径竞写", state: "active" },
+      { id: "solo-writer", layer: "create", desc: "播客稿单写手写作", state: "deferred" },
+      { id: "interview", layer: "create", desc: "访谈提炼人物稿", state: "optional" },
+      { id: "ad-writing", layer: "create", desc: "广告稿写作", state: "optional" },
+      { id: "ad-writing-v2", layer: "create", desc: "先大纲再实测写作", state: "optional" },
+      { id: "meme-to-script", layer: "create", desc: "梗图扩展成长文", state: "deferred" },
+      { id: "hokkaido-writer", layer: "create", desc: "工具书章节增强", state: "optional" },
+      { id: "viral-video-script", layer: "create", desc: "文章转视频脚本", state: "deferred" },
+
+      { id: "wechat-formatter", layer: "visual", desc: "Markdown 转公众号 HTML", state: "active" },
+      { id: "generate-image", layer: "visual", desc: "文章配图 / 视频分镜", state: "active" },
+      { id: "cover-generator", layer: "visual", desc: "多尺寸视频封面", state: "optional" },
+      { id: "cover-4styles", layer: "visual", desc: "四风格批量封面", state: "optional" },
+      { id: "xhs-cover-template", layer: "visual", desc: "小红书封面模板", state: "active" },
+      { id: "xiaolvshu-cover", layer: "visual", desc: "公众号小绿书封面", state: "optional" },
+      { id: "generate-video", layer: "visual", desc: "文生视频", state: "deferred" },
+
+      { id: "video-optimize", layer: "video", desc: "爆款视频拆解", state: "deferred" },
+      { id: "video-local-analyze", layer: "video", desc: "本地视频分析", state: "deferred" },
+      { id: "video-from-storyboard", layer: "video", desc: "分镜 + 配音合成成片", state: "deferred" },
+      { id: "minimax-tts", layer: "video", desc: "文字转语音", state: "deferred" },
+
+      { id: "feishu-bitable-sync", layer: "distribute", desc: "内容归档同步飞书", state: "active" },
+      { id: "xiaohongshu-note-generator", layer: "distribute", desc: "飞书转小红书笔记", state: "active" },
+      { id: "obsidian-to-x", layer: "distribute", desc: "发布到 X", state: "deferred" },
+      { id: "auto-curate", layer: "distribute", desc: "采集 + 入库组合技", state: "combo deferred" },
+      { id: "wechat-full", layer: "distribute", desc: "采集 + 报告组合技", state: "combo deferred" },
+      { id: "wechat-report", layer: "distribute", desc: "公众号潜力分析", state: "optional" }
+    ];
+
+    const links = [
+      ["daily-content-curator", "solo-writer"],
+      ["x-viral-collector", "case-writer-hybrid"],
+      ["attentionvc-ai-daily", "case-writer-hybrid"],
+      ["ai-income-stories", "case-writer-hybrid"],
+      ["wechat-subscribe", "wechat-topic-monitor"],
+      ["wechat-topic-monitor", "wechat-collect"],
+      ["wechat-collect", "case-writer-hybrid"],
+      ["wechat-collect", "wechat-report"],
+      ["meme-search", "meme-to-script"],
+      ["tiered-translate", "case-writer-hybrid"],
+      ["tiered-translate", "solo-writer"],
+      ["article-rewriter", "wechat-formatter"],
+      ["case-writer-hybrid", "generate-image"],
+      ["case-writer-hybrid", "wechat-formatter"],
+      ["case-writer-hybrid", "feishu-bitable-sync"],
+      ["case-writer-hybrid", "viral-video-script"],
+      ["solo-writer", "generate-image"],
+      ["solo-writer", "wechat-formatter"],
+      ["solo-writer", "viral-video-script"],
+      ["interview", "wechat-formatter"],
+      ["ad-writing", "wechat-formatter"],
+      ["ad-writing-v2", "wechat-formatter"],
+      ["meme-to-script", "wechat-formatter"],
+      ["hokkaido-writer", "wechat-formatter"],
+      ["wechat-formatter", "obsidian-to-x"],
+      ["wechat-formatter", "feishu-bitable-sync"],
+      ["generate-image", "xhs-cover-template"],
+      ["generate-image", "cover-generator"],
+      ["generate-image", "cover-4styles"],
+      ["generate-image", "xiaolvshu-cover"],
+      ["generate-image", "video-from-storyboard"],
+      ["viral-video-script", "minimax-tts"],
+      ["viral-video-script", "generate-image"],
+      ["minimax-tts", "video-from-storyboard"],
+      ["video-optimize", "viral-video-script"],
+      ["video-local-analyze", "viral-video-script"],
+      ["feishu-bitable-sync", "xiaohongshu-note-generator"],
+      ["xiaohongshu-note-generator", "xhs-cover-template"],
+      ["daily-content-curator", "auto-curate"],
+      ["feishu-bitable-sync", "auto-curate"],
+      ["wechat-collect", "wechat-full"],
+      ["wechat-report", "wechat-full"]
+    ];
+
+    const workflows = [
+      {
+        id: "all",
+        title: "全部关系",
+        description: "显示完整 35 个 Skills 的跨层关系，用于看全局。",
+        steps: ["35 Skills", "6 层", "全量关系"],
+        note: "适合第一次理解整体架构，或检查某个 Skill 在全图里的位置。",
+        highlights: skills.map((item) => item.id)
+      },
+      {
+        id: "stage1",
+        title: "阶段 1：观点 → 公众号",
+        description: "当前主链路，解决从观点 brief 到可发公众号 HTML 的最小闭环。",
+        steps: ["观点 brief", "case-writer-hybrid", "generate-image", "wechat-formatter"],
+        note: "这是当前最优先建设的闭环，也是后续采集和分发的底座。",
+        highlights: ["case-writer-hybrid", "generate-image", "wechat-formatter"]
+      },
+      {
+        id: "stage2",
+        title: "阶段 2：公众号采集 → 再创作",
+        description: "把公众号内容作为自动进料入口，直接接到阶段 1 创作链。",
+        steps: ["wechat-collect", "case-writer-hybrid", "generate-image", "wechat-formatter"],
+        note: "重点不是多平台采集，而是先把公众号采集接顺。",
+        highlights: ["wechat-collect", "case-writer-hybrid", "generate-image", "wechat-formatter"]
+      },
+      {
+        id: "stage3",
+        title: "阶段 3：飞书 → 小红书",
+        description: "以飞书多维表格为中枢，驱动小红书图文与封面生成。",
+        steps: ["feishu-bitable-sync", "xiaohongshu-note-generator", "xhs-cover-template"],
+        note: "当前分发层只优先做小红书，不同时展开 X 与全自动组合技。",
+        highlights: ["feishu-bitable-sync", "xiaohongshu-note-generator", "xhs-cover-template"]
+      },
+      {
+        id: "deferred",
+        title: "暂缓能力",
+        description: "外文翻译、播客链、梗图链、视频链与 X 分发暂时保留，不进入当前排期。",
+        steps: ["tiered-translate", "solo-writer", "article-rewriter", "viral-video-script", "obsidian-to-x"],
+        note: "这些能力仍在图中，方便以后扩展，但现在默认降权显示。",
+        highlights: skills.filter((item) => item.state.includes("deferred")).map((item) => item.id)
+      }
+    ];
+
+    const rows = document.getElementById("rows");
+    const legend = document.getElementById("legend");
+    const controls = document.getElementById("controls");
+    const workflowContainer = document.getElementById("workflows");
+    const svg = document.getElementById("link-layer");
+    const diagram = document.getElementById("diagram");
+    const skillCardById = new Map();
+    let activeWorkflow = "all";
+
+    const groupedSkills = Object.keys(layerMeta).map((layerId) => ({
+      layerId,
+      meta: layerMeta[layerId],
+      items: skills.filter((item) => item.layer === layerId)
+    }));
+
+    function renderLegend() {
+      legend.innerHTML = Object.entries(layerMeta).map(([id, meta]) => `
+        <div class="legend-item">
+          <span class="dot" style="background:${meta.color}"></span>
+          <span>${meta.label}</span>
+        </div>
+      `).join("");
+    }
+
+    function renderControls() {
+      controls.innerHTML = workflows.map((flow) => `
+        <button type="button" data-flow="${flow.id}" class="${flow.id === activeWorkflow ? "is-active" : ""}">
+          ${flow.title}
+        </button>
+      `).join("");
+
+      controls.querySelectorAll("button").forEach((button) => {
+        button.addEventListener("click", () => {
+          activeWorkflow = button.dataset.flow;
+          renderControls();
+          updateHighlights();
+          drawLinks();
+        });
+      });
+    }
+
+    function renderRows() {
+      rows.innerHTML = "";
+
+      groupedSkills.forEach(({ layerId, meta, items }) => {
+        const layer = document.createElement("section");
+        layer.className = "layer";
+        layer.dataset.layer = layerId;
+
+        layer.innerHTML = `
+          <div class="layer-header">
+            <div class="layer-title">
+              <span class="dot" style="background:${meta.color}"></span>
+              <span>${meta.label}</span>
+            </div>
+            <div class="layer-meta">${meta.count} 个 Skills · ${meta.desc}</div>
+          </div>
+          <div class="skill-grid" style="--columns:${items.length >= 7 ? 6 : Math.min(Math.max(items.length, 3), 6)}"></div>
+        `;
+
+        const grid = layer.querySelector(".skill-grid");
+
+        items.forEach((item) => {
+          const card = document.createElement("article");
+          card.className = "skill-card";
+          card.id = `skill-${item.id}`;
+          card.dataset.skill = item.id;
+          card.dataset.layer = item.layer;
+          card.dataset.state = item.state;
+          card.style.setProperty("--accent", meta.color);
+
+          const pills = [];
+          if (item.state.includes("active")) pills.push('<span class="pill active">当前重点</span>');
+          if (item.state.includes("combo")) pills.push('<span class="pill combo">组合 Skill</span>');
+          if (item.state.includes("deferred")) pills.push('<span class="pill deferred">暂缓</span>');
+
+          card.innerHTML = `
+            <div class="skill-name">\`${item.id}\`</div>
+            <div class="skill-desc">${item.desc}</div>
+            <div class="pill-row">${pills.join("")}</div>
+          `;
+
+          grid.appendChild(card);
+          skillCardById.set(item.id, card);
+        });
+
+        rows.appendChild(layer);
+      });
+    }
+
+    function renderWorkflowCards() {
+      workflowContainer.innerHTML = workflows
+        .filter((flow) => flow.id !== "all")
+        .map((flow) => `
+          <article class="workflow-card">
+            <h3>${flow.title}</h3>
+            <p>${flow.description}</p>
+            <div class="flow-steps">
+              ${flow.steps.map((step) => `<span class="step">${step}</span>`).join("")}
+            </div>
+            <div class="workflow-note">${flow.note}</div>
+          </article>
+        `)
+        .join("");
+    }
+
+    function getHighlightedSet() {
+      const current = workflows.find((item) => item.id === activeWorkflow);
+      return new Set(current ? current.highlights : []);
+    }
+
+    function updateHighlights() {
+      const highlighted = getHighlightedSet();
+      const showAll = activeWorkflow === "all";
+
+      skills.forEach((item) => {
+        const card = skillCardById.get(item.id);
+        if (!card) return;
+        const isHit = highlighted.has(item.id);
+        card.dataset.highlighted = showAll || isHit ? "true" : "false";
+        card.dataset.dimmed = showAll ? "false" : (isHit ? "false" : "true");
+      });
+    }
+
+    function centerOfCard(card) {
+      const cardRect = card.getBoundingClientRect();
+      const parentRect = diagram.getBoundingClientRect();
+      return {
+        x: cardRect.left - parentRect.left + cardRect.width / 2,
+        y: cardRect.top - parentRect.top + cardRect.height / 2
+      };
+    }
+
+    function edgePoints(from, to) {
+      const a = centerOfCard(from);
+      const b = centerOfCard(to);
+      const upward = b.y < a.y;
+      return {
+        startX: a.x,
+        startY: a.y + (upward ? -34 : 34),
+        endX: b.x,
+        endY: b.y + (upward ? 34 : -34)
+      };
+    }
+
+    function lineColor(fromId, toId, highlighted) {
+      if (activeWorkflow === "all") return "var(--link)";
+      if (highlighted.has(fromId) && highlighted.has(toId)) return "var(--link-active)";
+      return "var(--link-deferred)";
+    }
+
+    function drawLinks() {
+      const width = diagram.clientWidth;
+      const height = diagram.clientHeight;
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      svg.innerHTML = `
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="8" refX="5.5" refY="3.5" orient="auto">
+            <path d="M0,0 L7,3.5 L0,7 Z" fill="currentColor"></path>
+          </marker>
+        </defs>
+      `;
+
+      const highlighted = getHighlightedSet();
+
+      links.forEach(([fromId, toId]) => {
+        const fromCard = skillCardById.get(fromId);
+        const toCard = skillCardById.get(toId);
+        if (!fromCard || !toCard) return;
+
+        const p = edgePoints(fromCard, toCard);
+        const dx = Math.abs(p.endX - p.startX);
+        const curve = Math.max(36, Math.min(120, dx * 0.3));
+        const d = [
+          `M ${p.startX} ${p.startY}`,
+          `C ${p.startX} ${p.startY + curve}, ${p.endX} ${p.endY - curve}, ${p.endX} ${p.endY}`
+        ].join(" ");
+
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", d);
+        path.setAttribute("fill", "none");
+        path.setAttribute("stroke", lineColor(fromId, toId, highlighted));
+        path.setAttribute("stroke-width", activeWorkflow === "all" ? "2" : (highlighted.has(fromId) && highlighted.has(toId) ? "3.2" : "1.6"));
+        path.setAttribute("stroke-linecap", "round");
+        path.setAttribute("stroke-linejoin", "round");
+        path.setAttribute("marker-end", "url(#arrow)");
+        path.setAttribute("opacity", activeWorkflow === "all" ? "0.9" : (highlighted.has(fromId) && highlighted.has(toId) ? "1" : "0.42"));
+        path.style.color = lineColor(fromId, toId, highlighted);
+        svg.appendChild(path);
+      });
+    }
+
+    function render() {
+      renderLegend();
+      renderControls();
+      renderRows();
+      renderWorkflowCards();
+      updateHighlights();
+      requestAnimationFrame(drawLinks);
+    }
+
+    window.addEventListener("resize", () => {
+      requestAnimationFrame(drawLinks);
+    });
+
+    render();
+  </script>
+</body>
+</html>
