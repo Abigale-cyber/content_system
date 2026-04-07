@@ -79,7 +79,11 @@ def compose_image_style(base_style: str, custom_prompt: str) -> str:
     custom = str(custom_prompt or "").strip()
     if not custom:
         return base_style
-    return f"{base_style}; user direction: {custom}"
+    base = str(base_style or "").strip()
+    if "【用户补充】" in base:
+        prefix = base.split("【用户补充】", 1)[0].rstrip()
+        return f"{prefix}\n\n【用户补充】\n{custom}"
+    return f"{base}\n\n【用户补充】\n{custom}"
 
 
 def generate_image_asset(

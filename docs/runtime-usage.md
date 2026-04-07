@@ -14,6 +14,7 @@
 ## 当前可调用的 Skills
 
 - `case-writer-hybrid`
+- `humanizer-zh`
 - `generate-image`
 - `wechat-formatter`
 
@@ -59,6 +60,13 @@ python3 -m venv .venv
   --input content-production/inbox/20260403-ai-content-system-brief.md
 ```
 
+### 独立运行去 AI 味清洗
+
+```bash
+.venv/bin/python -m skill_runtime.cli run-skill humanizer-zh \
+  --input content-production/drafts/ai-content-system-article.md
+```
+
 ### 生成 PNG 配图
 
 ```bash
@@ -87,9 +95,18 @@ python3 -m venv .venv
 运行完整 workflow 后，默认会生成：
 
 - `content-production/drafts/ai-content-system-article.md`
+- `content-production/drafts/ai-content-system-writing-pack.md`
+- `content-production/drafts/ai-content-system-writing-pack.json`
+- `content-production/drafts/ai-content-system-review-trace.json`
 - `content-production/ready/ai-content-system-img-1.png`
 - `content-production/ready/ai-content-system-wechat.html`
 - `content-production/published/stage1-pipeline-last-run.json`
+
+若 `case-writer-hybrid` 连续三轮仍未达到质量门控：
+
+- workflow 会在该步中断，不再继续跑 `generate-image` / `wechat-formatter`
+- 会额外写出 `content-production/published/YYYYMMDD-{slug}-quality-gate.md`
+- manifest 中会出现 `workflow_status: interrupted_for_review`
 
 ## 7. 当前版本能力边界
 

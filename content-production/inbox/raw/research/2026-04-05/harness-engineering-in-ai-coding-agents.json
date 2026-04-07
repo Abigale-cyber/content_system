@@ -1,0 +1,153 @@
+{
+  "generated_at": "2026-04-05T23:03:53",
+  "request": {
+    "topic": "Harness engineering in AI coding agents",
+    "question": "最近一年海外对 harness engineering 的定义、代表性文章、典型实践、和它与 evaluation harness / feedback loops / coding agents 的关系是什么？请优先找英文一手文章、产品博客、技术论文或开发者文档。",
+    "model": "pro",
+    "source_file": "",
+    "seed_urls": [
+      "https://thenewstack.io/coding-agents-feedback-signals/",
+      "https://factory.ai/news/factory-signals"
+    ],
+    "request_path": "/tmp/harness-overseas-research.md"
+  },
+  "vendor_skill_path": "/Users/Abigale/All_project/content_system/skills/tavily-research",
+  "command": [
+    "tvly",
+    "research",
+    "研究主题：Harness engineering in AI coding agents\n\n研究问题：最近一年海外对 harness engineering 的定义、代表性文章、典型实践、和它与 evaluation harness / feedback loops / coding agents 的关系是什么？请优先找英文一手文章、产品博客、技术论文或开发者文档。\n\n请输出适合中文内容团队做选题判断的结构化研究，重点关注最新事实、分歧点、行业信号和可写角度。\n\n优先参考这些链接：\n- https://thenewstack.io/coding-agents-feedback-signals/\n- https://factory.ai/news/factory-signals\n\n补充要求：\n目标：整理海外原文脉络，后续要给中文读者做方法论解释。",
+    "--json",
+    "--model",
+    "pro"
+  ],
+  "stderr": "",
+  "payload": {
+    "content": "# Harness engineering 在 AI coding agents 领域的结构化调研报告（面向中文内容团队）\n\n执行摘要（1 页）\n- 核心结论：在最近一年内，“harness engineering”在海外研究与工程实践中逐渐被定义为：围绕模型之外的工程基础设施与运行时控制（工具调用、权限、状态/记忆、验证器、重试与错误恢复等），其目标是把模型失误转化为可工程化、可修复的问题，从而提高 agent 的首轮正确率并减少人工复核成本 [1], [2], [4], [6]。  \n- 术语边界：harness engineering 常与 “test/evaluation harness”、“signal engineering / feedback signals / feedback loops”、以及更广义的平台/Orchestrator 概念并存；其中 harness 更强调运行时的执行与环境控制，evaluation harness 更偏向可重复的基准与度量体系，signal engineering 指面向改进 agent 的反馈产生与处理机制，两者互为补充 [1], [2], [4], [11], [16].  \n- 行业信号（要点）：（1）公司在产品层面将 harness 能力写入文档与功能（例如 Harness 平台的 AI agents、GitHub Copilot 的安全扫描与自评能力），表明生产级交付重视运行时防护与治理 [7], [8], [13], [25]；（2）研究/工程社区在构建评估平台（BigCode、SWE‑bench、VeRO、c‑CRAB 等）以把“系统级行为”纳入可复现评测，显示评估与 harness 之间的紧密联系 [17], [18], [16], [22]；（3）供应商与研究机构正在把信号处理（batch 或接近实时）投入产品化（Factory Signals、Anthropic 的长会话 harness 实践、OpenAI 的 Evals 指南）以支持长期/多步 agent 工作流 [4], [9], [11], [10].  \n- 推荐编辑结论：该主题具备较高选题价值（技术背景门槛中等、面向工程读者与管理者均有内容空间），可采用“方法论解读 + 工程实操 + 产业案例”组合，重点讲清 harness 与 evaluation / feedback 的边界与互补关系，并对隐私/合规与自动化比例的争议做专题讨论（见写作角度）。\n\n目录\n- 定义与术语（含推荐中文术语）\n- 代表性一手资料（按类型、两句摘录/要点）\n- 典型工程实践与方法（可操作清单、工具/开源实现、平台模式）\n- Harness 与 evaluation harness / feedback loops / agent 架构的关系与边界\n- 社区与行业分歧点（争议与未决问题）\n- 行业信号与案例短示例（3–6 个）\n- 写作与传播角度（5–7 个可写切入点与所需证据）\n- 输出形式与优先级（编辑可直接用的交付结构）\n- 证据缺口与后续采访建议\n- 术语表\n- 证据清单（按主题列出英文原文链接，每条附两句摘录/要点）\n- 参考文献（编号链接）\n\n## 一、定义与术语（含推荐中文术语）\n- 推荐总称：harness engineering — 建议中文译为“（AI）harness 工程”或“harness 工程/体系”，并在正文首次出现时加短注释“（即构建模型外运行时控制与反馈的工程）”以便技术与非技术读者共同理解 [1], [2].  \n- 简明定义（推荐用于中文说明）：harness engineering = 为 AI coding agents 设计并实现运行时环境、工具与反馈回路的工程学科，负责工具/权限/状态管理、输出验证与自动修复/重试，从而把模型错误转化为工程可控问题并提高首轮正确率与可审计性 [1], [2], [6].  \n- 常见同义词或易混淆概念（与建议区分方式）：\n  - evaluation harness / test harness（测试/评估 harness）：偏向可重复基准、度量与容器化执行（例如 BigCode、SWE‑bench），用于比较模型/agent 能力，应与运行时 harness 区分开来 [17], [18].  \n  - signal engineering / feedback signals（信号工程）：专指生成、抽取与处理用于改进 agent 行为的信号（日志、失败模式、用户重构行为等），是 harness engineering 的核心输入/迭代动力，但不等同于整个 harness [4].  \n  - feedback loops（反馈回路）：泛指从执行结果回到系统改进的环节，可在评估批次中运行或实时嵌入运行时（Factory Signals 的每日批处理示例）[4].  \n  - runtime harness / orchestrator（运行时 harness / 协调器）：运行时负责将模型调用、工具执行、状态持久化与错误恢复组合成工作流；orchestrator 更多指决策序列，harness 更着眼于执行层面的整合与守护 [1], [6].  \n- 术语建议在中文内容中统一使用“harness 工程（运行时 harness）”描述生产与平台侧的工程工作，把“evaluation harness / test harness”单独作为“评估/测试体系”来表述，以避免混淆 [2], [17].\n\n## 二、代表性一手资料（最近一年内、按类型；每条两句要点）\n说明：样本范围覆盖主流 agent 变体（code‑generation copilots、multi‑tool/multi‑agent、CI 集成 agents、长期会话 agents）；选择优先级为公司产品/博文、开发者文档、其次学术预印本与开源 README。以下为摘要与两句摘录/要点（按类型排序）。\n\n产品/公司博文与开发者文档\n1. https://developer.harness.io/docs/platform/harness-ai/code-agent — Harness 平台的产品文档。要点：描述 Harness AI Code Agent 在 IDE 中的实时代码建议、自动化测试生成与上下文集成；展示了将 harness 能力直接嵌入开发流程的产品化路线 [7].  \n2. https://developer.harness.io/docs/platform/harness-ai/harness-agents — Harness 开发者文档（代理/管道集成）。要点：说明Harness agents 在 CI/CD 管道中继承权限、治理与知识图谱查询能力，体现平台级 harness 的治理与审计需求 [8].  \n3. https://github.blog/ai-and-ml/github-copilot/whats-new-with-github-copilot-coding-agent/ — GitHub Copilot 功能更新博文。要点：引入自我审查、安全扫描与可配置自定义 agents 的能力，表明产品把验证器与安全扫描纳入 agent 流程 [13].  \n4. https://factory.ai/news/factory-signals — Factory 的 Signals 产品说明。要点：Signals 作为每日批处理从 BigQuery 抽取会话、分类并导出摩擦信号以支持产品修正，且有计划将批处理朝实时化推进，展示了“信号工程到产品化”的路径 [4].  \n5. https://aicerts.ai/news/anthropic-debuts-code-review-with-ai-coding-agents/ — Anthropic 的 Code Review 研究预览报道（产品化案例）。要点：Anthropic 在代码审查场景中以多 agent 专长（安全、逻辑、性能）进行审查，实测在大文件审查中高比例发现问题并且被工程师广泛接受，反映出多 agent + harness 的可行性 [14].  \n6. https://resources.anthropic.com/2026%20Agentic%20Coding%20Trends%20Report.pdf — Anthropic 的 Agentic Coding 趋势报告（机构白皮书）。要点：断言工程师角色向 orchestrator/评审转变、长期/多 agent 协作成为主流，并提供公司级採用案例与趋势预测支持 [10].  \n7. https://harness.io/blog/ai-deployment-in-production-orchestrate-llms-rag-agents — Harness 公司产品博文。要点：把 prompts 与配置视为代码，并强调在输入/输出/动作层面嵌入 guardrails（护栏）以实现安全部署 [25].\n\n技术/工程实践博文与个人技术文章\n8. https://firecrawl.dev/blog/what-is-an-agent-harness — 工程博客对 agent harness 的阐述。要点：将 harness 定义为模型推理之外的运行时基础设施（工具执行、状态持久化、错误恢复），并把 harness engineering 看作把每一次失败当成工程问题来修复的实践 [1].  \n9. https://martinfowler.com/articles/harness-engineering.html — Martin Fowler 的概念性文章。要点：提出“outer harness”概念，以提高首轮正确率并减少人工复核，强调 feedforward（引导）与 feedback（传感器）组件的组合 [2].  \n10. https://mindstudio.ai/blog/ai-coding-agent-harness-stripe-shopify-airbnb/ — 行业实践归纳博文（Stripe/Shopify/Airbnb 模式）。要点：总结企业常见模式：窄职责 agent、结构化上下文管理、验证循环与多步编排，强调 harness 使自动化可信而非“更聪明”的模型本身 [3].  \n11. https://alexlavaee.me/blog/harness-engineering-why-coding-agents-need-infrastructure — 技术博文，引用 OpenAI/Anthropic 内部实验。要点：记录 OpenAI/Anthropic 在大规模代码生成中依赖 harness（脚手架、反馈环、机器可读约束）以实现高吞吐与低监控成本的案例说明 [6].  \n12. https://humanlayer.dev/blog/skill-issue-harness-engineering-for-coding-agents — 实践博客。要点：将 coding agent 定义为“模型 + harness”，并指出 harness 包括速率限制、权限与验证等运行时配置 [5].\n\n开源项目与评估平台\n13. https://github.com/Picrew/awesome-agent-harness — 开源资源清单（awesome 列表）。要点：汇集了多种 agent 框架与 harness 相关资源，指向 Claude Agent SDK、OpenHarness 等实现与测试参考资料 [19].  \n14. https://github.com/bigcode-project/bigcode-evaluation-harness — BigCode 的评估 harness 开源项目。要点：提供基于 Docker 的生成与评估框架，用于对自回归代码模型进行系统化比较 [17].  \n15. https://swebench.com/SWE-bench — SWE‑bench (及其文档)。要点：通过容器化环境把模型补丁应用到真实仓库并运行原仓库测试，体现评估 harness 的可复现执行策略与资源需求 [18].  \n16. https://arxiv.org/html/2602.22480v1 — VeRO 评估 harness（预印本）。要点：VeRO 提供版本化快照、预算限制与结构化执行轨迹以优化 coding agent，研究显示 Orchestrator 变体带来更高变化多样性 [16].  \n17. https://arxiv.org/html/2512.17419v1 — SWE‑Bench++（预印本）。要点：扩展多语言支持并引入状态差异化 Oracle，强化从真实 PR 中评估补丁的能力 [23].  \n18. https://arxiv.org/html/2603.23448v1 — c‑CRAB（预印本）。要点：评估自动化代码审查 agent，方法为将人工审查反馈转换为可执行测试，显示当前审查 agent 在现实 PR 任务上的局限性 [22].\n\n研究论文与方法论\n19. https://arxiv.org/html/2504.13472v2 — CodeBLEU / 执行型评估相关论文。要点：讨论了合成语法/语义指标及执行基准（pass@k）对代码生成评估的局限与适用条件 [20].  \n20. https://developers.openai.com/api/docs/guides/agent-evals/ — OpenAI 的 agent evaluation 指南。要点：提供构建评估数据集、trace grading 与大规模 evals 的工具建议，表明评估平台已被供应商纳入官方指南 [11].  \n21. https://developers.openai.com/api/docs/guides/code-generation/ — OpenAI 的代码生成指南。要点：讨论与 agent/harness 协同工作的模型与工具推荐，说明厂商层面的最佳实践文档化 [12].  \n22. https://neon.com/blog/six-principles-for-production-ai-agents — Neon 的工程原则博文。要点：列举用于生产 agent 的六项原则，包括使用编译器/linters/tests 作为简单验证器与 actor‑critic 模式的反馈设计 [15].\n\n## 三、典型实践与工程方法（可操作输出）\n下列为从行业与开源/研究资料中梳理出的工程实践组成要素及常用工具或实现模式，可作为中文实操解读的基础模板。\n\n1) harness 的核心职责（工程层面）\n- 工具与权限管理（tool orchestration / permissioning）：harness 指定 agent 可调用哪些工具、如何传递 secret/权限并执行速率限制 [1], [8].  \n- 状态/记忆与上下文管理（context and memory）：分层上下文（短期会话、项目级知识库、长期记忆）用于稳定长期/多步 agent 的表现 [6], [9].  \n- 验证器与过滤器（validators / signal filtering）：在输出进入系统前使用编译器、linters、单元测试、静态分析器等作为简单且自动化的第一道过滤器 [15], [18].  \n- 错误恢复与重试（error recovery / retry logic）：harness 要为工具失败、超时等做重试策略与安全后退（fail‑safe）[1].  \n- 监控/信号收集（telemetry, logging, signal extraction）：记录执行轨迹、工具调用与用户改动以构建后续改进的信号池（Factory Signals 的每日批处理示例）[4].  \n- 人机协同与降级路径（human‑in‑the‑loop）：在高风险或低置信度场景引入人工审查或将 agent 输出标为建议而非自动合并 [2], [13].\n\n2) 反馈信号的设计与处理（signal engineering）\n- 信号来源：自动验证结果（测试/编译/静态扫描）、会话行为（context churn、重复重述）、后端错误日志与人工拒绝/采纳决策 [4], [15].  \n- 批处理 vs 实时：产品化实现通常从每日/批处理开始（聚类异常和摩擦），逐步迁移到接近实时以支持会话内纠正 [4].  \n- 信号融合：将静态验证、执行结果与用户行为结合，用于触发能力改进、阻断或引导（Factory Signals 可以关联后端超时到重复改写摩擦）[4].\n\n3) 评估与测试策略（evaluation harness 的实践）\n- 可复现执行环境：使用容器化（Docker）来保证评估环境一致，并运行真实仓库测试（SWE‑bench、BigCode）[17], [18].  \n- 过程性指标：除功能正确率外，记录 agent 的修改轨迹、重试次数、tool call 成功率等，以评估鲁棒性与效率（VeRO 的执行轨迹与预算限制为例）[16].  \n- 诊断反馈：将评估结果转为“可操作的反馈”——例如生成针对性 linters、测试用例或 harness 配置变更 [16], [23].\n\n4) 常见工具/框架与开源实现\n- BigCode evaluation harness（Docker 化评估框架）[17].  \n- SWE‑bench / SWE‑Bench++（将模型补丁应用到真实仓库并运行测试）[18], [23].  \n- EleutherAI 的 lm‑evaluation‑harness（通用模型评估工具，被广泛采用）[via findings list]。  \n- “Awesome” 列表与社区实现（OpenHarness、Claude Agent SDK 等）用于快速搭建 harness 原型 [19].  \n- 厂商平台与文档化指南（OpenAI Evals、Harness 平台、Anthropic 博文）作为生产化参考 [11], [7], [9].\n\n5) 组织与岗位模式\n- Emergent role：harness engineering 被视为跨域角色，结合软件工程与 AI 特定技能（编排、内存管理、信号工程）[6].  \n- 平台化倾向：企业更可能把 harness 能力做为平台服务（pipeline step、模板、版本管理）以方便治理与审计 [8], [25].\n\n## 四、harness engineering 与 evaluation harness / feedback loops / agent 架构的关系与边界\n- 同一范畴的交集：harness engineering、evaluation harness 与 feedback loops 都关注“系统级的行为与可控性”，且实践上互为输入输出关系：evaluation harness/benchmarks 提供离线可复现的度量与 trace，feedback signals 为 harness 提供改进的输入，而 harness 在运行时执行治理与验证 [16], [17], [4].  \n- 明确区分的方面：evaluation harness 更强调可重复、容器化的对照测试（用于比较模型/agent 版本）；运行时 harness 更关注权限、执行流程、重试与实时监控。二者目标重叠（提升 correctness/robustness），但操作层面与生命周期不同 [17], [1], [16].  \n- 与不同 agent 架构的关系：\n  - 单步补全型（single‑shot copilots）：harness 轻量化，重点在输入构造、快速验证（linters/tests）與 IDE 集成（GitHub Copilot 场景）[13], [12].  \n  - 多步自主 agent / multi‑tool agents / long‑running agents：需要更复杂的 harness（state persistence、orchestration、inter‑agent coordination、长期监控），并通常依赖信号工程来管理会话质量与用户放弃风险（Factory Signals、Anthropic 的长会话 harness 设计）[4], [9], [16].  \n- 对 correctness、robustness、safety、可维护性的角色：harness 在提升首轮正确率（通过 validators 与 restrictions）、提高鲁棒性（错误恢复、重试）、提升安全（权限与输出过滤）、并降低维护与复核成本（自动化修复/测试）方面发挥直接作用；而 evaluation harness 则负责定量化这些改进是否真实生效并防止 regressions（通过可重复的基准）[2], [15], [18], [16].\n\n## 五、分歧点与争议（社区/行业内主要未决问题）\n- 自动化 vs 人工评审比例：少数案例（例如 Anthropic 的 Code Review 试验）显示 agent 发现问题率高且工程师通常接受，但社区讨论（GitHub 社区讨论）仍强调“agent 应提议但不主导”这种谨慎立场，表明对完全自动化合并的接受度并非一致 [14], [13].  \n- 度量方法与优先指标：学术/工业间存在对“正确率”定义的争议——执行型指标（pass@k、test passing）适合可执行代码，但对复杂工程任务不足；过程性指标（修改轨迹、多步骤成功率）与诊断反馈被提倡作为补充 [20], [16], [21].  \n- 信号隐私/合规问题：产品化信号体系倾向于不把原始对话直接暴露给人工分析（Factory Signals 的方法），但如何在保隐私的前提下保留可操作信号仍是实践难题 [4].  \n- Benchmarks 的数据污染与现实代表性：SWE‑Bench++ 等提出污染检测措施，反映出基准数据与生产数据一致性的持续挑战 [23].  \n- 定义范围争议：部分工业博客/文章把“harness”用于宽义平台（包括 orchestration、SDK），而其他标准化讨论把它限制为运行时验证层，社区尚未形成统一术语边界（Martin Fowler 与多个工程博客存在表述差异）[2], [1].\n\n## 六、行业信号与案例短示例（3–6 个）\n案例一：Anthropic — Code Review 与 Agentic Coding 报告  \n- 信号：Anthropic 推出 Code Review（agent squad）并发布 Agentic Coding 趋势报告，展示多 agent 专长分工与长会话 harness 的应用场景与成效数据（高问题发现率与工程师接受度）[14], [10].  \n- 含义：多 agent + harness 在大规模代码审查/生成场景已进入可用预览阶段，表明企业级采用在推进。  \n\n案例二：Factory Signals（信号工程产品化）  \n- 信号：Factory 的 Signals 平台把会话批量抽取、分类摩擦并与后端日志关联，用以识别如“context churn”的摩擦模式，且计划从每日批处理走向实时化[4].  \n- 含义：对用户行为与后端错误关联的信号工程正在成为改进 agent 的重要产品闭环。  \n\n案例三：GitHub Copilot（IDE 集成与自评机制）  \n- 信号：Copilot 的 coding agent 引入 model picker、自评（self‑review）与自动安全扫描等功能，表明 IDE 层面的 harness 能力向内嵌化方向发展 [13].  \n- 含义：面向开发者的生产工具正在把验证器与合规检查嵌入日常工作流，提升首轮交付的可信度。  \n\n案例四：BigCode / SWE‑bench / VeRO（评估生态）  \n- 信号：开源评估 harness 与学术预印本（BigCode、SWE‑bench、VeRO）展示了对可复现执行与轨迹化评估的重视，为比较与回归检测提供基础 [17], [18], [16].  \n- 含义：评估基础设施成为衡量 harness 改进能否落地的必要条件。\n\n## 七、写作与传播角度（面向中文读者，5–7 个可写切入点）\n1. 方法论解读（技术深读）  \n   - 内容要点：解释 harness 的组成（tools、validators、memory、orchestrator）、信号工艺与评估链路。  \n   - 需要证据：Martin Fowler 的理论框架、Firecrawl 与 Alex Lavaee 的工程实践描述、Factory Signals 的产品化说明 [2], [1], [6], [4].  \n\n2. 工程实操指南（面向开发者/工程经理）  \n   - 内容要点：如何从零搭建简单 harness（linters→tests→retry→monitor），如何把评估 harness 与 CI 集成。  \n   - 需要证据：SWE‑bench / BigCode 的评估流程、GitHub Copilot 与 Harness 平台的产品文档 [18], [17], [13], [7].  \n\n3. 对比分析（产品/平台）  \n   - 内容要点：比较厂商在 harness 能力上的差异（IDE 嵌入 vs 平台级治理 vs 信号平台）。  \n   - 需要证据：Harness 文档、GitHub Copilot 更新、Factory Signals、Anthropic 报告 [7], [13], [4], [10].  \n\n4. 行业趋势预测（策略类）  \n   - 内容要点：基于 Anthropic 报告与社区开源趋势，讨论未来角色分工（orchestrator、harness 工程师）与平台化方向。  \n   - 需要证据：Anthropic 报告、community resources（awesome list）、招聘/产品信号（可作为后续采访目标）[10], [19].  \n\n5. 风险与合规专题（治理/隐私）  \n   - 内容要点：讨论信号收集的隐私边界、数据污染、审计链路的必要性。  \n   - 需要证据：Factory Signals（不暴露原始会话）、SWE‑Bench++ 的污染控制措施 [4], [23].  \n\n6. 案例研究（Deep Dive）  \n   - 内容要点：1–2 个公司深度剖析（如 Anthropic、GitHub、Factory）——技术实现、组织流程、收益与成本。  \n   - 需要证据：Anthropic Code Review 报道、GitHub Copilot 博文、Factory Signals 文档 [14], [13], [4].  \n\n7. 基准与指标指南（为研究者/评测工程师）  \n   - 内容要点：如何构建可用的评估套件（何时用 pass@k、何时用过程性指标），以及如何做 contamination 控制。  \n   - 需要证据：CodeBLEU/执行评估论文、VeRO/SWE‑bench++ 文献与 OpenAI Evals 指南 [20], [16], [23], [11].\n\n## 八、输出形式与优先级（可直接交付给编辑/记者）\n建议交付包结构与优先级：\n1. 一页执行摘要（供首页直接引用） — 已包含于本报告开头（高优先级）。  \n2. 术语表（清晰定义与对照） — 中高优先级（见下方“术语表”）。  \n3. 按主题分的证据清单与原文链接（英文原文优先，每条两句摘录/要点） — 中优先级（下文“证据清单”）。  \n4. 实践清单与工具列表（简明操作步骤与推荐开源/平台） — 中优先级（见第三节）。  \n5. 分歧点与写作角度建议（含采访问题） — 中高优先级（见第五节、第七节与下文采访建议）。  \n6. 证据缺口与后续采访清单 — 高优先级（见下节）。\n\n## 九、证据缺口（Evidence Gaps）与后续采访/数据采集建议\n证据缺口：\n- thenewstack 的优先文章（用户优先参考的链接）在本次证据集中未包含，无法核实其具体表述（需后续检索原文）。  \n- 量化的行业采用率（例如多少公司在生产中部署 harness engineering）与招聘数据在当前证据中缺失。  \n- 用户/组织关于隐私合规与审计实施细节（如何在信号处理时保证最小化暴露）的具体实现细节不足。\n\n建议后续采访对象与问题（示例）\n- Factory.ai（产品负责人或研究负责人）  \n  - 问：Signals 从每日批处理迁移到实时的技术与成本挑战是什么？对隐私合规采取了哪些具体脱敏或聚合策略？[4]  \n- Anthropic（工程团队/产品负责人）  \n  - 问：Code Review 的 agent squad 在实际生产中引入的审计/复核流程如何设计？人工拒绝/接受的阈值如何设定？[14], [9]  \n- GitHub Copilot / Harness / OpenAI（产品或工程负责人）  \n  - 问：在 IDE 与 CI 层面把验证器嵌入 workflow 时，如何权衡自动合并与人工审查？是否有针对 patch provenance 的可追溯性实践？[13], [7], [11]  \n- 开源评估项目维护者（SWE‑bench / BigCode / VeRO）  \n  - 问：评估 harness 在复制真实工程复杂性的限制在哪里？如何防止数据污染与保证 bench 的长期可用性？[17], [18], [16]\n\n## 十、术语表（推荐在面向中文读者的文章中使用）\n- harness engineering（harness 工程）：为 AI agents 设计运行时环境、工具/权限、验证器与信号回路的工程学科，目标是提高首轮正确率与可控性 [1], [2].  \n- evaluation harness / test harness（评估/测试 harness）：可重复、容器化的评估/基准框架，用于衡量 agent/模型在标准任务上的表现 [17], [18].  \n- signal engineering（信号工程）：生成、抽取与处理用于驱动 agent 改进的行为与运行信号（如失败日志、context churn、测试不通过）[4].  \n- feedback loop（反馈回路）：从 agent 输出到系统改进的闭环（可批量或实时）[4], [16].  \n- orchestrator（编排器）：负责决定模型调用序列的组件，通常与 harness 协同，但主要关注决策序列而非执行守护[1].\n\n## 十一、证据清单（按主题，英文原文优先；每条两句摘录/要点）\n注：每条仅保留两句高度概括的摘录/要点，供编辑直接引用或进一步阅读。\n\n产品/平台文档与博文\n[1] https://firecrawl.dev/blog/what-is-an-agent-harness  \n- 摘录：Agent harness 是在模型推理之外管理工具执行、内存、状态持久化與错误恢复的运行时基础设施。Harness engineering 把每一次 agent 失败视为可修复的工程问题，而非仅靠重试或 prompt 调整。  \n\n[2] https://martinfowler.com/articles/harness-engineering.html  \n- 摘录：提出“outer harness”概念，目标是提高首轮正确率并通过引导与传感器（linters、tests、人工评审）形成自我修正的闭环。强调 harness 与 context engineering 的区别与互补性。  \n\n[3] https://mindstudio.ai/blog/ai-coding-agent-harness-stripe-shopify-airbnb/  \n- 摘录：总结Stripe、Shopify、Airbnb 等企业的实践模式：窄域 agent、结构化上下文管理、验证循环与多步编排。指出 harness 通过定义可运行的自动化边界来增加可信度，而非提升模型“更聪明”。  \n\n[4] https://factory.ai/news/factory-signals  \n- 摘录：Factory Signals 以每日批处理方式从 BigQuery 抽取会话并分类摩擦信号，能在不暴露原始对话的前提下提取抽象模式（如 context churn），并计划走向实时化以支持会话内纠正。Signals 还能将摩擦聚类为新功能建议。  \n\n[5] https://humanlayer.dev/blog/skill-issue-harness-engineering-for-coding-agents  \n- 摘录：将 coding agent 定义为“模型 + harness”，并指出 harness 包括外部运行时配置（速率限制、验证与后退策略）。引用 OpenAI 将错误视为配置问题的表述作为实践启示。  \n\n[6] https://alexlavaee.me/blog/harness-engineering-why-coding-agents-need-infrastructure  \n- 摘录：描述 OpenAI/Anthropic 在大规模代码生成实验中依赖 harness（脚手架、反馈环及机器可读约束）以获得高吞吐与低监控成本。强调三层上下文架构在长期任务中的重要性。  \n\n[7] https://developer.harness.io/docs/platform/harness-ai/code-agent  \n- 摘录：Harness AI Code Agent 在 VS Code 中提供实时代码建议、自动化测试生成与基于项目上下文的解释功能，表明 harness 能直接嵌入 IDE 流程。  \n\n[8] https://developer.harness.io/docs/platform/harness-ai/harness-agents  \n- 摘录：Harness agents 在 CI/CD 管道中作为步骤运行，继承权限、治理与可查询的组织知识图谱，支持版本化與 Git 管理。  \n\n[9] https://anthropic.com/engineering/effective-harnesses-for-long-running-agents  \n- 摘录：Anthropic 描述了针对长运行 agent 的三阶段 harness（初始化、编码 agent、环境管理）以维持会话跨时一致性并简化组件。  \n\n研究/产品报告与新闻\n[10] https://resources.anthropic.com/2026%20Agentic%20Coding%20Trends%20Report.pdf  \n- 摘录：Anthropic 的趋势报告认为工程师角色将转向 orchestrator/评审，并预测单体 agent 将进化为协调团队以解决更高复杂度任务。报告列举了企业内部广泛部署 agent 的案例与影响。  \n\n[11] https://developers.openai.com/api/docs/guides/agent-evals/  \n- 摘录：OpenAI 提供 agent evals 的工具与指南，推荐使用 Datasets 构建 evals 并提供 trace‑grading 与大规模运行功能以进行系统级错误识别。  \n\n[12] https://developers.openai.com/api/docs/guides/code-generation/  \n- 摘录：OpenAI 的代码生成指南讨论将模型与 harness 协同使用的场景与工具推荐，反映厂商在文档层面对 harness 的推广。  \n\n[13] https://github.blog/ai-and-ml/github-copilot/whats-new-with-github-copilot-coding-agent/  \n- 摘录：GitHub Copilot coding agent 引入 model picker、自我审查、安全扫描与自定义 agents 目录，示例把安全/依赖扫描自动化纳入 agent 工作流。  \n\n[14] https://aicerts.ai/news/anthropic-debuts-code-review-with-ai-coding-agents/  \n- 摘录：Anthropic 的 Code Review 试验显示在大文件审查中 agent 能在大多数案例中发现问题且工程师对 agent 评论的拒绝率极低，提示 agent 在审查场景的可接受性。  \n\n工程原则与实践总结\n[15] https://neon.com/blog/six-principles-for-production-ai-agents  \n- 摘录：提出六项用于生产 agent 的原则，强调使用编译器/linters/tests 作为简单验证器，并推荐 actor‑critic 两阶段反馈设计。  \n\n开源评估与研究实现\n[16] https://arxiv.org/html/2602.22480v1  \n- 摘录：VeRO 提供版本化快照、预算控制與结构化执行轨迹，可用于优化 coding agent 并显示不同编排策略导致的行为多样性差异。  \n\n[17] https://github.com/bigcode-project/bigcode-evaluation-harness  \n- 摘录：BigCode 的评估 harness 为自回归代码模型提供 Docker 化的生成与评估框架，支持可重复的模型比较。  \n\n[18] https://swebench.com/SWE-bench  \n- 摘录：SWE‑bench 通过容器化将模型补丁应用到真实仓库并运行原仓库测试，强调可复现性与资源要求（例如容器、存储）。  \n\n基准、评测与代码质量研究\n[19] https://github.com/Picrew/awesome-agent-harness  \n- 摘录：社区维护的“awesome”清单汇集了 agent harness 相关框架、运行时与参考阅读，便于快速了解生态与实现选项。  \n\n[20] https://arxiv.org/html/2504.13472v2  \n- 摘录：CodeBLEU 等研究讨论兼顾语法/语义与执行的评估指标，并指出执行型指标对可执行代码更适用但有局限。  \n\n[21] https://arxiv.org/html/2504.01931v3  \n- 摘录：Intercode 提出使用面向执行的 reward 信号评估代理在多域（Bash、Python、SQL）任务的成功率與进展率指标。  \n\n[22] https://arxiv.org/html/2603.23448v1  \n- 摘录：c‑CRAB 将实际 PR 的人类审查反馈转换为可执行测试以评估代码审查 agent，并显示当前 agent 的解决率仍有显著提升空间。  \n\n[23] https://arxiv.org/html/2512.17419v1  \n- 摘录：SWE‑Bench++ 扩展了多语言支持并引入状态差分 oracle 与污染感知机制，以提升基准对真实工程场景的代表性与可信度。  \n\n行业/公司博客与观点汇总\n[24] https://epsilla.com/blogs/harness-engineering-evolution-prompt-context-autonomous-agents  \n- 摘录：讨论“语义图/蓝图”作为终极 harness 的构想，并引用 Stripe、OpenAI、Anthropic 的内部实践以说明 harness 在自动化大规模变更中的作用。  \n\n[25] https://harness.io/blog/ai-deployment-in-production-orchestrate-llms-rag-agents  \n- 摘录：倡导把 prompts 与配置视为代码，并在输入/输出/动作层面嵌入 guardrails 以实现安全部署與治理。  \n\n## 参考文献（Sources）\n[1] https://firecrawl.dev/blog/what-is-an-agent-harness  \n[2] https://martinfowler.com/articles/harness-engineering.html  \n[3] https://mindstudio.ai/blog/ai-coding-agent-harness-stripe-shopify-airbnb/  \n[4] https://factory.ai/news/factory-signals  \n[5] https://humanlayer.dev/blog/skill-issue-harness-engineering-for-coding-agents  \n[6] https://alexlavaee.me/blog/harness-engineering-why-coding-agents-need-infrastructure  \n[7] https://developer.harness.io/docs/platform/harness-ai/code-agent  \n[8] https://developer.harness.io/docs/platform/harness-ai/harness-agents  \n[9] https://anthropic.com/engineering/effective-harnesses-for-long-running-agents  \n[10] https://resources.anthropic.com/2026%20Agentic%20Coding%20Trends%20Report.pdf  \n[11] https://developers.openai.com/api/docs/guides/agent-evals/  \n[12] https://developers.openai.com/api/docs/guides/code-generation/  \n[13] https://github.blog/ai-and-ml/github-copilot/whats-new-with-github-copilot-coding-agent/  \n[14] https://aicerts.ai/news/anthropic-debuts-code-review-with-ai-coding-agents/  \n[15] https://neon.com/blog/six-principles-for-production-ai-agents  \n[16] https://arxiv.org/html/2602.22480v1  \n[17] https://github.com/bigcode-project/bigcode-evaluation-harness  \n[18] https://swebench.com/SWE-bench  \n[19] https://github.com/Picrew/awesome-agent-harness  \n[20] https://arxiv.org/html/2504.13472v2  \n[21] https://arxiv.org/html/2504.01931v3  \n[22] https://arxiv.org/html/2603.23448v1  \n[23] https://arxiv.org/html/2512.17419v1  \n[24] https://epsilla.com/blogs/harness-engineering-evolution-prompt-context-autonomous-agents  \n[25] https://harness.io/blog/ai-deployment-in-production-orchestrate-llms-rag-agents\n\n（报告结束）",
+    "sources": [
+      {
+        "url": "https://www.firecrawl.dev/blog/what-is-an-agent-harness",
+        "title": "What Is an Agent Harness? The Infrastructure That Makes AI Agents ...",
+        "favicon": "https://www.firecrawl.dev/favicon.png"
+      },
+      {
+        "url": "https://developer.harness.io/docs/platform/harness-ai/code-agent",
+        "title": "Harness AI Code Agent | Harness Developer Hub",
+        "favicon": "https://developer.harness.io/img/hdh_fav_icon_grey.ico"
+      },
+      {
+        "url": "https://www.mindstudio.ai/blog/ai-coding-agent-harness-stripe-shopify-airbnb/",
+        "title": "What Is an AI Coding Agent Harness? How Stripe, Shopify, and ...",
+        "favicon": "https://www.mindstudio.ai/favicon.svg"
+      },
+      {
+        "url": "https://martinfowler.com/articles/harness-engineering.html",
+        "title": "Harness engineering for coding agent users - Martin Fowler",
+        "favicon": "https://martinfowler.com/favicon.ico"
+      },
+      {
+        "url": "https://factory.ai/news/factory-signals",
+        "title": "Signals: Toward a Self-Improving Agent | Factory.ai",
+        "favicon": "https://factory.ai/favicon.svg"
+      },
+      {
+        "url": "https://www.humanlayer.dev/blog/skill-issue-harness-engineering-for-coding-agents",
+        "title": "Skill Issue: Harness Engineering for Coding Agents | HumanLayer Blog",
+        "favicon": "https://www.humanlayer.dev/favicon.ico?favicon.b590251f.ico"
+      },
+      {
+        "url": "https://alexlavaee.me/blog/harness-engineering-why-coding-agents-need-infrastructure",
+        "title": "How to Harness Coding Agents with the Right Infrastructure | Blog",
+        "favicon": "https://alexlavaee.me/favicon.ico"
+      },
+      {
+        "url": "https://www.harness.io/blog/ai-deployment-in-production-orchestrate-llms-rag-agents",
+        "title": "AI Deployment in 2026: CI/CD for LLMs & Agents - Harness",
+        "favicon": "https://cdn.prod.website-files.com/6222ca42ea87e1bd1aa1d10c/62245acc1b2f1040941f0d8f_webclip.png"
+      },
+      {
+        "url": "https://neon.com/blog/six-principles-for-production-ai-agents",
+        "title": "Six Principles for Production AI Agents - Neon",
+        "favicon": "https://neon.com/apple-touch-icon-152x152.png"
+      },
+      {
+        "url": "https://github.com/Picrew/awesome-agent-harness",
+        "title": "Picrew/awesome-agent-harness - GitHub",
+        "favicon": "https://github.githubassets.com/favicons/favicon.svg"
+      },
+      {
+        "url": "https://developer.harness.io/docs/platform/harness-ai/harness-agents",
+        "title": "Harness Agents | Harness Developer Hub",
+        "favicon": "https://developer.harness.io/img/hdh_fav_icon_grey.ico"
+      },
+      {
+        "url": "https://alexlavaee.me/blog/harness-engineering-why-coding-agents-need-infrastructure/",
+        "title": "How to Harness Coding Agents with the Right Infrastructure | Blog",
+        "favicon": "https://alexlavaee.me/favicon.ico"
+      },
+      {
+        "url": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
+        "title": "Effective harnesses for long-running agents - Anthropic",
+        "favicon": "https://cdn.prod.website-files.com/67ce28cfec624e2b733f8a52/67d31dd7aa394792257596c5_webclip.png"
+      },
+      {
+        "url": "https://www.aicerts.ai/news/anthropic-debuts-code-review-with-ai-coding-agents/",
+        "title": "Anthropic Debuts Code Review With AI Coding Agents - AI CERTs",
+        "favicon": "https://www.aicerts.ai/wp-content/uploads/2025/05/favicon-logo.png"
+      },
+      {
+        "url": "https://developers.openai.com/api/docs/guides/code-generation/",
+        "title": "Code generation | OpenAI API",
+        "favicon": "https://developers.openai.com/favicon.png"
+      },
+      {
+        "url": "https://developers.openai.com/api/docs/guides/agent-evals/",
+        "title": "Agent evals | OpenAI API",
+        "favicon": "https://developers.openai.com/favicon.png"
+      },
+      {
+        "url": "https://arxiv.org/html/2504.13472v2",
+        "title": "An Agent-based Evaluation Framework for Complex Code Generation",
+        "favicon": "https://arxiv.org/static/browse/0.3.4/images/icons/apple-touch-icon.png"
+      },
+      {
+        "url": "https://github.blog/ai-and-ml/github-copilot/whats-new-with-github-copilot-coding-agent/",
+        "title": "What's new with GitHub Copilot coding agent",
+        "favicon": "https://github.blog/wp-content/uploads/2019/01/cropped-github-favicon-512.png?fit=180%2C180"
+      },
+      {
+        "url": "https://www.epsilla.com/blogs/harness-engineering-evolution-prompt-context-autonomous-agents",
+        "title": "Why Harness Engineering Replaced Prompting in 2026 | Epsilla Blog",
+        "favicon": "https://www.epsilla.com/favicon.ico"
+      },
+      {
+        "url": "https://arxiv.org/html/2602.22480v1",
+        "title": "VeRO: An Evaluation Harness for Agents to Optimize Agents - arXiv",
+        "favicon": "https://arxiv.org/static/browse/0.3.4/images/icons/apple-touch-icon.png"
+      },
+      {
+        "url": "https://arxiv.org/html/2603.23448v1",
+        "title": "Code Review Agent Benchmark - arXiv",
+        "favicon": "https://arxiv.org/static/browse/0.3.4/images/icons/apple-touch-icon.png"
+      },
+      {
+        "url": "https://arxiv.org/html/2504.01931v3",
+        "title": "On the Role of Feedback in Test-Time Scaling of Agentic AI Workflows",
+        "favicon": "https://arxiv.org/static/browse/0.3.4/images/icons/apple-touch-icon.png"
+      },
+      {
+        "url": "https://github.com/bigcode-project/bigcode-evaluation-harness",
+        "title": "Code Generation LM Evaluation Harness - GitHub",
+        "favicon": "https://github.githubassets.com/favicons/favicon.svg"
+      },
+      {
+        "url": "https://arxiv.org/html/2512.17419v1",
+        "title": "SWE-Bench++: A Framework for the Scalable Generation of ... - arXiv",
+        "favicon": "https://arxiv.org/static/browse/0.3.4/images/icons/apple-touch-icon.png"
+      }
+    ],
+    "status": "completed",
+    "created_at": "2026-04-05T14:59:50.146580+00:00",
+    "response_time": 236.53,
+    "request_id": "a7288379-b892-4fee-980c-22e5ed124a8e"
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "generated_at": "2026-04-05T22:58:24",
+  "request": {
+    "profile": "custom",
+    "sources": [
+      "hackernews",
+      "github",
+      "ai_newsletters",
+      "essays",
+      "producthunt"
+    ],
+    "keyword": "harness engineering,coding agents,feedback signals",
+    "limit": 5,
+    "deep": true,
+    "title": "Harness Engineering 海外扫描",
+    "request_path": "/tmp/harness-overseas-news.md"
+  },
+  "vendor_skill_path": "/Users/Abigale/All_project/content_system/skills/news-aggregator-skill",
+  "command": [
+    "/Users/Abigale/All_project/content_system/.venv/bin/python",
+    "/Users/Abigale/All_project/content_system/skills/news-aggregator-skill/scripts/fetch_news.py",
+    "--source",
+    "hackernews,github,ai_newsletters,essays,producthunt",
+    "--limit",
+    "5",
+    "--no-save",
+    "--keyword",
+    "harness engineering,coding agents,feedback signals",
+    "--deep"
+  ],
+  "stderr": "HN Algolia failed: HTTPSConnectionPool(host='hn.algolia.com', port=443): Read timed out. (read timeout=10)\nSmart Fill triggered: Found 0 items, filling gaps...\nDeep fetching content for 5 items...\n",
+  "items": [
+    {
+      "source": "Hacker News",
+      "title": "Someone at BrowserStack Is Leaking Users' Email Address",
+      "url": "https://shkspr.mobi/blog/2026/04/someone-at-browserstack-is-leaking-users-email-address/",
+      "hn_url": "https://news.ycombinator.com/item?id=47649117",
+      "heat": "176 points",
+      "time": "⚠️ 1 hour ago",
+      "smart_fill": true,
+      "content": "Someone at BrowserStack is Leaking Users’ Email Address – Terence Eden’s Blog Theme Switcher: 🌒 Dark 🌞 Light 📰 eInk 💻 xterm 🥴 Drunk 👻 Nude ♻️ Reset Like all good nerds, I generate a unique email address for every service I sign up to. This has several advantages - it allows me to see if a message is legitimately from a service, if a service is hacked the hackers can't go credential stuffing, and I instantly know who leaked my address. A few weeks ago I signed up for BrowserStack as I wanted to join their Open Source programme. I had a few emails back-and-forth with their support team and finally got set up. A couple of days later I received an email to that email address from someone other than BrowserStack. After a brief discussion, the emailer told me they got my details from Apollo.io. Naturally, I reached out to Apollo to ask them where they got my details from. They replied: Your email address was derived using our proprietary algorithm that leverages publicly accessible information combined with typical corporate email structures (e.g., firstname.lastname@companydomain.com). Wow! A proprietary algorithm, eh? I wonder how much AI it takes to work out \"firstname.lastname\"???? Obviously, their response was inaccurate. There's no way their magical if-else statement could have derived the specific email I'd used with BrowserStack. I called them out on their bullshit and they replied with: Your email address came from BrowserStack (browserstack.com) one of our customers who participates in our customer contributor network by sharing their business contacts with the Apollo platform. The date of collection is 2026-02-25. So I emailed BrowserStack a simple \"Hey guys, what the fuck?\" I love their cheery little \"No spam, we promise!\" Despite multiple attempts to contact them, BrowserStack never replied. Given that this email address was only used with one company, I think there are a few likely possibilities for how Apollo got it. BrowserStack routinely sell or give away their users' data. A third-party service used by BrowserStack siphons off information to send to others. An employee or contractor at BrowserStack is exfiltrating user data and transferring it elsewhere. There are other, more nefarious, explanations - but I consider that to be unlikely. I suspect it is just the normalisation of the shabby trade in personal information undertaken by entities with no respect for privacy. But, it turns out, it gets worse. My next blog post reveals how Apollo got my phone number from from a very big company. Be seeing you 👌 Share this post on… Voluntary Paywall Enjoyed this post? Show your support and pay the author. 3 thoughts on “Someone at BrowserStack is Leaking Users' Email Address” John William David Thomson @blog I'm assuming BrowserStack uses some sort of CRM type thing that does this, either in a \"you give us your contacts in exchange for $/access to other customers' contacts\" or just on the sly at the CRM provider's benefit. Reply | Reply to ori"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Finnish sauna heat exposure induces stronger immune cell than cytokine responses",
+      "url": "https://www.tandfonline.com/doi/full/10.1080/23328940.2026.2645467#abstract",
+      "hn_url": "https://news.ycombinator.com/item?id=47649113",
+      "heat": "70 points",
+      "time": "⚠️ 1 hour ago",
+      "smart_fill": true
+    },
+    {
+      "source": "Hacker News",
+      "title": "Iguanaworks has closed down. USB Infrared hardware open source maker",
+      "url": "http://iguanaworks.net/products/usb-ir-transceiver.html",
+      "hn_url": "https://news.ycombinator.com/item?id=47649148",
+      "heat": "43 points",
+      "time": "⚠️ 1 hour ago",
+      "smart_fill": true,
+      "content": "USB IR Transceiver | Iguanaworks (now out of business) Skip to the content. USB device to send and receive IR: have your computer send IR signals to your DVR; receive IR signals from a remote control. Works under Linux and Windows. Our standard USB IR Transceiver can send and receive infra-red (IR) signals. It comes in 3 different variations. Common to all versions: Receive Standard 38 kHz IR Signals Transmit IR Codes at (25 – 125 kHz carrier frequency) USB device works under Linux and Windows The difference between the three version are how IR is transmitted and received: Dual Socket : Contains two stereo 3.5mm jacks for connecting wired IR emitters (also called blasters). Each jack can control two independent transmit channels, enabling a total of 4 independent IR sending channels. To transmit IR using this device, you need one of our IR Emitters per channel. To use two channels per socket, you need a stereo->mono adapter . Device has one on-board receive unit. Socket Receive : One stereo 3.5mm jack for connecting wired IR emitters and one stereo 3.5mm jack for connecting a wired receiver . Transmit Channels Device Type Port A Port B Dual Socket Channels 1 & 2* Channels 3 & 4* Socket Receive Channels 1 & 2* Receive Socket * Channel only accessible with stereo->mono adapter Uses on-board LED Requires wired IR emitter Receive Channels Dual Socket, Dual LED and Hybrid all have on-board IR receivers opposite USB connector. Socket Receive version does not have on-board IR receiver, but Port B accepts a wired IR receiver . Socket Receive cannot receive IR signals without a separate wired IR receiver. Specs Receive standard 38kHz carrier IR signals used by most remotes Transmit IR with 10ft transmit range (depending on receiver) and 50° cone angle USB device compatible with USB 1.1 and 2.0 Transmit IR on up to 4 independent channels. User adjustable transmission carrier frequency from 25kHz to 100kHz Compatible with LIRC and WinLIRC Overview Our USB IR Transmitter/Receiver is a standard USB device that can transmit and receive the infrared codes supported by LIRC (Linux only) and WinLIRC (Windows only). Combined with (Win)LIRC, this device can communicate with most home electronics, such as TVs, stereos, DVD players, receivers, and their associated remote controls. When used with MythTV , you can turn your computer into a TiVo-like media center. We can send and receive IR under Linux and Windows. We do not support MAC OS X, although there is an UNSUPPORTED MAC OS/X project . Decoding remote control commands is currently supported under Linux via LIRC and under Windows via WinLIRC . Our software, both binaries and source code, is available in the Downloads section and is licensed under the GPL . We happily accept patches to our code. We would like to extend the ability to decode remote control signals MAC OS/X either through LIRC or an alternative. Accessories Wired IR Emitter Wired IR Receiver Stereo -> Mono Splitter"
+    },
+    {
+      "source": "Hacker News",
+      "title": "The threat is comfortable drift toward not understanding what you're doing",
+      "url": "https://ergosphere.blog/posts/the-machines-are-fine/",
+      "hn_url": "https://news.ycombinator.com/item?id=47647788",
+      "heat": "419 points",
+      "time": "⚠️ 5 hours ago",
+      "smart_fill": true,
+      "content": "The machines are fine. I'm worried about us. The machines are fine. I'm worried about us. Mar 30, 2026 # ai # llm # science # physics # academia Imagine you're a new assistant professor at a research university. You just got the job, you just got a small pot of startup funding, and you just hired your first two PhD students: Alice and Bob. You're in astrophysics. This is the beginning of everything. You do what your supervisor did for you, years ago: you give each of them a well-defined project. Something you know is solvable, because other people have solved adjacent versions of it. Something that would take you, personally, about a month or two. You expect it to take each student about a year, because they don't know what they're doing yet, and that's the point. The project isn't the deliverable. The project is the vehicle. The deliverable is the scientist that comes out the other end. Alice's project is to build an analysis pipeline for measuring a particular statistical signature in galaxy clustering data. Bob's is something similar in scope and difficulty, a different signal, a different dataset, the same basic arc of learning. You send them each a few papers to read, point them at some publicly available data, and tell them to start by reproducing a known result. Then you wait. The academic year unfolds the way academic years do. You have weekly meetings with each student. Alice gets stuck on the coordinate system. Bob can't get his likelihood function to converge. Alice writes a plotting script that produces garbage. Bob misreads a sign convention in a key paper and spends two weeks chasing a factor-of-two error. You give them both similar feedback: read the paper again, check your units, try printing the intermediate output, think about what the answer should look like before you look at what the code gives you. Normal things. The kind of things you say fifty times a year and never remember saying. By summer, both students have finished. Both papers are solid. Not groundbreaking, not going to change the field, but correct, useful, and publishable. Both go through a round of minor revisions at a decent journal and come out the other side. A perfectly ordinary outcome. The kind of outcome that the entire apparatus of academic training is designed to produce. But Bob has a secret. Unlike Alice, who spent the year reading papers with a pencil in hand, scribbling notes in the margins, getting confused, re-reading, looking things up, and slowly assembling a working understanding of her corner of the field, Bob has been using an AI agent. When his supervisor sent him a paper to read, Bob asked the agent to summarize it. When he needed to understand a new statistical method, he asked the agent to explain it. When his Python code broke, the agent debugged it. When the agent's fix introduced a new bug, it debugged that too. When it came time to write the paper, the agent wrote it. Bob's weekly updates to his supervisor were indistinguishable from A"
+    },
+    {
+      "source": "Hacker News",
+      "title": "Talk like caveman",
+      "url": "https://github.com/JuliusBrussee/caveman",
+      "hn_url": "https://news.ycombinator.com/item?id=47647455",
+      "heat": "257 points",
+      "time": "⚠️ 6 hours ago",
+      "smart_fill": true,
+      "content": "GitHub - JuliusBrussee/caveman: 🪨 why use many token when few token do trick — Claude Code skill that cuts 75% of tokens by talking like caveman · GitHub Skip to content You signed in with another tab or window. Reload to refresh your session. You signed out in another tab or window. Reload to refresh your session. You switched accounts on another tab or window. Reload to refresh your session. Dismiss alert JuliusBrussee / caveman Public Notifications You must be signed in to change notification settings Fork 11 Star 575 main Branches Tags Go to file Code Open more actions menu Folders and files Name Name Last commit message Last commit date Latest commit History 7 Commits 7 Commits .claude-plugin .claude-plugin caveman caveman skills/ caveman skills/ caveman .gitattributes .gitattributes LICENSE LICENSE README.md README.md caveman.skill caveman.skill View all files Repository files navigation caveman why use many token when few token do trick Install • Before/After • Why A Claude Code skill that makes Claude talk like a caveman — cutting ~75% of tokens while keeping full technical accuracy. Based on the viral observation that caveman-speak dramatically reduces LLM token usage without losing technical substance. So we made it a one-line install. Before / After 🗣️ Normal Claude (69 tokens) \"The reason your React component is re-rendering is likely because you're creating a new object reference on each render cycle. When you pass an inline object as a prop, React's shallow comparison sees it as a different object every time, which triggers a re-render. I'd recommend using useMemo to memoize the object.\" 🪨 Caveman Claude (19 tokens) \"New object ref each render. Inline object prop = new ref = re-render. Wrap in useMemo .\" 🗣️ Normal Claude \"Sure! I'd be happy to help you with that. The issue you're experiencing is most likely caused by your authentication middleware not properly validating the token expiry. Let me take a look and suggest a fix.\" 🪨 Caveman Claude \"Bug in auth middleware. Token expiry check use < not <= . Fix:\" Same fix. 75% less word. Brain still big. Install npx skills add JuliusBrussee/caveman Or with Claude Code plugin system: claude plugin marketplace add JuliusBrussee/caveman claude plugin install caveman@caveman One rock. That it. Usage Trigger with: /caveman \"talk like caveman\" \"caveman mode\" \"less tokens please\" Stop with: \"stop caveman\" or \"normal mode\" What Caveman Do Thing Caveman Do? English explanation 🪨 Caveman smash filler words Code blocks ✍️ Write normal (caveman not stupid) Technical terms 🧠 Keep exact (polymorphism stay polymorphism) Error messages 📋 Quote exact Git commits & PRs ✍️ Write normal Articles (a, an, the) 💀 Gone Pleasantries 💀 \"Sure I'd be happy to\" is dead Hedging 💀 \"It might be worth considering\" extinct Why ┌─────────────────────────────────────┐ │ TOKENS SAVED ████████ 75% │ │ TECHNICAL ACCURACY ████████ 100%│ │ SPEED INCREASE ████████ ~3x │ │ VIBES ████████ OOG │ └────────────────────────────────────"
+    }
+  ]
+}

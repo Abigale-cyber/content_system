@@ -47,8 +47,7 @@
       <main class="main-shell">
         <header class="topbar">
           <div>
-            <p class="eyebrow">wechat-studio subsystem</p>
-            <h2>微信包装子系统工作台</h2>
+            <p class="eyebrow topbar-title">wechat-studio subsystem</p>
           </div>
         </header>
 
@@ -86,70 +85,89 @@
                     <div class="article-switcher" id="articleSwitcherWrap">
                       <span class="article-switcher-label">当前文章</span>
                       <div class="article-switcher-row">
-                        <select id="articleSwitcher" aria-label="切换文章"></select>
+                        <div class="article-switcher-menu-wrap">
+                          <button
+                            class="article-switcher-trigger"
+                            id="articleSwitcherButton"
+                            type="button"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                          >
+                            <span class="article-switcher-current" id="articleSwitcherCurrent">当前工作区暂无文章</span>
+                            <span class="article-switcher-caret" aria-hidden="true">▾</span>
+                          </button>
+                          <div class="article-switcher-menu hidden" id="articleSwitcherMenu"></div>
+                        </div>
                         <span class="count-pill subtle" id="articleCount">0 篇</span>
                       </div>
-                    </div>
-                    <div class="status-badges">
-                      <span class="meta-chip" id="detailThemeBadge">视觉设置</span>
-                      <span class="meta-chip muted" id="detailCoverBadge">未选封面</span>
-                      <span class="meta-chip muted" id="detailDraftBadge">未推草稿</span>
                     </div>
                   </div>
                 </header>
 
                 <div class="detail-grid">
                   <div class="modules-column">
-                    <section class="module-card">
+                    <section class="module-card is-collapsible is-collapsed" id="articleInfoCard">
                       <div class="module-head">
                         <div>
                           <p class="eyebrow">模块二</p>
                           <h4>文章信息</h4>
                         </div>
+                        <button
+                          class="module-collapse-toggle"
+                          id="articleInfoToggle"
+                          type="button"
+                          aria-expanded="false"
+                          aria-controls="articleInfoContent"
+                        >
+                          <span class="module-collapse-toggle-label" id="articleInfoToggleLabel">展开</span>
+                          <span class="module-collapse-toggle-icon" aria-hidden="true">▾</span>
+                        </button>
                       </div>
 
-                      <div class="info-grid">
-                        <div class="info-item">
-                          <span class="info-label">作者</span>
-                          <strong id="infoAuthor">-</strong>
+                      <div class="module-content hidden" id="articleInfoContent" aria-hidden="true">
+                        <div class="info-grid">
+                          <div class="info-item">
+                            <span class="info-label">作者</span>
+                            <strong id="infoAuthor">-</strong>
+                          </div>
+                          <div class="info-item">
+                            <span class="info-label">字数</span>
+                            <strong id="infoChars">0</strong>
+                          </div>
+                          <div class="info-item wide">
+                            <span class="info-label">文章目录</span>
+                            <strong id="infoPath">-</strong>
+                          </div>
+                          <div class="info-item">
+                            <span class="info-label">更新时间</span>
+                            <strong id="infoUpdatedAt">-</strong>
+                          </div>
                         </div>
-                        <div class="info-item">
-                          <span class="info-label">字数</span>
-                          <strong id="infoChars">0</strong>
-                        </div>
-                        <div class="info-item wide">
-                          <span class="info-label">文章目录</span>
-                          <strong id="infoPath">-</strong>
-                        </div>
-                        <div class="info-item">
-                          <span class="info-label">更新时间</span>
-                          <strong id="infoUpdatedAt">-</strong>
-                        </div>
-                      </div>
 
-                      <div class="source-files source-file-grid">
-                        <div class="source-file">
-                          <span>source.md</span>
-                          <code id="sourcePath">-</code>
+                        <div class="source-files source-file-grid">
+                          <div class="source-file">
+                            <span>source.md</span>
+                            <code id="sourcePath">-</code>
+                          </div>
+                          <div class="source-file">
+                            <span>doocs.md</span>
+                            <code id="doocsPath">-</code>
+                          </div>
+                          <div class="source-file">
+                            <span>publish-pack.json</span>
+                            <code id="packPath">-</code>
+                          </div>
                         </div>
-                        <div class="source-file">
-                          <span>doocs.md</span>
-                          <code id="doocsPath">-</code>
-                        </div>
-                        <div class="source-file">
-                          <span>publish-pack.json</span>
-                          <code id="packPath">-</code>
-                        </div>
-                      </div>
 
-                      <div class="summary-box">
-                        <span class="info-label">摘要预览</span>
-                        <p id="infoSummary">-</p>
-                      </div>
+                        <div class="summary-box">
+                          <span class="info-label">摘要预览</span>
+                          <p id="infoSummary">-</p>
+                        </div>
 
-                      <div class="status-panel hidden" id="sourceWarningPanel">
-                        <strong>导入提醒</strong>
-                        <div class="warning-list" id="sourceWarningList"></div>
+                        <div class="status-panel hidden" id="sourceWarningPanel">
+                          <strong>导入提醒</strong>
+                          <div class="warning-list" id="sourceWarningList"></div>
+                        </div>
                       </div>
                     </section>
 
@@ -195,61 +213,6 @@
                       </div>
 
                       <div class="control-section">
-                        <div class="field-group">
-                          <label for="templateSelect">版式模板</label>
-                          <select id="templateSelect"></select>
-                          <p class="field-help" id="templateHint">控制标题区、小节结构和图文节奏。</p>
-                        </div>
-
-                        <div class="field-group">
-                          <label for="titleStyleSelect">标题样式</label>
-                          <select id="titleStyleSelect"></select>
-                        </div>
-
-                        <div class="field-group">
-                          <label for="bodySizeRange">正文字号</label>
-                          <div class="range-row">
-                            <input id="bodySizeRange" type="range" min="14" max="22" step="1" />
-                            <span class="range-readout" id="bodySizeValue">16px</span>
-                          </div>
-                        </div>
-
-                        <div class="field-group">
-                          <label for="lineHeightRange">行距</label>
-                          <div class="range-row">
-                            <input id="lineHeightRange" type="range" min="1.5" max="2.4" step="0.05" />
-                            <span class="range-readout" id="lineHeightValue">1.90</span>
-                          </div>
-                        </div>
-
-                        <div class="field-group">
-                          <label for="paragraphGapRange">段间距</label>
-                          <div class="range-row">
-                            <input id="paragraphGapRange" type="range" min="8" max="32" step="1" />
-                            <span class="range-readout" id="paragraphGapValue">16px</span>
-                          </div>
-                        </div>
-
-                        <div class="field-group">
-                          <label for="sectionStyleSelect">小节标题样式</label>
-                          <select id="sectionStyleSelect"></select>
-                        </div>
-
-                        <div class="field-group">
-                          <label for="imageRadiusRange">图片圆角</label>
-                          <div class="range-row">
-                            <input id="imageRadiusRange" type="range" min="0" max="32" step="1" />
-                            <span class="range-readout" id="imageRadiusValue">24px</span>
-                          </div>
-                        </div>
-
-                        <div class="field-group">
-                          <label for="imageSpacingRange">图片间距</label>
-                          <div class="range-row">
-                            <input id="imageSpacingRange" type="range" min="12" max="40" step="1" />
-                            <span class="range-readout" id="imageSpacingValue">22px</span>
-                          </div>
-                        </div>
                       </div>
                     </section>
 
@@ -259,17 +222,7 @@
                           <p class="eyebrow">模块四</p>
                           <h4>封面候选</h4>
                         </div>
-                        <button class="secondary-btn" id="generateCoverButton" type="button">重新生成封面候选</button>
-                      </div>
-
-                      <div class="field-group">
-                        <label for="coverPromptInput">封面提示词补充（可选）</label>
-                        <textarea
-                          id="coverPromptInput"
-                          rows="4"
-                          placeholder="比如：更像商业评论、增加留白、偏生活方式、不要人物、强调数据感..."
-                        ></textarea>
-                        <p class="field-help">系统会自动生成 4 种核心封面风格，你只需要补充方向和挑选当前封面。</p>
+                        <button class="secondary-btn" id="generateCoverButton" type="button">generate</button>
                       </div>
 
                       <div class="image-card hidden" id="coverResultCard">
@@ -278,7 +231,19 @@
                           <span id="coverResultMeta">未生成</span>
                         </div>
                         <img id="coverResultImage" alt="封面预览" />
-                        <p class="field-help" id="coverResultPrompt">生成后会展示提示词与素材路径。</p>
+                        <div class="cover-result-placeholder hidden" id="coverResultPlaceholder">
+                          这是当前文章的默认封面结构化 Prompt。你可以直接修改后点上方 generate；如果不改，就按默认逻辑生成封面候选。
+                        </div>
+                        <div class="generated-prompt-editor">
+                          <label class="generated-prompt-label" for="coverResultPromptInput">当前结构化 Prompt</label>
+                          <textarea
+                            class="generated-prompt-input"
+                            id="coverResultPromptInput"
+                            rows="12"
+                            placeholder="这里会展示当前封面的完整结构化 Prompt；修改后点上方 generate，可以按这版 Prompt 重生当前封面。"
+                          ></textarea>
+                          <p class="generated-prompt-help" id="coverResultPromptHelp">生成后会展示当前封面的完整结构化 Prompt 和本地路径。</p>
+                        </div>
                         <div class="history-actions">
                           <button class="primary-btn small" id="selectCoverButton" type="button">设为当前封面</button>
                           <button class="secondary-btn danger small image-delete-btn" id="deleteCoverButton" type="button">删除</button>
@@ -302,41 +267,14 @@
                           <p class="eyebrow">模块五</p>
                           <h4>正文配图</h4>
                         </div>
-                        <button class="secondary-btn" id="generateInlineButton" type="button">重新生成正文配图</button>
+                        <button class="secondary-btn" id="generateInlineButton" type="button">generate</button>
                       </div>
 
-                      <div class="field-group">
-                        <label for="inlinePromptInput">正文配图提示词补充（可选）</label>
-                        <textarea
-                          id="inlinePromptInput"
-                          rows="4"
-                          placeholder="比如：更像分析图、减少插画感、偏极简、不要人物、增加图表结构..."
-                        ></textarea>
-                        <p class="field-help">系统默认生成 2 张正文配图；你可以先选每张图要插入的位置，再生成或替换。</p>
-                      </div>
-
-                      <div class="inline-position-grid">
-                        <div class="field-group">
-                          <label for="inlinePositionSlot1">插图 1 位置</label>
-                          <select id="inlinePositionSlot1"></select>
-                        </div>
-                        <div class="field-group">
-                          <label for="inlinePositionSlot2">插图 2 位置</label>
-                          <select id="inlinePositionSlot2"></select>
-                        </div>
-                      </div>
+                      <p class="field-help inline-slot-help">
+                        先在右侧编辑区里选中一个位置，然后插入插图位；这里会自动出现对应的插图卡、结构化 Prompt 和历史图。
+                      </p>
 
                       <div class="inline-gallery" id="inlineGallery"></div>
-
-                      <div class="history-block">
-                        <div class="submodule-head">
-                          <div>
-                            <h5>历史正文配图</h5>
-                            <p>历史生成结果会保存在本地，可回切到当前正文插图位。</p>
-                          </div>
-                        </div>
-                        <div class="history-gallery" id="inlineHistoryGallery"></div>
-                      </div>
                     </section>
 
                     <section class="module-card">
@@ -365,33 +303,28 @@
 
                   <div class="preview-column">
                     <section class="preview-shell">
-                      <div class="preview-toolbar">
-                        <div class="preview-toolbar-meta">
-                          <span id="previewCharCount">0</span>
-                          <span>字符</span>
+                      <div class="preview-sticky-head">
+                        <div class="preview-toolbar">
+                          <div class="preview-toolbar-meta">
+                            <span id="previewCharCount">0</span>
+                            <span>字符</span>
+                          </div>
+                          <div class="preview-toolbar-actions">
+                            <button class="chip ghost" id="previewModeButton" type="button">编辑</button>
+                            <button class="chip" id="copyHtmlButton" type="button">复制</button>
+                            <button class="chip" id="saveHtmlButton" type="button">保存</button>
+                          </div>
                         </div>
-                        <div class="preview-toolbar-actions">
-                          <button class="chip ghost" id="previewModeButton" type="button">源码</button>
-                          <button class="chip" id="copyHtmlButton" type="button">复制</button>
-                          <button class="chip" id="saveHtmlButton" type="button">保存</button>
-                        </div>
-                      </div>
 
-                      <div class="preview-meta-strip">
-                        <span class="meta-chip" id="previewModeBadge">微信发布预览</span>
-                        <span class="meta-chip" id="previewThemeBadge">视觉设置</span>
-                        <span class="meta-chip muted" id="previewReferenceBadge">所见即所得</span>
-                      </div>
-
-                      <div class="preview-card">
                         <div class="preview-card-head">
                           <p class="eyebrow" id="previewKicker">微信发布预览</p>
                           <h4 id="previewTitle">等待加载</h4>
-                          <p id="previewSummary">选中左侧文章后，这里会展示和推草稿同源的公众号预览。</p>
                         </div>
+                      </div>
 
+                      <div class="preview-card">
                         <iframe id="previewFrame" title="公众号预览"></iframe>
-                        <pre class="source-view hidden" id="sourceView"></pre>
+                        <div class="editor-view hidden" id="editorView"></div>
                       </div>
                     </section>
                   </div>
@@ -464,6 +397,11 @@
       </main>
     </div>
 
+    <div class="editor-selection-toolbar hidden" id="editorSelectionToolbar">
+      <button class="secondary-btn small" id="editorHighlightButton" type="button">高亮</button>
+      <button class="secondary-btn small danger" id="editorDeleteButton" type="button">删除</button>
+      <button class="primary-btn small" id="editorInsertImageButton" type="button">插入插图位</button>
+    </div>
     <div class="toast" id="toast"></div>
     <script src="./app.js"></script>
   </body>

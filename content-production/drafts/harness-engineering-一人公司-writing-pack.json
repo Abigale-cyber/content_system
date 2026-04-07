@@ -1,0 +1,265 @@
+{
+  "topic": "Harness Engineering：为什么 AI 一人公司最终还是要回到工程师思维",
+  "slug": "harness-engineering-一人公司",
+  "topic_score": {
+    "story_potential": 63,
+    "long_term_value": 50,
+    "pain_point_strength": 52,
+    "timeliness": 100,
+    "human_nature_fit": 50,
+    "evidence_density": 100,
+    "total": 69,
+    "recommendation": "revise_before_write"
+  },
+  "reader_profile": "AI 一人公司创业者、独立开发者、想把 AI 从 demo 推到商业化交付的小团队",
+  "primary_pain_point": "但一旦进入商业化交付，问题就不再是“AI 能不能写出来”，而是“这套东西能不能稳定运行、持续迭代、出错后可回退、上线后…",
+  "chosen_structure": {
+    "type": "what_why_how",
+    "reason": "命题自带解释和方法导向，适合 what-why-how。"
+  },
+  "opening_options": [
+    {
+      "type": "relevance_utility",
+      "label": "与我有关/对我有用",
+      "text": "如果你是AI 一人公司创业者、独立开发者、想把 AI 从 demo 推到商业化交付的小团队，眼下最现实的问题往往不是不会努力，而是但一旦进入商业化交付，问题就不再是“AI 能不能写出来”，而是“这套东西能不能稳定运行、持续迭代、出错后可回退、上线后…。这篇文章只回答一件事：vibe coding 当然有价值，它让个人和小团队第一次能用极低门槛做出原型、页面和…。"
+    },
+    {
+      "type": "direct_claim",
+      "label": "开门见山表明观点",
+      "text": "先把结论放在前面：vibe coding 当然有价值，它让个人和小团队第一次能用极低门槛做出原型、页面和…。真正拉开差距的，从来不是表面动作，而是背后的结构。"
+    },
+    {
+      "type": "pain_point",
+      "label": "痛点切入",
+      "text": "很多人已经很努力了，问题却还是没解。原因常常不在执行力，而在于但一旦进入商业化交付，问题就不再是“AI 能不能写出来”，而是“这套东西能不能稳定运行、持续迭代、出错后可回退、上线后…。这也是为什么我想把Harness Engineering：为什么 AI 一人公司最终还是要回到工程师思维说透。"
+    },
+    {
+      "type": "summary",
+      "label": "精华摘要切入",
+      "text": "这篇文章会拆三件事：为什么Harness Engineering：为什么 AI 一人公司最终还是要回到工程师思维现在值得写，问题到底卡在哪里，以及普通人能怎么把这套方法落地。"
+    },
+    {
+      "type": "story",
+      "label": "讲故事",
+      "text": "先讲个片段：案例 1：Anthropic 的 *Effective harnesses for long-running…。真正打动人的，不是这个故事本身，而是它把一个现实问题撕开给你看。"
+    }
+  ],
+  "ending_options": [
+    {
+      "type": "summary",
+      "label": "总结全文",
+      "text": "总结一下，Harness Engineering：为什么 AI 一人公司最终还是要回到工程师思维真正重要的地方，不在表层技巧，而在你能不能把它变成稳定的判断、结构和动作。"
+    },
+    {
+      "type": "restate_claim",
+      "label": "强调观点",
+      "text": "说到底，这篇文章只想留下一个判断：vibe coding 当然有价值，它让个人和小团队第一次能用极低门槛做出原型、页面和…。"
+    },
+    {
+      "type": "cta",
+      "label": "互动引导",
+      "text": "如果你也是AI 一人公司创业者、独立开发者、想把 AI 从 demo 推到商业化交付的小团队，不妨回看一下自己的内容或项目：你现在卡住的，究竟是执行不够，还是结构没搭起来？"
+    }
+  ],
+  "title_options": [
+    {
+      "title": "别再把Harness Engineering：为什么 AI 一人公司最终还是要回到工程师思维写成空话了",
+      "pattern": "question",
+      "pattern_label": "提问式",
+      "drivers": [
+        "relevance",
+        "curiosity",
+        "emotion",
+        "voice_of_reader"
+      ],
+      "driver_labels": [
+        "与我有关",
+        "引发好奇",
+        "挑动情绪",
+        "替我说话"
+      ],
+      "length": 51,
+      "score": 8.0
+    },
+    {
+      "title": "Harness Engineering：为什么 AI 一人公司最终还是要回到工程师思维不是技巧清单，而是一套结果系统",
+      "pattern": "question",
+      "pattern_label": "提问式",
+      "drivers": [
+        "relevance",
+        "utility",
+        "curiosity",
+        "voice_of_reader"
+      ],
+      "driver_labels": [
+        "与我有关",
+        "对我有用",
+        "引发好奇",
+        "替我说话"
+      ],
+      "length": 58,
+      "score": 8.0
+    },
+    {
+      "title": "你以为问题在执行，其实卡在Harness Engineering：为什么 AI 一人公司最终还是要回到工程师思维",
+      "pattern": "question",
+      "pattern_label": "提问式",
+      "drivers": [
+        "relevance",
+        "curiosity",
+        "voice_of_reader"
+      ],
+      "driver_labels": [
+        "与我有关",
+        "引发好奇",
+        "替我说话"
+      ],
+      "length": 56,
+      "score": 7.4
+    },
+    {
+      "title": "AI 一人公司创业者、独立开发者、想把 AI 从 demo 推到商业化交付的小团队最容易忽略的，不是努力，而是Harness Engineering：为什么 AI 一人公司最终还是要回到工程师思维",
+      "pattern": "question",
+      "pattern_label": "提问式",
+      "drivers": [
+        "relevance",
+        "curiosity",
+        "voice_of_reader"
+      ],
+      "driver_labels": [
+        "与我有关",
+        "引发好奇",
+        "替我说话"
+      ],
+      "length": 98,
+      "score": 7.4
+    },
+    {
+      "title": "Harness Engineering：为什么 AI 一人公司最终还是要回到工程师思维：真正的分水岭，不是会不会做，而是能不能稳",
+      "pattern": "question",
+      "pattern_label": "提问式",
+      "drivers": [
+        "relevance",
+        "curiosity",
+        "voice_of_reader"
+      ],
+      "driver_labels": [
+        "与我有关",
+        "引发好奇",
+        "替我说话"
+      ],
+      "length": 64,
+      "score": 7.4
+    },
+    {
+      "title": "Harness Engineering：为什么 AI 一人公司最终还是要回到工程师思维：把问题说透，比堆方法更重要",
+      "pattern": "question",
+      "pattern_label": "提问式",
+      "drivers": [
+        "relevance",
+        "utility",
+        "curiosity"
+      ],
+      "driver_labels": [
+        "与我有关",
+        "对我有用",
+        "引发好奇"
+      ],
+      "length": 57,
+      "score": 7.4
+    },
+    {
+      "title": "Harness Engineering：为什么 AI 一人公司最终还是要回到工程师思维：为什么AI 一人公司创业者、独立开发者、想把 AI 从 demo 推到商业化交付的小团队最后还是得回到结构思维",
+      "pattern": "question",
+      "pattern_label": "提问式",
+      "drivers": [
+        "relevance",
+        "curiosity"
+      ],
+      "driver_labels": [
+        "与我有关",
+        "引发好奇"
+      ],
+      "length": 99,
+      "score": 6.7
+    },
+    {
+      "title": "看懂Harness Engineering：为什么 AI 一人公司最终还是要回到工程师思维，你才知道问题到底卡在哪",
+      "pattern": "question",
+      "pattern_label": "提问式",
+      "drivers": [
+        "relevance",
+        "curiosity"
+      ],
+      "driver_labels": [
+        "与我有关",
+        "引发好奇"
+      ],
+      "length": 57,
+      "score": 6.7
+    },
+    {
+      "title": "AI 一人公司创业者、独立开发者、想把 AI 从 demo 推到商业化交付的小团队要补的，不只是动作，更是Harness Engineering：为什么 AI 一人公司最终还是要回到工程师思维",
+      "pattern": "question",
+      "pattern_label": "提问式",
+      "drivers": [
+        "relevance",
+        "curiosity"
+      ],
+      "driver_labels": [
+        "与我有关",
+        "引发好奇"
+      ],
+      "length": 96,
+      "score": 6.7
+    },
+    {
+      "title": "Harness Engineering：为什么 AI 一人公司最终还是要回到工程师思维这件事，为什么现在必须讲清楚",
+      "pattern": "question",
+      "pattern_label": "提问式",
+      "drivers": [
+        "relevance",
+        "curiosity"
+      ],
+      "driver_labels": [
+        "与我有关",
+        "引发好奇"
+      ],
+      "length": 57,
+      "score": 6.7
+    }
+  ],
+  "share_copy_options": [
+    "这篇把Harness Engineering：为什么 AI 一人公司最终还是要回到工程师思维讲得很透，尤其适合AI 一人公司创业者、独立开发者、想把 AI 从 demo 推到商业化交付的小团队回看。最认同的一句是：vibe coding 当然有价值，它让个人和小团队第一次能用极低门槛做出原型、页面和…。",
+    "很多时候我们不是不努力，而是没把结构搭起来。这篇对Harness Engineering：为什么 AI 一人公司最终还是要回到工程师思维的判断值得收藏。",
+    "看完会更清楚：真正决定结果的，不是表面动作，而是背后的系统。分享给也在卡这件事的人。"
+  ],
+  "highlight_quotes": [
+    "vibe coding 当然有价值，它让个人和小团队第一次能用极低门槛做出原型、页面和…",
+    "为什么 2026 年行业开始从 `Prompt / Context` 转向 `Harness`，核心不是概念升级，而是交付问题终于被正面命名。",
+    "为什么 vibe coding 的上限不是“写得快不快”，而是“有没有把 AI 放进可验证、可回退、可协作的工程系统”。",
+    "为什么对 AI 一人公司来说，Harness Engineering 本质上就是“个人的微型研发体系”，也是商业化交付的真正门槛。"
+  ],
+  "summary_points": [
+    "vibe coding 当然有价值，它让个人和小团队第一次能用极低门槛做出原型、页面和…",
+    "为什么 2026 年行业开始从 `Prompt / Context` 转向…",
+    "为什么 vibe coding 的上限不是“写得快不快”，而是“有没有把…",
+    "为什么对 AI 一人公司来说，Harness Engineering 本质…"
+  ],
+  "ending_cta": "如果你也是AI 一人公司创业者、独立开发者、想把 AI 从 demo 推到商业化交付的小团队，欢迎把这篇转给同样卡在 Harness Engineering：为什么 AI 一人公司最终还是要回到工程师思维 上的人，顺手想一想：你现在最该补的是动作，还是结构？",
+  "judge_summary": {
+    "score": 8.1,
+    "scores": {
+      "headline_hook": 6.7,
+      "structure_logic": 8.9,
+      "evidence_substance": 9.8,
+      "reader_value": 9.6,
+      "pacing_length": 5.2
+    },
+    "ai_trace_risk": "low",
+    "pass": true
+  },
+  "publish_ready": true,
+  "run_status": "completed",
+  "next_action": ""
+}

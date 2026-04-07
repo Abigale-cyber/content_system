@@ -7,22 +7,22 @@
   },
   "layout": {
     "theme": "winter-slate",
-    "template": "default",
+    "template": "xiumi-winter-ins",
     "themeFile": "",
     "referenceUrl": "",
     "warning": "",
     "extractionMeta": {},
-    "updatedAt": "2026-03-29 17:50:39"
+    "updatedAt": "2026-04-05 19:56:44"
   },
   "tone": {
     "theme": "winter-slate",
     "primaryColor": "#2d7b45",
     "saturation": 100,
     "opacity": 88,
-    "updatedAt": "2026-03-29 17:51:00"
+    "updatedAt": "2026-04-05 19:56:44"
   },
   "typography": {
-    "template": "default",
+    "template": "xiumi-winter-ins",
     "titleStyle": "standard",
     "bodySize": 16,
     "lineHeight": 1.9,
@@ -30,7 +30,7 @@
     "sectionStyle": "editorial",
     "imageRadius": 24,
     "imageSpacing": 22,
-    "updatedAt": "2026-03-29 17:51:00"
+    "updatedAt": "2026-04-05 19:56:44"
   },
   "cover": {
     "candidatePath": "content/articles/2026-03-29-ai/studio-assets/cover-sticker-note-20260329-174617.png",
@@ -94,26 +94,6 @@
     "items": [
       {
         "slot": 1,
-        "label": "1. AI 的大脑是怎么长出来的？",
-        "targetId": "h2:1",
-        "targetKind": "h2",
-        "targetLineIndex": 1,
-        "targetLabel": "1. AI 的大脑是怎么长出来的？",
-        "preset": "infographic-bento",
-        "customPrompt": "绿色调",
-        "style": "theme style winter-slate, primary color #2d7b45, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 1. AI 的大脑是怎么长出来的？; user direction: 绿色调",
-        "prompt": "为文章生成 Bento Grid 风格的信息图提示词。\n标题：AI科普\n摘要：1. AI 的大脑是怎么长出来的？\n核心要点：1. AI 的大脑是怎么长出来的？\n风格：theme style winter-slate, primary color #2d7b45, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 1. AI 的大脑是怎么长出来的？; user direction: 绿色调\n画幅：3:4\n\n要求：\n1. 采用多个模块卡片组织信息\n2. 模块之间层级清晰、留白明确\n3. 适合总览、综述、多主题总结",
-        "previewUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON5JzL1c00Rlh8nsRuatjf8av9LIRsTIVQWJdI1APwrRK8wichDJrGfkRrm9eDJ6eWXJiaRETiaDicykEYZdRicyn7z29LDGic7ODRJWk/0?wx_fmt=jpeg",
-        "draftUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON5JzL1c00Rlh8nsRuatjf8av9LIRsTIVQWJdI1APwrRK8wichDJrGfkRrm9eDJ6eWXJiaRETiaDicykEYZdRicyn7z29LDGic7ODRJWk/0?wx_fmt=jpeg",
-        "mediaId": "YZiaWkQEcudqYwi5TLHu4BRwZMEHluDkPzIbKCqgV-pYqL4FQbkEYkQDFvvzyCiZ",
-        "width": 0,
-        "height": 0,
-        "localPath": "content/articles/2026-03-29-ai/studio-assets/inline-1-20260329-175133.png",
-        "createdAt": "2026-03-29 17:51:33",
-        "batchId": "20260329-175100"
-      },
-      {
-        "slot": 2,
         "label": "2. 撕掉标签：那些高频黑话到底在说什么？",
         "targetId": "h2:14",
         "targetKind": "h2",
@@ -130,32 +110,13 @@
         "height": 0,
         "localPath": "content/articles/2026-03-29-ai/studio-assets/inline-2-20260329-175156.png",
         "createdAt": "2026-03-29 17:51:57",
-        "batchId": "20260329-175100"
+        "batchId": "20260329-175100",
+        "slotId": "slot-2"
       }
     ],
     "history": [
       {
         "slot": 1,
-        "label": "1. AI 的大脑是怎么长出来的？",
-        "targetId": "h2:1",
-        "targetKind": "h2",
-        "targetLineIndex": 1,
-        "targetLabel": "1. AI 的大脑是怎么长出来的？",
-        "preset": "infographic-bento",
-        "customPrompt": "绿色调",
-        "style": "theme style winter-slate, primary color #2d7b45, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 1. AI 的大脑是怎么长出来的？; user direction: 绿色调",
-        "prompt": "为文章生成 Bento Grid 风格的信息图提示词。\n标题：AI科普\n摘要：1. AI 的大脑是怎么长出来的？\n核心要点：1. AI 的大脑是怎么长出来的？\n风格：theme style winter-slate, primary color #2d7b45, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 1. AI 的大脑是怎么长出来的？; user direction: 绿色调\n画幅：3:4\n\n要求：\n1. 采用多个模块卡片组织信息\n2. 模块之间层级清晰、留白明确\n3. 适合总览、综述、多主题总结",
-        "previewUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON5JzL1c00Rlh8nsRuatjf8av9LIRsTIVQWJdI1APwrRK8wichDJrGfkRrm9eDJ6eWXJiaRETiaDicykEYZdRicyn7z29LDGic7ODRJWk/0?wx_fmt=jpeg",
-        "draftUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON5JzL1c00Rlh8nsRuatjf8av9LIRsTIVQWJdI1APwrRK8wichDJrGfkRrm9eDJ6eWXJiaRETiaDicykEYZdRicyn7z29LDGic7ODRJWk/0?wx_fmt=jpeg",
-        "mediaId": "YZiaWkQEcudqYwi5TLHu4BRwZMEHluDkPzIbKCqgV-pYqL4FQbkEYkQDFvvzyCiZ",
-        "width": 0,
-        "height": 0,
-        "localPath": "content/articles/2026-03-29-ai/studio-assets/inline-1-20260329-175133.png",
-        "createdAt": "2026-03-29 17:51:33",
-        "batchId": "20260329-175100"
-      },
-      {
-        "slot": 2,
         "label": "2. 撕掉标签：那些高频黑话到底在说什么？",
         "targetId": "h2:14",
         "targetKind": "h2",
@@ -172,15 +133,71 @@
         "height": 0,
         "localPath": "content/articles/2026-03-29-ai/studio-assets/inline-2-20260329-175156.png",
         "createdAt": "2026-03-29 17:51:57",
-        "batchId": "20260329-175100"
+        "batchId": "20260329-175100",
+        "slotId": "slot-2"
       }
     ],
     "positions": {
       "1": "h2:1",
       "2": "h2:14"
     },
+    "promptOverrides": {},
     "customPrompt": "绿色调",
-    "updatedAt": "2026-03-29 17:52:32"
+    "slots": [
+      {
+        "slotId": "slot-2",
+        "order": 1,
+        "prompt": "theme style winter-slate, primary color #2d7b45, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 2. 撕掉标签：那些高频黑话到底在说什么？; user direction: 绿色调",
+        "anchorBlockId": "heading:13",
+        "targetLabel": "2. 撕掉标签：那些高频黑话到底在说什么？",
+        "selectedLocalPath": "content/articles/2026-03-29-ai/studio-assets/inline-2-20260329-175156.png",
+        "currentItem": {
+          "slot": 2,
+          "label": "2. 撕掉标签：那些高频黑话到底在说什么？",
+          "targetId": "h2:14",
+          "targetKind": "h2",
+          "targetLineIndex": 14,
+          "targetLabel": "2. 撕掉标签：那些高频黑话到底在说什么？",
+          "preset": "infographic-bento",
+          "customPrompt": "绿色调",
+          "style": "theme style winter-slate, primary color #2d7b45, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 2. 撕掉标签：那些高频黑话到底在说什么？; user direction: 绿色调",
+          "prompt": "为文章生成 Bento Grid 风格的信息图提示词。\n标题：AI科普\n摘要：2. 撕掉标签：那些高频黑话到底在说什么？\n核心要点：2. 撕掉标签：那些高频黑话到底在说什么？\n风格：theme style winter-slate, primary color #2d7b45, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 2. 撕掉标签：那些高频黑话到底在说什么？; user direction: 绿色调\n画幅：3:4\n\n要求：\n1. 采用多个模块卡片组织信息\n2. 模块之间层级清晰、留白明确\n3. 适合总览、综述、多主题总结",
+          "previewUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON5PBYgZrUXmNEYaLLv2SPneicgQ27tmI4hLCuQIebVyy5N4qHjmCK6TC2X9AA7nibUzQdryibHeHwArpjIsjPQVCgiacbL6p4fzfbg/0?wx_fmt=jpeg",
+          "draftUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON5PBYgZrUXmNEYaLLv2SPneicgQ27tmI4hLCuQIebVyy5N4qHjmCK6TC2X9AA7nibUzQdryibHeHwArpjIsjPQVCgiacbL6p4fzfbg/0?wx_fmt=jpeg",
+          "mediaId": "YZiaWkQEcudqYwi5TLHu4PomItIyGjQSCQpDPhjsM8o7BidHJEPkaXZauWKFkgGJ",
+          "width": 0,
+          "height": 0,
+          "localPath": "content/articles/2026-03-29-ai/studio-assets/inline-2-20260329-175156.png",
+          "createdAt": "2026-03-29 17:51:57",
+          "batchId": "20260329-175100"
+        },
+        "history": [
+          {
+            "slot": 2,
+            "label": "2. 撕掉标签：那些高频黑话到底在说什么？",
+            "targetId": "h2:14",
+            "targetKind": "h2",
+            "targetLineIndex": 14,
+            "targetLabel": "2. 撕掉标签：那些高频黑话到底在说什么？",
+            "preset": "infographic-bento",
+            "customPrompt": "绿色调",
+            "style": "theme style winter-slate, primary color #2d7b45, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 2. 撕掉标签：那些高频黑话到底在说什么？; user direction: 绿色调",
+            "prompt": "为文章生成 Bento Grid 风格的信息图提示词。\n标题：AI科普\n摘要：2. 撕掉标签：那些高频黑话到底在说什么？\n核心要点：2. 撕掉标签：那些高频黑话到底在说什么？\n风格：theme style winter-slate, primary color #2d7b45, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 2. 撕掉标签：那些高频黑话到底在说什么？; user direction: 绿色调\n画幅：3:4\n\n要求：\n1. 采用多个模块卡片组织信息\n2. 模块之间层级清晰、留白明确\n3. 适合总览、综述、多主题总结",
+            "previewUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON5PBYgZrUXmNEYaLLv2SPneicgQ27tmI4hLCuQIebVyy5N4qHjmCK6TC2X9AA7nibUzQdryibHeHwArpjIsjPQVCgiacbL6p4fzfbg/0?wx_fmt=jpeg",
+            "draftUrl": "http://mmbiz.qpic.cn/sz_mmbiz_jpg/TTkqFUkSON5PBYgZrUXmNEYaLLv2SPneicgQ27tmI4hLCuQIebVyy5N4qHjmCK6TC2X9AA7nibUzQdryibHeHwArpjIsjPQVCgiacbL6p4fzfbg/0?wx_fmt=jpeg",
+            "mediaId": "YZiaWkQEcudqYwi5TLHu4PomItIyGjQSCQpDPhjsM8o7BidHJEPkaXZauWKFkgGJ",
+            "width": 0,
+            "height": 0,
+            "localPath": "content/articles/2026-03-29-ai/studio-assets/inline-2-20260329-175156.png",
+            "createdAt": "2026-03-29 17:51:57",
+            "batchId": "20260329-175100"
+          }
+        ],
+        "updatedAt": "2026-04-05 19:56:44"
+      }
+    ],
+    "nextSlotIndex": 3,
+    "updatedAt": "2026-04-06 00:16:29"
   },
   "sectionModules": {
     "items": [],
@@ -196,5 +213,9 @@
     "theme": "",
     "themeFile": "",
     "template": ""
+  },
+  "preview": {
+    "initialized": true,
+    "updatedAt": "2026-04-05 19:56:44"
   }
 }

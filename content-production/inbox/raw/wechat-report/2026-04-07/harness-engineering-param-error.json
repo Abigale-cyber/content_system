@@ -1,0 +1,52 @@
+{
+  "generated_at": "2026-04-07T12:20:53",
+  "request": {
+    "topic": "Harness Engineering Param Error",
+    "slug": "harness-engineering-param-error",
+    "max_articles": 3,
+    "seed_urls": [
+      "https://mp.weixin.qq.com/s/Z6G25L3uv9-Dm1DRU3_Nhg#rd"
+    ],
+    "collect_engagement": false,
+    "discovery_mode": "topic_compare",
+    "notes": "只验证参数错误分类。",
+    "request_path": "/tmp/wechat-report-param-XXXX.md"
+  },
+  "vendor_skill_path": "/Users/Abigale/All_project/content_system/skills/wechat-article-extractor-skill",
+  "discovery": {
+    "queries": [],
+    "results": [],
+    "scanned_results": 0,
+    "candidate_urls": [
+      "https://mp.weixin.qq.com/s/Z6G25L3uv9-Dm1DRU3_Nhg#rd"
+    ]
+  },
+  "articles": [],
+  "failures": [
+    {
+      "stage": "prefetch",
+      "url": "https://mp.weixin.qq.com/s/Z6G25L3uv9-Dm1DRU3_Nhg#rd",
+      "canonical_url": "https://mp.weixin.qq.com/s/Z6G25L3uv9-Dm1DRU3_Nhg#rd",
+      "final_url": "https://mp.weixin.qq.com/s/Z6G25L3uv9-Dm1DRU3_Nhg#rd",
+      "failure_type": "param_error",
+      "error": "公众号链接返回参数错误页",
+      "note": "微信返回了参数错误页；这类短链或分享链接当前不是可直接抓取的标准文章入口。",
+      "page_excerpt": "<!DOCTYPE html> <html class=\"\"> <head> <meta name=\"wechat-enable-text-zoom-em\" content=\"true\"> <meta name=\"wechat-enable-text-size-adjust\" content=\"true\"> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-…",
+      "should_browser_retry": false,
+      "title": ""
+    }
+  ],
+  "feishu_sync": {
+    "status": "awaiting_user_confirmation",
+    "auth_mode": "user",
+    "synced_at": "",
+    "manifest_path": "",
+    "csv_path": "",
+    "error": "",
+    "user_auth_cache_path": "",
+    "table": {
+      "app_token_env": "FEISHU_BITABLE_APP_TOKEN",
+      "table_id_env": "FEISHU_BITABLE_TABLE_ID"
+    }
+  }
+}

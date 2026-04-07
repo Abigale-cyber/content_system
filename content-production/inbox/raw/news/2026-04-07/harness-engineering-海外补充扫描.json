@@ -1,0 +1,31 @@
+{
+  "generated_at": "2026-04-07T13:47:02",
+  "request": {
+    "profile": "global_ai",
+    "sources": [
+      "hackernews",
+      "github",
+      "ai_newsletters"
+    ],
+    "keyword": "Harness Engineering,agent harness,coding agents,Anthropic",
+    "limit": 12,
+    "deep": true,
+    "title": "Harness Engineering 海外补充扫描",
+    "request_path": "/Users/Abigale/All_project/content_system/content-production/inbox/20260407-harness-engineering-海外补充扫描-request.md"
+  },
+  "vendor_skill_path": "/Users/Abigale/All_project/content_system/skills/news-aggregator-skill",
+  "command": [
+    "/Users/Abigale/All_project/content_system/.venv/bin/python",
+    "/Users/Abigale/All_project/content_system/skills/news-aggregator-skill/scripts/fetch_news.py",
+    "--source",
+    "hackernews,github,ai_newsletters",
+    "--limit",
+    "12",
+    "--no-save",
+    "--keyword",
+    "Harness Engineering,agent harness,coding agents,Anthropic",
+    "--deep"
+  ],
+  "stderr": "HN Algolia failed: HTTPConnectionPool(host='hn.algolia.com', port=80): Max retries exceeded with url: /api/v1/search_by_date?tags=story&numericFilters=created_at_i%3E1775454422&hitsPerPage=24&query=%22Harness%20Engineering%22%20OR%20%22agent%20harness%22%20OR%20%22coding%20agents%22%20OR%20Anthropic (Caused by NameResolutionError(\"HTTPConnection(host='hn.algolia.com', port=80): Failed to resolve 'hn.algolia.com' ([Errno 8] nodename nor servname provided, or not known)\"))\nRSS Fetch failed for https://www.bensbites.com/feed: HTTPSConnectionPool(host='www.bensbites.com', port=443): Max retries exceeded with url: /feed (Caused by NameResolutionError(\"HTTPSConnection(host='www.bensbites.com', port=443): Failed to resolve 'www.bensbites.com' ([Errno 8] nodename nor servname provided, or not known)\"))\nRSS Fetch failed for https://www.oneusefulthing.org/feed: HTTPSConnectionPool(host='www.oneusefulthing.org', port=443): Max retries exceeded with url: /feed (Caused by NameResolutionError(\"HTTPSConnection(host='www.oneusefulthing.org', port=443): Failed to resolve 'www.oneusefulthing.org' ([Errno 8] nodename nor servname provided, or not known)\"))\nRSS Fetch failed for https://chinai.substack.com/feed: HTTPSConnectionPool(host='chinai.substack.com', port=443): Max retries exceeded with url: /feed (Caused by NameResolutionError(\"HTTPSConnection(host='chinai.substack.com', port=443): Failed to resolve 'chinai.substack.com' ([Errno 8] nodename nor servname provided, or not known)\"))\nRSS Fetch failed for https://www.interconnects.ai/feed: HTTPSConnectionPool(host='www.interconnects.ai', port=443): Max retries exceeded with url: /feed (Caused by NameResolutionError(\"HTTPSConnection(host='www.interconnects.ai', port=443): Failed to resolve 'www.interconnects.ai' ([Errno 8] nodename nor servname provided, or not known)\"))\nRSS Fetch failed for https://ai2roi.substack.com/feed: HTTPSConnectionPool(host='ai2roi.substack.com', port=443): Max retries exceeded with url: /feed (Caused by NameResolutionError(\"HTTPSConnection(host='ai2roi.substack.com', port=443): Failed to resolve 'ai2roi.substack.com' ([Errno 8] nodename nor servname provided, or not known)\"))\nRSS Fetch failed for https://memia.substack.com/feed: HTTPSConnectionPool(host='memia.substack.com', port=443): Max retries exceeded with url: /feed (Caused by NameResolutionError(\"HTTPSConnection(host='memia.substack.com', port=443): Failed to resolve 'memia.substack.com' ([Errno 8] nodename nor servname provided, or not known)\"))\nRSS Fetch failed for https://www.kdnuggets.com/feed: HTTPSConnectionPool(host='www.kdnuggets.com', port=443): Max retries exceeded with url: /feed (Caused by NameResolutionError(\"HTTPSConnection(host='www.kdnuggets.com', port=443): Failed to resolve 'www.kdnuggets.com' ([Errno 8] nodename nor servname provided, or not known)\"))\nSmart Fill triggered: Found 0 items, filling gaps...\nRSS Fetch failed for https://www.bensbites.com/feed: HTTPSConnectionPool(host='www.bensbites.com', port=443): Max retries exceeded with url: /feed (Caused by NameResolutionError(\"HTTPSConnection(host='www.bensbites.com', port=443): Failed to resolve 'www.bensbites.com' ([Errno 8] nodename nor servname provided, or not known)\"))\nRSS Fetch failed for https://www.interconnects.ai/feed: HTTPSConnectionPool(host='www.interconnects.ai', port=443): Max retries exceeded with url: /feed (Caused by NameResolutionError(\"HTTPSConnection(host='www.interconnects.ai', port=443): Failed to resolve 'www.interconnects.ai' ([Errno 8] nodename nor servname provided, or not known)\"))\nRSS Fetch failed for https://chinai.substack.com/feed: HTTPSConnectionPool(host='chinai.substack.com', port=443): Max retries exceeded with url: /feed (Caused by NameResolutionError(\"HTTPSConnection(host='chinai.substack.com', port=443): Failed to resolve 'chinai.substack.com' ([Errno 8] nodename nor servname provided, or not known)\"))\nRSS Fetch failed for https://www.oneusefulthing.org/feed: HTTPSConnectionPool(host='www.oneusefulthing.org', port=443): Max retries exceeded with url: /feed (Caused by NameResolutionError(\"HTTPSConnection(host='www.oneusefulthing.org', port=443): Failed to resolve 'www.oneusefulthing.org' ([Errno 8] nodename nor servname provided, or not known)\"))\nRSS Fetch failed for https://memia.substack.com/feed: HTTPSConnectionPool(host='memia.substack.com', port=443): Max retries exceeded with url: /feed (Caused by NameResolutionError(\"HTTPSConnection(host='memia.substack.com', port=443): Failed to resolve 'memia.substack.com' ([Errno 8] nodename nor servname provided, or not known)\"))\nRSS Fetch failed for https://ai2roi.substack.com/feed: HTTPSConnectionPool(host='ai2roi.substack.com', port=443): Max retries exceeded with url: /feed (Caused by NameResolutionError(\"HTTPSConnection(host='ai2roi.substack.com', port=443): Failed to resolve 'ai2roi.substack.com' ([Errno 8] nodename nor servname provided, or not known)\"))\nRSS Fetch failed for https://www.kdnuggets.com/feed: HTTPSConnectionPool(host='www.kdnuggets.com', port=443): Max retries exceeded with url: /feed (Caused by NameResolutionError(\"HTTPSConnection(host='www.kdnuggets.com', port=443): Failed to resolve 'www.kdnuggets.com' ([Errno 8] nodename nor servname provided, or not known)\"))\n",
+  "items": []
+}

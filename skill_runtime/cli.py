@@ -29,32 +29,42 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.command == "list-skills":
-      print(json.dumps(list_skills(), ensure_ascii=False, indent=2))
-      return
+        print(json.dumps(list_skills(), ensure_ascii=False, indent=2))
+        return
 
     if args.command == "list-workflows":
-      print(json.dumps(list_workflows(), ensure_ascii=False, indent=2))
-      return
+        print(json.dumps(list_workflows(), ensure_ascii=False, indent=2))
+        return
 
     if args.command == "run-skill":
-      result = run_skill(args.skill_id, args.input)
-      print(
-          json.dumps(
-              {
-                  "skill_id": result.skill_id,
-                  "output_path": result.output_path,
-                  "metadata": result.metadata,
-              },
-              ensure_ascii=False,
-              indent=2,
-          )
-      )
-      return
+        try:
+            result = run_skill(args.skill_id, args.input)
+        except Exception as error:  # noqa: BLE001
+            parser.exit(1, f"Error: {error}\n")
+        print(
+            json.dumps(
+                {
+                    "skill_id": result.skill_id,
+                    "output_path": result.output_path,
+                    "metadata": result.metadata,
+                    "run_status": result.run_status,
+                    "blocking": result.blocking,
+                    "message": result.message,
+                    "next_action": result.next_action,
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+        return
 
     if args.command == "run-workflow":
-      result = run_workflow(args.workflow_id, args.input)
-      print(json.dumps(result, ensure_ascii=False, indent=2))
-      return
+        try:
+            result = run_workflow(args.workflow_id, args.input)
+        except Exception as error:  # noqa: BLE001
+            parser.exit(1, f"Error: {error}\n")
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        return
 
     parser.error("Unknown command")
 

@@ -1,0 +1,59 @@
+{
+  "slug": "harness-engineering-vibe-coding-重构",
+  "topic": "Harness Engineering 重构了 vibe coding：AI 一人公司为什么最终还是要回到工程师思维",
+  "source_path": "/Users/Abigale/All_project/content_system/content-production/inbox/20260407-harness-engineering-vibe-coding-重构-brief.md",
+  "publish_ready": true,
+  "run_status": "completed",
+  "next_action": "",
+  "final_round": 1,
+  "selected_round": 1,
+  "rounds": [
+    {
+      "round": 1,
+      "title": "Harness Engineering 重构了 vibe coding：AI 一人公司为什么最终还是要回到工程师思维",
+      "score": 8.1,
+      "scores": {
+        "headline_hook": 6.7,
+        "structure_logic": 8.9,
+        "evidence_substance": 9.8,
+        "reader_value": 9.6,
+        "pacing_length": 5.2
+      },
+      "ai_trace_risk": "low",
+      "critic_issues": {
+        "headline_hook": [
+          "标题偏长，微信场景下前半句卖点不够集中。"
+        ],
+        "structure_logic": [],
+        "evidence_substance": [],
+        "reader_value": [],
+        "pacing_length": [
+          "段落偏长，阅读节奏容易拖慢。"
+        ]
+      },
+      "focus_areas": [
+        "pacing_length",
+        "headline_hook"
+      ],
+      "humanizer": {
+        "changed_line_count": 0,
+        "pattern_hit_count": 0,
+        "changes": []
+      },
+      "article_excerpt": "# Harness Engineering 重构了 vibe coding：AI 一人公司为什么最终还是要回到工程师思维 > 目标读者：AI 一人公司创业者、独立开发者、在做小程序或轻应用商业化交付的小团队 > 发布目标：写成一篇适合公众号发布的观点型长文，把一个强判断讲清楚：vibe coding 能稳定做简单应用，但一旦进入商业化交付，就必须回到工程师思维；而我们做小程序时，其实已经在实践工程化的全栈 vibe coding ## 导语 如果你是AI 一人公司创业者、独立开发者、在做小程序或轻应用商业化交付的…"
+    }
+  ],
+  "latest_score": 8.1,
+  "latest_scores": {
+    "headline_hook": 6.7,
+    "structure_logic": 8.9,
+    "evidence_substance": 9.8,
+    "reader_value": 9.6,
+    "pacing_length": 5.2
+  },
+  "ai_trace_risk": "low",
+  "unresolved_issues": [
+    "段落偏长，阅读节奏容易拖慢。",
+    "标题偏长，微信场景下前半句卖点不够集中。"
+  ]
+}

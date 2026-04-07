@@ -1,0 +1,33 @@
+{
+  "generated_at": "2026-04-07T13:47:02",
+  "request": {
+    "profile": "cn_media",
+    "sources": [
+      "36kr",
+      "wallstreetcn",
+      "tencent",
+      "weibo",
+      "v2ex"
+    ],
+    "keyword": "Harness Engineering,AI 编程,Agent 工程,工程化交付",
+    "limit": 12,
+    "deep": true,
+    "title": "Harness Engineering 国内补充扫描",
+    "request_path": "/Users/Abigale/All_project/content_system/content-production/inbox/20260407-harness-engineering-国内补充扫描-request.md"
+  },
+  "vendor_skill_path": "/Users/Abigale/All_project/content_system/skills/news-aggregator-skill",
+  "command": [
+    "/Users/Abigale/All_project/content_system/.venv/bin/python",
+    "/Users/Abigale/All_project/content_system/skills/news-aggregator-skill/scripts/fetch_news.py",
+    "--source",
+    "36kr,wallstreetcn,tencent,weibo,v2ex",
+    "--limit",
+    "12",
+    "--no-save",
+    "--keyword",
+    "Harness Engineering,AI 编程,Agent 工程,工程化交付",
+    "--deep"
+  ],
+  "stderr": "Smart Fill triggered: Found 0 items, filling gaps...\n",
+  "items": []
+}

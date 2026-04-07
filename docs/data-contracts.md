@@ -11,6 +11,10 @@
 | 路径 | 用途 |
 |------|------|
 | `inbox/` | 采集原文、链接列表、原始导出、视频拆解报告 |
+| `inbox/raw/wechat/` | `wechat-collect` 原始 HTML 归档 |
+| `inbox/raw/wechat-report/YYYY-MM-DD/` | `wechat-report` 原始 JSON 归档 |
+| `inbox/raw/news/YYYY-MM-DD/` | `news-collect` 原始 JSON 归档 |
+| `inbox/raw/research/YYYY-MM-DD/` | `topic-research` 原始 JSON 归档 |
 | `drafts/` | 创作中稿件（Markdown）、翻译稿 |
 | `ready/` | 已定稿、已排版、封面图、待发布 |
 | `published/` | 已对外发布归档 |
@@ -26,13 +30,29 @@
 | 阶段 | 产物名（示例） | 说明 |
 |------|----------------|------|
 | 采集 | `inbox/YYYYMMDD-{slug}.md` | 含原始链接、摘录 |
+| 资讯扫描 | `inbox/YYYYMMDD-{slug}-news-report.md` | `news-collect` 统一扫描报告 |
+| 资讯扫描 raw | `inbox/raw/news/YYYY-MM-DD/{slug}.json` | `news-collect` 原始 JSON |
+| 深研 | `inbox/YYYYMMDD-{slug}-research.md` | `topic-research` 深度研究报告 |
+| 深研 raw | `inbox/raw/research/YYYY-MM-DD/{slug}.json` | `topic-research` 原始 JSON |
+| 公众号原始归档 | `inbox/raw/wechat/YYYYMMDD-{slug}.html` | `wechat-collect` 原始 HTML |
+| 公众号对比报告 | `inbox/YYYYMMDD-{slug}-wechat-report.md` | `wechat-report` 本地结构化对比报告 |
+| 公众号对比 raw | `inbox/raw/wechat-report/YYYY-MM-DD/{slug}.json` | `wechat-report` 原始 JSON |
 | 转写 | `inbox/{slug}-transcript.md` | 音视频转写 |
 | 翻译 | `drafts/{slug}-zh.md` | 外文译稿 |
 | 创作 | `drafts/{slug}-article.md` | Markdown 正文 |
+| 写作包 | `drafts/{slug}-writing-pack.md` | `case-writer-hybrid` 输出的标题/开头/结尾/转发语 sidecar |
+| 写作包 JSON | `drafts/{slug}-writing-pack.json` | 给 `wechat-formatter` 等下游消费的结构化 sidecar |
+| 审稿轨迹 | `drafts/{slug}-review-trace.json` | writer / critic / judge 多轮评分与修改轨迹 |
+| 去 AI 味输出 | `drafts/{slug}-humanized.md` | `humanizer-zh` 独立运行后的清洗稿 |
+| 去 AI 味报告 | `drafts/{slug}-humanizer-report.json` | `humanizer-zh` 的命中规则与修改摘要 |
 | 排版 | `ready/{slug}-wechat.html` | 可粘贴微信后台 |
 | 文章配图 | `ready/{slug}-img-*.png` | `generate-image` 输出 |
 | 封面 | `ready/{slug}-cover-*.png` | 各封面 Skill 输出 |
-| 飞书行 | 表字段见 `docs/feishu-schema.md`（**待建**，阶段 3 新增） | 与 `source_url` 去重 |
+| 质量门控通知 | `published/YYYYMMDD-{slug}-quality-gate.md` | 三轮不过线后中断流程并通知人工处理 |
+| 飞书行 | 表字段见 `docs/feishu-schema.md` | 与 `source_url` 去重 |
+| 飞书授权回执 | `published/YYYYMMDD-feishu-user-auth.md` | `feishu-user-auth` 一次性授权结果 |
+| 飞书同步回执 | `published/YYYYMMDD-{slug}-feishu-sync.md` | `feishu-bitable-sync` 同步结果清单 |
+| 飞书导入 CSV | `published/YYYYMMDD-{slug}-feishu-import.csv` | `feishu-bitable-sync` 直写失败时的手动导入兜底 |
 | 视频脚本 | `storyboards/{slug}-script.md` | `viral-video-script` 输出 |
 | 分镜图 | `video-assets/{slug}-frames/*.png` | `generate-image` 分镜输出 |
 | TTS 音频 | `video-assets/{slug}-voice.wav` | `minimax-tts` 输出 |

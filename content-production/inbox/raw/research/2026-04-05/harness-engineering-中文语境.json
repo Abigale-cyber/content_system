@@ -1,0 +1,92 @@
+{
+  "generated_at": "2026-04-05T23:04:45",
+  "request": {
+    "topic": "Harness engineering 中文语境",
+    "question": "国内中文媒体、技术社区或开发者文章里，harness engineering 通常怎么翻译、怎么讨论？如果没有直接采用这个词，最接近的替代概念、案例和代表性中文来源是什么？请优先找中文原文。",
+    "model": "pro",
+    "source_file": "",
+    "seed_urls": [
+      "https://cloud.tencent.com/developer/article/2581381"
+    ],
+    "request_path": "/tmp/harness-cn-research.md"
+  },
+  "vendor_skill_path": "/Users/Abigale/All_project/content_system/skills/tavily-research",
+  "command": [
+    "tvly",
+    "research",
+    "研究主题：Harness engineering 中文语境\n\n研究问题：国内中文媒体、技术社区或开发者文章里，harness engineering 通常怎么翻译、怎么讨论？如果没有直接采用这个词，最接近的替代概念、案例和代表性中文来源是什么？请优先找中文原文。\n\n请输出适合中文内容团队做选题判断的结构化研究，重点关注最新事实、分歧点、行业信号和可写角度。\n\n优先参考这些链接：\n- https://cloud.tencent.com/developer/article/2581381\n\n补充要求：\n目标：找国内原文、中文译法和落地案例。",
+    "--json",
+    "--model",
+    "pro"
+  ],
+  "stderr": "",
+  "payload": {
+    "content": "# Harness engineering 在中文语境的可执行研究报告\n\n## 执行摘要（1 页）\n结论要点\n- “harness engineering”在中文语境中呈现两条明显不同行为路径：一是硬件语境（主要指汽车/航空/嵌入式领域的线束 wiring harness），对应的中文惯用词是“线束 / 线束设计 / 线束工程”；二是软件语境（主要指 test harness、test rig、integration harness 等测试相关概念），现有中文证据非常有限，仅见把 test harness 翻译为“测试工具”或类似词，但缺乏行业内统一用法与落地案例。[4], [10], [5]\n\n- 证据显示在国内公开资料中，硬件含义占优：汽车与航空制造、线束供应链、专利与行业报告中频繁使用“线束/线束设计/线束工程”等词；而在开发者/技术社区、公司技术博客等可检索中文原文中，直接以“harness engineering”英文出现或以“测试夹具/test harness”明确指代软件测试整套工程的情形较少或未见明确案例（证据缺口）。[4], [8], [7], [11]\n\n推荐译法（优先策略）\n- 硬件（汽车/航空/嵌入式）：推荐统一使用“线束工程”或“线束设计”（视语境侧重工程管理/设计输出分别选词），不另行直译英文；若原文强调学术/工具链或为双语读者，可在首处标注“线束工程（wiring harness engineering）”。理由：行业文档与招聘中已普遍使用“线束/线束设计/线束工程”，读者认知度高且歧义小。[4], [8], [12]\n\n- 软件（测试 / 测试框架 / DevOps）：当前仅有词典型翻译“测试工具/test harness”作为参考，证据不足以固化单一译法。建议在中文内容中采用“测试框架 / 测试工具（test harness）”并在首次出现时保留英文原词或括注说明，以便覆盖检索（SEO）和避免与“线束”混淆。理由：中文“测试工具”范围宽、易与常见“测试平台/测试工程”混淆，保留英文原词有助于精准读者检索与语义清晰。[10]\n\n三条优先可写选题（供中文内容团队立项）\n1. 汽车与航空线束设计趋势（面向车辆电子/硬件工程师）：题目示例《电动汽车线束设计的五大趋势：从材料到智能诊断》——可引用行业报告、Cadonix 趋势分析与专利素材。[5], [4], [7]  \n2. 线束工程师的技能与工具（面向求职/职业成长读者）：题目示例《成为线束工程师：标准、工具与岗位职责梳理》——可引用招聘描述与岗位需求标准。[11], [12]  \n3. （需补证）“test harness”在国内软件研发里的实践：题目示例《什么是 test harness（测试框架）？从概念到在国产 CI/CD 的落地》——该方向证据不足，需补做一轮一手访谈/搜集公司技术博客与开源 README 作为原始材料（见证据缺口）。[10]\n\n---\n\n## 证据与结论细分（详细分析）\n\n### 1. 语义边界与占比判断\n- 两大语义类别\n  - 硬件：指物理线缆、连接器与束带等组成的 wiring harness，及其规划、布线、工艺和制造流程（中文常用“线束”“线束设计”“线束工程”）。依据：行业报告将线束描述为“车辆的中枢神经系统，负责供电和信号传输”，并列举线束分类与材料构成，且在汽车与航空文献中“线束设计”作为常用术语出现。[4], [8]\n  - 软件/测试：指 test harness、test rig、integration harness 等测试支撑体系（测试集成、测试执行和观测能力）。现有中文词典/翻译资源把 test harness 翻成“测试工具”，并在释义中将其与硬件含义区分开来，但在国内技术社区或公司技术博客中，未发现足量的原始案例说明该术语被固定采用为“harness engineering”。[10]\n\n- 哪种含义占比更高（基于现有证据）\n  - 证据显示硬件含义在国内公开中文资料中占优：行业报告、专利、制造与培训资料、招聘信息等均围绕线束展开，涵盖供应商、工艺和设计软件等方面，行业分布集中在汽车、航空与嵌入式制造领域。[4], [8], [7], [6], [11], [12]\n  - 软件含义在中文公开资料中证据稀少，仅见翻译词条或双语辞典式条目，不足以证明在技术社区已形成稳定的中文用语或大量工程实践记录。[10]\n\n### 2. 中文译法清单（原文出处 + 适切性评估）\n- “线束 / 线束设计 / 线束工程”\n  - 出处与摘录（示例）：行业报告指出“线束是车辆的中枢神经系统……‘线束设计’是常用表述”[4]；航空线束制造文档亦使用“线束设计”一词描述路由与固定位点定义[8]。  \n  - 适切性：高度适切，用于汽车/航空/嵌入式硬件语境，通用且低歧义。  \n  - 歧义风险：与软件 test harness 无直接混淆风险（术语字面不同）。\n\n- “半成品线”（Sub Assy Wiring Harness）\n  - 出处：wiring‑world 提供了“Sub Assy Wiring Harness = 半成品线”等词对照[9]。  \n  - 适切性：用于物料/采购/工艺上下文的翻译较精确（子装配件层级）。  \n  - 歧义风险：专用于制造/物料清单语境，不适合作为“工程”总体概念的译法。\n\n- “测试工具 / test harness”\n  - 出处：Glosbe / fanyi.taobao 的条目将 test harness 翻为“测试工具”，并在条目中区分软件测试含义与硬件线束含义[10]。  \n  - 适切性：作为直译词典条目合理，但范围较宽；“测试工具”可能指任何测试相关工具或平台，无法明确表达“用于构建/集成/驱动测试的框架或夹具”的工程职能。  \n  - 歧义风险：高 —— 易与“测试工程”“测试平台”“自动化测试工具”等混淆。建议首次出现时括注英文。\n\n- “电缆 / 电瓶线 / 支架 / 波纹管” 等（线缆部件词对照）\n  - 出处：wiring‑world 提供多项中英文对应（Cable = 电缆, Battery Cable = 电瓶线, Bracket = 支架 等）[9]。  \n  - 适切性：用于零部件级别的翻译和 BOM 描述，语义明确。  \n  - 歧义风险：低，但不适用于表达“工程”层面的职责。\n\n注：未找到可靠证据支持“测试夹具”“测试台架”“测试治具”等具体中文翻译在国内技术社区被普遍采用的原始出处（证据缺口，见下文）。\n\n### 3. 代表性落地案例与证据（软件/硬件分别挑选）\n- 硬件语境案例（每条包含出处与关键摘录）\n  1. 汽车线束行业综述（材料/分类/供应商）\n     - 摘录要点：报告将汽车线束描述为“车辆的中枢神经系统，提供电力与信号传输”，列举线束功能分类与主要供应商（永鼎、卡倍亿、立讯精密），并列举典型线束类别（前舱、发动机、高压线束等）[4].  \n     - 出处：[4]\n\n  2. 电动汽车线束设计趋势（工具/智能化/可维护性）\n     - 摘录要点：Cadonix 提出电动车线束设计的五大趋势，包括融入传感器实现预测性维护、环保材料与可拆解设计等（指向线束设计的技术与产品化趋势）[5].  \n     - 出处：[5]\n\n  3. 航空线束制造与数字化工艺（制造仿真与信息化）\n     - 摘录要点：航空线束生产采用仿真模型提升质量并使用信息采集系统自动化流程，常用 pro/E + pro/CABLING 等工具定义路由与固定位置，文献中明确使用“线束”与“敷设方法”等术语[8].  \n     - 出处：[8]\n\n  4. 专利实例（线束工艺/敷设方法等）\n     - 摘录要点：多项专利涉及线缆敷设、线束工艺设计与三维建模方法，显示线束设计与工艺为研发活动并形成知识产权布局[7].  \n     - 出处：[7]\n\n  5. 招聘 / 岗位描述（线束工程师）\n     - 摘录要点：招聘岗位以“线束工程师”命名，职责包括线束系统设计与开发，岗位文案提及行业标准与工具要求[11], [12].  \n     - 出处：[11], [12]\n\n- 软件语境案例（证据稀少；仅有词典/翻译条目）\n  1. 双语词典式翻译：test harness → “测试工具”\n     - 摘录要点：Glosbe（在 fanyi.taobao 的条目镜像）将 test harness 翻为“测试工具”，并在条目中解释软件测试含义与硬件含义应区分[10].  \n     - 出处：[10]\n\n说明与限制：在提供的中文原始材料集中，并未找到公司技术博客、开源仓库中文 README、知乎/掘金/SegmentFault 等平台上明确以“harness engineering”或其固定中文译法详述软件测试 harness 的系统性实践案例；因此对于软件语境的代表性落地案例，需开展后续一手检索或访谈以补强（证据缺口，见下）。\n\n### 4. 讨论态势与主要分歧点\n- 主体分歧\n  - 硬件 vs 软件：现有中文资料基本将“harness”在硬件（线束）情境固化为“线束/线束设计/线束工程”，而软件含义主要停留在词典/翻译层面，缺乏统一工程学语义或岗位标签。[4], [8], [10]\n  - 语义模糊点（软件侧）：“测试工具”“测试框架”“测试平台”“测试工程”之间边界在中文语境易混淆，无法仅凭单一词汇反映是否包含产品化/工程化职责（如测试平台化、自动化集成、观测能力建设等）。证据未显示国内社区对“test harness”有共识性的中文命名。[10]\n\n- 不同群体倾向\n  - 硬件工程师 / 制造企业 / 招聘方：使用“线束/线束设计/线束工程”表达明确的设计与制造职责，伴随工具与标准性要求（示例见招聘与行业报告）[11], [12], [4].\n  - 测试工程师 / 开发者群体：由于缺乏直接证据，无法断言国内测试工程师普遍使用何种中文词来概括“test harness”。词典级翻译显示偏“测试工具”，但是否被技术博客或公司内部用作岗位/项目名尚无证明（证据缺口）[10].\n\n### 5. 行业信号与可写角度（含采访对象建议）\n- 可用作选题信号的证据（从现有材料可见）\n  - 行业报告与分析表明线束市场与设计趋势活跃（可作为选题数据支撑）[4], [5].  \n  - 专利文献反映技术演进与工艺创新，适合作为技术深挖线索[7].  \n  - 培训/课程与招聘信息显示线束工程师为明确职业路径，具备读者人群（求职/培训）[6], [11], [12].  \n  - 公司级别的车辆/车载网络文档（如 Huawei 车载架构白皮书）显示整车级硬件/网络与线束设计的交叉点（适合深度稿采访）[3].\n\n- 至少 5 个拟写角度（题目样式 + 目标读者 + 建议采访对象/素材）\n  1. 题目：《电动汽车线束设计的五大趋势》；读者：硬件工程师/产品经理；采访对象：线束设计工具厂商（Cadonix）、线束供应商、OEM 线束负责人；可引用材料：[5], [4], [7].  \n  2. 题目：《线束工程师岗位切片：技能、标准与面试题》；读者：求职者/培训机构；采访对象：招聘方 HR、现职线束工程师；引用材料：[11], [12], [6].  \n  3. 题目：《航空线束如何走向数字化制造》；读者：制造工程师/工艺工程师；采访对象：航空线束制造商、仿真工具供应商；引用材料：[8], [7].  \n  4. 题目：《线束设计中的材料与可靠性挑战》；读者：产品/质量工程师；采访对象：材料供应商、质量工程师；引用材料：[4], [5].  \n  5. 题目：《（需补证）什么是 test harness？国内软件团队如何构建可重复的测试体系》——标注需一手调研；读者：测试工程师/DevOps；采访对象：互联网公司测试平台负责人、开源项目维护者；现有材料不足，需开展访谈与原始资料采集[10].\n\n### 6. 结论与可执行建议（面向中文内容团队）\n- 标准译法推荐\n  - 对于硬件内容（汽车/航空/嵌入式）：首选“线束工程”或“线束设计”（根据语境：职责/工程管理用“线束工程”；设计/输出用“线束设计”）。理由：与行业文献、招聘与专利表达一致，便于 SEO 与读者认知。[4], [8], [11]\n  - 对于软件/测试内容：暂采用“测试框架 / 测试工具（test harness）”并在首次出现处加括号保留英文原词以确保精准检索和避免混淆。理由：现有中文证据仅为翻译条目，无法证明某一纯中文表述已被行业内普遍接受，保留英文原词可兼顾技术精准与覆盖度。[10]\n\n- 何时保留英文原词或括注\n  - 若受众包括跨学科工程师、产品经理或招聘者（可能混淆“线束”与“test harness”），或文章涉及英文文档/开源项目的直接引用时，应保留英文原词并在括注中给出中文解释。证据显示中文词在硬件场景清晰，但在软件场景存在歧义，需注明以避免误读。[4], [10]\n\n### 7. 证据缺口（需进一步检索/访谈以补强）\n- 在国内技术社区（如知乎、掘金、SegmentFault、公司技术博客、开源仓库中文 README、cloud.tencent.com 等）中，缺乏能直接证明“harness engineering”作为软件测试工程学术或岗位术语被普遍使用的中文原文案例（用户要求中特别优先 cloud.tencent.com 的检索并未在当前证据集中体现）。这导致对软件语境的译法与实际岗位职责判断存在不确定性。[10]\n\n- 需补采的原始材料建议：公司技术博客中关于“test harness”的技术实践文章、开源项目中文 README 中对 test harness 的实现说明、互联网公司/云厂商测试平台的岗位描述或技术演讲稿、以及 cloud.tencent.com 等开发者社区的相关文章。\n\n---\n\n## 快速证据清单（代表性原文引用与链接，便于编辑快速核验）\n- “汽车线束是车辆的中枢神经系统……典型线束分类与材料构成” — 行业报告（含供应商名单）[4].  \n  链接：[4] https://pdf.dfcfw.com/pdf/H3_AP202212191581193203_1.pdf?1671463291000.pdf\n\n- “电动汽车线束设计的五大趋势，包括集成传感器、可拆解与可回收设计”等 — Cadonix 趋势文章[5].  \n  链接：[5] https://cadonix.com/zh-hans/%E7%94%B5%E5%8A%A8%E6%B1%BD%E8%BD%A6%E7%BA%BF%E6%9D%9F%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%BA%94%E5%A4%A7%E8%B6%8B%E5%8A%BF\n\n- 航空线束数字制造（仿真、信息采集、pro/CABLING 工具）— 学术/行业文档[8].  \n  链接：[8] https://2winpub.com/static/uploads/journalArticle/gcjsyj0309007.pdf\n\n- 专利示例：多项涉及线缆敷设、工艺设计/三维建模的中国专利条目[7].  \n  链接：[7] https://patents.google.com/patent/CN106529097A/zh\n\n- 线束部件与中英文对照（Sub Assy Wiring Harness = 半成品线，Cable = 电缆 等）— wiring‑world 术语对照[9].  \n  链接：[9] https://wiring-world.com/document_info/389.html\n\n- 招聘/岗位示例：招聘“线束工程师”，职责含设计与开发线束系统[11].  \n  链接：[11] https://zhipin.com/zhaopin/d8bfe92f53d8f1f61nF_2tW8Eg~~/\n\n- 岗位/行业标准与工具要求示例（USCAR、ISO6722、Capital Harness Pro 等）— 招聘/岗位描述汇总[12].  \n  链接：[12] https://gaoxiaojob.com/bk_jobs/cxoior4u\n\n- 线束培训资源示例（面向线束工艺与实操培训）[6].  \n  链接：[6] https://zh1mo.com/2025/04/30/%E7%BA%BF%E6%9D%9F%E5%9F%B9%E8%AE%AD%E8%B5%84%E6%96%99%E7%BD%91%E7%AB%99%E5%8F%8A%E8%A7%86%E9%A2%91%E8%B5%84%E6%BA%90/\n\n- “test harness” 的中文词典式翻译：test harness → “测试工具”；并区分软件测试含义与硬件含义[10].  \n  链接：[10] https://fanyi.taobao.com/en/dianzixian_8109/detail-793d514d6e21a2ec288439924fc75022.html\n\n- 车辆厂商文档（可作为采访/引用对象的厂家文档样例：BYD 使用手册）[1], [2]。  \n  链接：[1] https://byd.com/material/domestic-official/user-manual/dynasty/2026%E6%AC%BE%E7%A7%A6PLUS%20DM-i%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C20260120.pdf  \n  链接：[2] https://byd.com/content/dam/byd-site/hk/support/manual/BYD_M6_Manual_CN.pdf\n\n- 车载网络架构与硬件虚拟化示例（华为车载解决方案白皮书）——显示车载硬件/网络与线束、架构交互的行业上下文[3].  \n  链接：[3] https://www-file.huawei.com/admin/asset/v1/pro/view/9b14d3e022eb4868ad782b9c140052a3.pdf\n\n---\n\n## 证据缺口（需后续补检）\n- cloud.tencent.com / 腾讯云开发者社区中关于“harness engineering”或“test harness”中文实践文章（优先检索但当前证据集中未包含）；  \n- 开源项目（Gitee/GitHub）中文 README 中将 test harness 列为工程职责或实现示例的原文材料；  \n- 公司技术博客（阿里、腾讯、华为、字节等）或会议演讲稿中关于“test harness / harness engineering”在软件侧的工程化实践案例。\n\n建议内容团队下一步动作：优先在上述平台（cloud.tencent.com、掘金、知乎、SegmentFault、公司技术博客及开源仓库）做一轮关键词检索并进行一手访谈（目标采访：互联网公司测试平台负责人、线束供应商研发负责人、汽车 OEM 线束工程师）。\n\n---\n\n## 结语\n基于现有中文原始材料，中文内容策略应区分硬件与软件两个语义域：在硬件（汽车/航空/嵌入式）语境直接采用“线束工程/线束设计”；在软件/测试语境谨慎采用“测试框架/测试工具（test harness）”并保留英文原词以消歧与利于检索。同时，若计划产出与“test harness”相关的软件内容，需补做一手调研以获取国内真实落地案例与术语使用证据。\n\n---\n\n## 参考文献（Sources）\n[1] https://byd.com/material/domestic-official/user-manual/dynasty/2026%E6%AC%BE%E7%A7%A6PLUS%20DM-i%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C20260120.pdf  \n[2] https://byd.com/content/dam/byd-site/hk/support/manual/BYD_M6_Manual_CN.pdf  \n[3] https://www-file.huawei.com/admin/asset/v1/pro/view/9b14d3e022eb4868ad782b9c140052a3.pdf  \n[4] https://pdf.dfcfw.com/pdf/H3_AP202212191581193203_1.pdf?1671463291000.pdf  \n[5] https://cadonix.com/zh-hans/%E7%94%B5%E5%8A%A8%E6%B1%BD%E8%BD%A6%E7%BA%BF%E6%9D%9F%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%BA%94%E5%A4%A7%E8%B6%8B%E5%8A%BF  \n[6] https://zh1mo.com/2025/04/30/%E7%BA%BF%E6%9D%9F%E5%9F%B9%E8%AE%AD%E8%B5%84%E6%96%99%E7%BD%91%E7%AB%99%E5%8F%8A%E8%A7%86%E9%A2%91%E8%B5%84%E6%BA%90/  \n[7] https://patents.google.com/patent/CN106529097A/zh  \n[8] https://2winpub.com/static/uploads/journalArticle/gcjsyj0309007.pdf  \n[9] https://wiring-world.com/document_info/389.html  \n[10] https://fanyi.taobao.com/en/dianzixian_8109/detail-793d514d6e21a2ec288439924fc75022.html  \n[11] https://zhipin.com/zhaopin/d8bfe92f53d8f1f61nF_2tW8Eg~~/  \n[12] https://gaoxiaojob.com/bk_jobs/cxoior4u",
+    "sources": [
+      {
+        "url": "https://www.byd.com/material/domestic-official/user-manual/dynasty/2026%E6%AC%BE%E7%A7%A6PLUS%20DM-i%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C20260120.pdf",
+        "title": "[PDF] 下载车型手册 - BYD",
+        "favicon": "https://www.byd.com/static_material/byd/overseas/images/public/favicon.ico"
+      },
+      {
+        "url": "https://www.byd.com/content/dam/byd-site/hk/support/manual/BYD_M6_Manual_CN.pdf",
+        "title": "[PDF] 前言 - BYD",
+        "favicon": "https://www.byd.com/static_material/byd/overseas/images/public/favicon.ico"
+      },
+      {
+        "url": "https://www-file.huawei.com/admin/asset/v1/pro/view/9b14d3e022eb4868ad782b9c140052a3.pdf",
+        "title": "[PDF] 智能汽车解决方案 - Huawei",
+        "favicon": "https://www.huawei.com/-/media/htemplate-home/1.0.1.20251205144752/components/assets/img/apple-touch-icon-precomposed-180.png"
+      },
+      {
+        "url": "https://pdf.dfcfw.com/pdf/H3_AP202212191581193203_1.pdf?1671463291000.pdf",
+        "title": "[PDF] 汽车线束专题:单车价值提升,竞争格局重塑",
+        "favicon": "http://pdf.dfcfw.com/favicon.ico"
+      },
+      {
+        "url": "https://www.cadonix.com/zh-hans/%E7%94%B5%E5%8A%A8%E6%B1%BD%E8%BD%A6%E7%BA%BF%E6%9D%9F%E8%AE%BE%E8%AE%A1%E7%9A%84%E4%BA%94%E5%A4%A7%E8%B6%8B%E5%8A%BF",
+        "title": "电动汽车的五大趋势及其对线束设计的影响 - Cadonix",
+        "favicon": "https://www.cadonix.com/wp-content/uploads/2025/03/cropped-Homepage-HubSpot-Favicon.png?w=32"
+      },
+      {
+        "url": "http://www.zh1mo.com/2025/04/30/%E7%BA%BF%E6%9D%9F%E5%9F%B9%E8%AE%AD%E8%B5%84%E6%96%99%E7%BD%91%E7%AB%99%E5%8F%8A%E8%A7%86%E9%A2%91%E8%B5%84%E6%BA%90/",
+        "title": "线束培训资料网站及视频资源 – 知默 | 一个线束工程师的资源站",
+        "favicon": "http://www.zh1mo.com/favicon.ico"
+      },
+      {
+        "url": "https://patents.google.com/patent/CN106529097A/zh",
+        "title": "CN106529097A - 一种飞机线束敷设方法 - Google Patents",
+        "favicon": null
+      },
+      {
+        "url": "https://www.2winpub.com/static/uploads/journalArticle/gcjsyj0309007.pdf",
+        "title": "[PDF] 面向航空线束的数字化制造关键问题探讨",
+        "favicon": "https://2winpub.com/favicon.ico"
+      },
+      {
+        "url": "https://www.wiring-world.com/document_info/389.html",
+        "title": "线束行业单词中英文对照",
+        "favicon": "https://wiring-world.com/favicon.ico"
+      },
+      {
+        "url": "https://fanyi.taobao.com/en/dianzixian_8109/detail-793d514d6e21a2ec288439924fc75022.html",
+        "title": "端子线束英语例句 - 淘宝翻译",
+        "favicon": "https://www.taobao.com/favicon.ico"
+      },
+      {
+        "url": "https://www.zhipin.com/zhaopin/d8bfe92f53d8f1f61nF_2tW8Eg~~/",
+        "title": "「汽车线束工程师招聘信息」-BOSS直聘",
+        "favicon": "https://static.zhipin.com/zhipin-geek-seo/v5426/h5/wap/images/screen-icon.png"
+      },
+      {
+        "url": "https://www.gaoxiaojob.com/bk_jobs/cxoior4u",
+        "title": "线束工程师 - 高校人才网",
+        "favicon": "https://img.gaoxiaojob.com/uploads/static/favicon.ico"
+      }
+    ],
+    "status": "completed",
+    "created_at": "2026-04-05T14:59:50.330804+00:00",
+    "response_time": 290.1,
+    "request_id": "d8e25b54-3b18-4514-8954-e06198fb9b27"
+  }
+}

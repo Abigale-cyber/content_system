@@ -1,26 +1,12 @@
 from __future__ import annotations
 
 import re
-import urllib.request
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 from lxml import html
-
-
-def fetch_html(url: str) -> str:
-    request = urllib.request.Request(
-        url,
-        headers={
-            "User-Agent": (
-                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0 Safari/537.36"
-            )
-        },
-    )
-    with urllib.request.urlopen(request, timeout=60) as response:
-        return response.read().decode("utf-8", errors="ignore")
+from skill_runtime.wechat_access import browser_fetch_html, canonicalize_url, classify_page, fetch_page
 
 
 def slugify(text: str) -> str:
@@ -226,9 +212,41 @@ def build_brief_markdown(article: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def load_article_html(url: str, *, workspace_root: Path) -> tuple[str, str]:
+    probe = fetch_page(url, timeout=30)
+    access_meta = classify_page(source_url=url, html_text=probe["html"], final_url=probe["final_url"])
+
+    if access_meta["status"] == "article_page":
+        return probe["html"], access_meta.get("canonical_url") or canonicalize_url(url)
+
+    if access_meta["status"] == "param_error":
+        raise RuntimeError("公众号链接返回参数错误页，当前不是可直接抓取的标准文章入口。")
+
+    if access_meta["status"] == "expired_or_deleted":
+        raise RuntimeError("公众号链接已过期、被删除或因违规不可见，无法继续采集。")
+
+    if access_meta["status"] == "captcha_blocked":
+        profile_dir = workspace_root / ".cache" / "wechat-report-playwright"
+        output_html_path = workspace_root / ".cache" / "wechat-collect-browser-html" / f"{slugify(url)}.html"
+        browser_result = browser_fetch_html(
+            workspace_root=workspace_root,
+            source_url=access_meta.get("canonical_url") or url,
+            profile_dir=profile_dir,
+            output_html_path=output_html_path,
+            headless=False,
+        )
+        if browser_result.get("done") and browser_result.get("output_html_path"):
+            html_text = Path(browser_result["output_html_path"]).read_text(encoding="utf-8")
+            return html_text, canonicalize_url(browser_result.get("final_url") or access_meta.get("canonical_url") or url)
+        raise RuntimeError("公众号原文被微信环境校验拦截；请先在弹出的浏览器中完成验证后重试。")
+
+    raise RuntimeError("未识别到可抓取的公众号正文页面，当前链接可能不是标准文章详情页。")
+
+
 def collect_article_to_brief(url: str, *, inbox_dir: Path, archive_dir: Path) -> dict[str, Any]:
-    raw_html = fetch_html(url)
-    article = extract_article(raw_html, url)
+    workspace_root = inbox_dir.parent.parent
+    raw_html, resolved_url = load_article_html(url, workspace_root=workspace_root)
+    article = extract_article(raw_html, resolved_url)
 
     inbox_dir.mkdir(parents=True, exist_ok=True)
     archive_dir.mkdir(parents=True, exist_ok=True)
@@ -245,6 +263,6 @@ def collect_article_to_brief(url: str, *, inbox_dir: Path, archive_dir: Path) ->
         "slug": article["slug"],
         "title": article["title"],
         "author": article.get("author", ""),
-        "source_url": url,
+        "source_url": resolved_url,
         "publish_date": article["publish_date"],
     }

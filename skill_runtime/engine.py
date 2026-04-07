@@ -10,15 +10,22 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from PIL import Image, ImageDraw, ImageFont
+from skill_runtime.writing_core import augment_markdown_with_writing_pack, load_writing_pack_json
 
 
 ROOT = Path(__file__).resolve().parent.parent
 SKILLS_DIR = ROOT / "skills"
 WORKFLOWS_DIR = ROOT / "workflows"
+_CASE_WRITER_RUNTIME: Any | None = None
 _GENERATE_IMAGE_RUNTIME: Any | None = None
 _WECHAT_FORMATTER_RUNTIME: Any | None = None
 _WECHAT_COLLECT_RUNTIME: Any | None = None
+_NEWS_COLLECT_RUNTIME: Any | None = None
+_TOPIC_RESEARCH_RUNTIME: Any | None = None
+_WECHAT_REPORT_RUNTIME: Any | None = None
+_FEISHU_BITABLE_SYNC_RUNTIME: Any | None = None
+_FEISHU_USER_AUTH_RUNTIME: Any | None = None
+_HUMANIZER_ZH_RUNTIME: Any | None = None
 
 
 @dataclass
@@ -26,6 +33,10 @@ class RunResult:
     skill_id: str
     output_path: str
     metadata: dict[str, Any]
+    run_status: str = "completed"
+    blocking: bool = False
+    message: str = ""
+    next_action: str = ""
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -137,24 +148,48 @@ def markdown_title(path: Path) -> str:
     return title_match.group(1).strip() if title_match else path.stem
 
 
+def load_pillow() -> tuple[Any, Any, Any]:
+    try:
+        from PIL import Image, ImageDraw, ImageFont
+    except ModuleNotFoundError as error:  # pragma: no cover - import path depends on runtime env
+        raise RuntimeError(
+            "Pillow is required for the local generate-image fallback. Install it in the active Python environment."
+        ) from error
+    return Image, ImageDraw, ImageFont
+
+
+def load_runtime_module(module_name: str, runtime_path: Path) -> Any:
+    if not runtime_path.exists():
+        raise FileNotFoundError(f"runtime not found: {runtime_path}")
+
+    spec = importlib.util.spec_from_file_location(module_name, runtime_path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"Failed to load runtime module: {module_name}")
+
+    module = importlib.util.module_from_spec(spec)
+    sys.modules.setdefault(module_name, module)
+    spec.loader.exec_module(module)
+    return module
+
+
 def load_generate_image_runtime() -> Any:
     global _GENERATE_IMAGE_RUNTIME
     if _GENERATE_IMAGE_RUNTIME is not None:
         return _GENERATE_IMAGE_RUNTIME
 
     runtime_path = SKILLS_DIR / "generate-image" / "runtime.py"
-    if not runtime_path.exists():
-        raise FileNotFoundError(f"generate-image runtime not found: {runtime_path}")
+    _GENERATE_IMAGE_RUNTIME = load_runtime_module("generate_image_runtime", runtime_path)
+    return _GENERATE_IMAGE_RUNTIME
 
-    spec = importlib.util.spec_from_file_location("generate_image_runtime", runtime_path)
-    if spec is None or spec.loader is None:
-        raise RuntimeError("Failed to load generate-image runtime module.")
 
-    module = importlib.util.module_from_spec(spec)
-    sys.modules.setdefault("generate_image_runtime", module)
-    spec.loader.exec_module(module)
-    _GENERATE_IMAGE_RUNTIME = module
-    return module
+def load_case_writer_runtime() -> Any:
+    global _CASE_WRITER_RUNTIME
+    if _CASE_WRITER_RUNTIME is not None:
+        return _CASE_WRITER_RUNTIME
+
+    runtime_path = SKILLS_DIR / "case-writer-hybrid" / "runtime.py"
+    _CASE_WRITER_RUNTIME = load_runtime_module("case_writer_hybrid_runtime", runtime_path)
+    return _CASE_WRITER_RUNTIME
 
 
 def load_wechat_formatter_runtime() -> Any:
@@ -163,18 +198,8 @@ def load_wechat_formatter_runtime() -> Any:
         return _WECHAT_FORMATTER_RUNTIME
 
     runtime_path = SKILLS_DIR / "wechat-formatter" / "runtime.py"
-    if not runtime_path.exists():
-        raise FileNotFoundError(f"wechat-formatter runtime not found: {runtime_path}")
-
-    spec = importlib.util.spec_from_file_location("wechat_formatter_runtime", runtime_path)
-    if spec is None or spec.loader is None:
-        raise RuntimeError("Failed to load wechat-formatter runtime module.")
-
-    module = importlib.util.module_from_spec(spec)
-    sys.modules.setdefault("wechat_formatter_runtime", module)
-    spec.loader.exec_module(module)
-    _WECHAT_FORMATTER_RUNTIME = module
-    return module
+    _WECHAT_FORMATTER_RUNTIME = load_runtime_module("wechat_formatter_runtime", runtime_path)
+    return _WECHAT_FORMATTER_RUNTIME
 
 
 def load_wechat_collect_runtime() -> Any:
@@ -183,18 +208,83 @@ def load_wechat_collect_runtime() -> Any:
         return _WECHAT_COLLECT_RUNTIME
 
     runtime_path = SKILLS_DIR / "wechat-collect" / "runtime.py"
-    if not runtime_path.exists():
-        raise FileNotFoundError(f"wechat-collect runtime not found: {runtime_path}")
+    _WECHAT_COLLECT_RUNTIME = load_runtime_module("wechat_collect_runtime", runtime_path)
+    return _WECHAT_COLLECT_RUNTIME
 
-    spec = importlib.util.spec_from_file_location("wechat_collect_runtime", runtime_path)
-    if spec is None or spec.loader is None:
-        raise RuntimeError("Failed to load wechat-collect runtime module.")
 
-    module = importlib.util.module_from_spec(spec)
-    sys.modules.setdefault("wechat_collect_runtime", module)
-    spec.loader.exec_module(module)
-    _WECHAT_COLLECT_RUNTIME = module
-    return module
+def load_news_collect_runtime() -> Any:
+    global _NEWS_COLLECT_RUNTIME
+    if _NEWS_COLLECT_RUNTIME is not None:
+        return _NEWS_COLLECT_RUNTIME
+
+    runtime_path = SKILLS_DIR / "news-collect" / "runtime.py"
+    _NEWS_COLLECT_RUNTIME = load_runtime_module("news_collect_runtime", runtime_path)
+    return _NEWS_COLLECT_RUNTIME
+
+
+def load_topic_research_runtime() -> Any:
+    global _TOPIC_RESEARCH_RUNTIME
+    if _TOPIC_RESEARCH_RUNTIME is not None:
+        return _TOPIC_RESEARCH_RUNTIME
+
+    runtime_path = SKILLS_DIR / "topic-research" / "runtime.py"
+    _TOPIC_RESEARCH_RUNTIME = load_runtime_module("topic_research_runtime", runtime_path)
+    return _TOPIC_RESEARCH_RUNTIME
+
+
+def load_wechat_report_runtime() -> Any:
+    global _WECHAT_REPORT_RUNTIME
+    if _WECHAT_REPORT_RUNTIME is not None:
+        return _WECHAT_REPORT_RUNTIME
+
+    runtime_path = SKILLS_DIR / "wechat-report" / "runtime.py"
+    _WECHAT_REPORT_RUNTIME = load_runtime_module("wechat_report_runtime", runtime_path)
+    return _WECHAT_REPORT_RUNTIME
+
+
+def load_feishu_bitable_sync_runtime() -> Any:
+    global _FEISHU_BITABLE_SYNC_RUNTIME
+    if _FEISHU_BITABLE_SYNC_RUNTIME is not None:
+        return _FEISHU_BITABLE_SYNC_RUNTIME
+
+    runtime_path = SKILLS_DIR / "feishu-bitable-sync" / "runtime.py"
+    _FEISHU_BITABLE_SYNC_RUNTIME = load_runtime_module("feishu_bitable_sync_runtime", runtime_path)
+    return _FEISHU_BITABLE_SYNC_RUNTIME
+
+
+def load_feishu_user_auth_runtime() -> Any:
+    global _FEISHU_USER_AUTH_RUNTIME
+    if _FEISHU_USER_AUTH_RUNTIME is not None:
+        return _FEISHU_USER_AUTH_RUNTIME
+
+    runtime_path = SKILLS_DIR / "feishu-user-auth" / "runtime.py"
+    _FEISHU_USER_AUTH_RUNTIME = load_runtime_module("feishu_user_auth_runtime", runtime_path)
+    return _FEISHU_USER_AUTH_RUNTIME
+
+
+def load_humanizer_zh_runtime() -> Any:
+    global _HUMANIZER_ZH_RUNTIME
+    if _HUMANIZER_ZH_RUNTIME is not None:
+        return _HUMANIZER_ZH_RUNTIME
+
+    runtime_path = SKILLS_DIR / "humanizer-zh" / "runtime.py"
+    _HUMANIZER_ZH_RUNTIME = load_runtime_module("humanizer_zh_runtime", runtime_path)
+    return _HUMANIZER_ZH_RUNTIME
+
+
+def resolve_repo_skill_dependency(skill_name: str) -> Path:
+    allowed = {
+        "news-aggregator-skill": SKILLS_DIR / "news-aggregator-skill",
+        "tavily-research": SKILLS_DIR / "tavily-research",
+        "wechat-article-extractor-skill": SKILLS_DIR / "wechat-article-extractor-skill",
+    }
+    if skill_name not in allowed:
+        raise ValueError(f"Unsupported repo-local skill dependency: {skill_name}")
+
+    path = allowed[skill_name]
+    if not path.exists():
+        raise FileNotFoundError(f"Repo-local skill dependency not found: {path}")
+    return path
 
 
 def first_url_from_input(path: Path) -> str:
@@ -209,7 +299,9 @@ def first_url_from_input(path: Path) -> str:
     raise ValueError(f"No URL found in input file: {path}")
 
 
-def load_font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
+def load_font(size: int, bold: bool = False, *, image_font_module: Any | None = None) -> Any:
+    if image_font_module is None:
+        _, _, image_font_module = load_pillow()
     candidates = [
         ("/System/Library/Fonts/PingFang.ttc", 0 if not bold else 5),
         ("/System/Library/Fonts/Supplemental/Arial Unicode.ttf", 0),
@@ -217,13 +309,13 @@ def load_font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont | ImageFo
     ]
     for path, index in candidates:
         try:
-            return ImageFont.truetype(path, size=size, index=index)
+            return image_font_module.truetype(path, size=size, index=index)
         except OSError:
             continue
-    return ImageFont.load_default()
+    return image_font_module.load_default()
 
 
-def wrap_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.ImageFont, max_width: int) -> list[str]:
+def wrap_text(draw: Any, text: str, font: Any, max_width: int) -> list[str]:
     words = list(text)
     lines: list[str] = []
     current = ""
@@ -248,65 +340,28 @@ def truncate_text(text: str, limit: int) -> str:
 
 
 def render_case_writer_hybrid(input_path: Path) -> RunResult:
-    brief = parse_brief(input_path)
-    topic = brief["topic"]
-    slug = brief["slug"]
-    arguments = brief["arguments"][:3] or ["为什么这个问题值得现在讨论", "为什么这不是单点执行问题", "为什么系统化才是长期解法"]
-    cases = brief["cases"][:3]
-
-    argument_blocks = []
-    for index, argument in enumerate(arguments, start=1):
-        normalized_argument = argument.rstrip("。！？!?. ")
-        case_line = cases[index - 1] if index - 1 < len(cases) else "可补充一个与你业务场景接近的真实案例。"
-        argument_blocks.append(
-            "\n".join(
-                [
-                    f"## 论证 {index}：{normalized_argument}",
-                    "",
-                    f"{normalized_argument}。如果只靠临时输出，你会发现内容难以积累，认知难以形成，外部很难持续理解你到底在做什么。",
-                    "",
-                    f"可结合案例：{case_line}",
-                    "",
-                    "这部分要回到主观点：真正决定长期结果的，不是偶尔发出一篇内容，而是有没有一条能反复执行的生产与分发系统。",
-                ]
-            )
-        )
-
-    article = "\n".join(
-        [
-            f"# {topic}",
-            "",
-            f"> 目标读者：{brief['target_reader'] or '关注 AI 创业、个人品牌、独立产品的人'}",
-            f"> 发布目标：{brief['publish_goal'] or '形成一篇可发布的公众号长文'}",
-            "",
-            "## 导语",
-            "",
-            brief["core_view"] or "这是一篇从观点 brief 扩展出的阶段 1 主稿，用于验证内容链路是否能稳定跑通。",
-            "",
-            "## 问题提出",
-            "",
-            "很多内容看起来没有产出，不是因为作者不努力，而是因为没有一条稳定的内容生产链。没有链，所有动作都只能临时发生，无法积累，也无法复盘。",
-            "",
-            "## 核心判断",
-            "",
-            "对一人公司、独立开发者、AI 创业者来说，内容系统不是宣传动作，而是增长基础设施。它决定你是否能被持续看见、被持续理解、被持续信任。",
-            "",
-            *argument_blocks,
-            "",
-            "## 结论",
-            "",
-            "真正值得搭的，不只是某个爆款选题能力，而是一条可重复的内容流水线：输入清晰、输出固定、节点可复用、结果可分发。只有这样，内容才会从消耗动作，变成增长资产。",
-            "",
-            "## 可传播总结",
-            "",
-            "- 没有内容系统，再好的产品也很难持续被理解。",
-            "- 内容不是附属品，而是 AI 一人公司的增长基础设施。",
-        ]
+    case_runtime = load_case_writer_runtime()
+    drafted = case_runtime.run_case_writer_hybrid(input_path, workspace_root=ROOT)
+    return RunResult(
+        "case-writer-hybrid",
+        str(drafted["article_path"]),
+        {
+            "slug": drafted["slug"],
+            "topic": drafted["topic"],
+            "writing_pack_md_path": str(drafted["writing_pack_md_path"]),
+            "writing_pack_json_path": str(drafted["writing_pack_json_path"]),
+            "review_trace_path": str(drafted["review_trace_path"]),
+            "quality_gate_notice_path": str(drafted["quality_gate_notice_path"]) if drafted["quality_gate_notice_path"] else "",
+            "publish_ready": drafted["publish_ready"],
+            "score": drafted["score"],
+            "scores": drafted["scores"],
+            "ai_trace_risk": drafted["ai_trace_risk"],
+        },
+        run_status=drafted["run_status"],
+        blocking=bool(drafted["blocking"]),
+        message=str(drafted["message"]),
+        next_action=str(drafted["next_action"]),
     )
-
-    output = article_output_path(slug)
-    write_text(output, article + "\n")
-    return RunResult("case-writer-hybrid", str(output), {"slug": slug, "topic": topic})
 
 
 def render_wechat_collect(input_path: Path) -> RunResult:
@@ -324,6 +379,120 @@ def render_wechat_collect(input_path: Path) -> RunResult:
             "author": collected["author"],
             "source_url": collected["source_url"],
             "archive_path": str(collected["archive_path"]),
+        },
+    )
+
+
+def render_news_collect(input_path: Path) -> RunResult:
+    collect_runtime = load_news_collect_runtime()
+    dependency_path = resolve_repo_skill_dependency("news-aggregator-skill")
+    collected = collect_runtime.run_news_collect(
+        input_path,
+        workspace_root=ROOT,
+        vendor_root=dependency_path,
+    )
+    return RunResult(
+        "news-collect",
+        str(collected["report_path"]),
+        {
+            "slug": collected["slug"],
+            "title": collected["title"],
+            "profile": collected["profile"],
+            "sources": collected["sources"],
+            "item_count": collected["item_count"],
+            "recommended_count": collected.get("recommended_count", 0),
+            "raw_path": str(collected["raw_path"]),
+        },
+    )
+
+
+def render_topic_research(input_path: Path) -> RunResult:
+    research_runtime = load_topic_research_runtime()
+    dependency_path = resolve_repo_skill_dependency("tavily-research")
+    researched = research_runtime.run_topic_research(
+        input_path,
+        workspace_root=ROOT,
+        vendor_root=dependency_path,
+    )
+    return RunResult(
+        "topic-research",
+        str(researched["report_path"]),
+        {
+            "slug": researched["slug"],
+            "topic": researched["topic"],
+            "model": researched["model"],
+            "writeworthiness_score": researched.get("writeworthiness_score", 0),
+            "raw_path": str(researched["raw_path"]),
+            "source_count": researched["source_count"],
+        },
+    )
+
+
+def render_wechat_report(input_path: Path) -> RunResult:
+    report_runtime = load_wechat_report_runtime()
+    dependency_path = resolve_repo_skill_dependency("wechat-article-extractor-skill")
+    reported = report_runtime.run_wechat_report(
+        input_path,
+        workspace_root=ROOT,
+        vendor_root=dependency_path,
+    )
+    return RunResult(
+        "wechat-report",
+        str(reported["report_path"]),
+        {
+            "slug": reported["slug"],
+            "topic": reported["topic"],
+            "article_count": reported["article_count"],
+            "candidate_count": reported["candidate_count"],
+            "raw_path": str(reported["raw_path"]),
+        },
+    )
+
+
+def render_feishu_bitable_sync(input_path: Path) -> RunResult:
+    sync_runtime = load_feishu_bitable_sync_runtime()
+    synced = sync_runtime.run_feishu_bitable_sync(input_path, workspace_root=ROOT)
+    return RunResult(
+        "feishu-bitable-sync",
+        str(synced["manifest_path"]),
+        {
+            "slug": synced["slug"],
+            "topic": synced["topic"],
+            "status": synced.get("status", "synced"),
+            "created_count": synced["created_count"],
+            "updated_count": synced["updated_count"],
+            "raw_path": str(synced["raw_path"]),
+        },
+    )
+
+
+def render_feishu_user_auth(input_path: Path) -> RunResult:
+    auth_runtime = load_feishu_user_auth_runtime()
+    authorized = auth_runtime.run_feishu_user_auth(input_path, workspace_root=ROOT)
+    return RunResult(
+        "feishu-user-auth",
+        str(authorized["manifest_path"]),
+        {
+            "status": authorized["status"],
+            "cache_path": authorized["cache_path"],
+            "redirect_uri": authorized["redirect_uri"],
+            "expires_at": authorized["expires_at"],
+            "open_id": authorized["open_id"],
+        },
+    )
+
+
+def render_humanizer_zh(input_path: Path) -> RunResult:
+    humanizer_runtime = load_humanizer_zh_runtime()
+    humanized = humanizer_runtime.run_humanizer_zh(input_path, workspace_root=ROOT)
+    return RunResult(
+        "humanizer-zh",
+        str(humanized["output_path"]),
+        {
+            "slug": humanized["slug"],
+            "report_path": str(humanized["report_path"]),
+            "ai_trace_risk": humanized["ai_trace_risk"],
+            "changed_line_count": humanized["changed_line_count"],
         },
     )
 
@@ -361,6 +530,7 @@ def generate_image_style(summary: dict[str, Any]) -> str:
 
 
 def render_generate_image_local(input_path: Path) -> RunResult:
+    Image, ImageDraw, ImageFont = load_pillow()
     summary = extract_article_summary(input_path)
     slug = re.sub(r"-article$", "", input_path.stem)
     output = image_output_path(slug)
@@ -370,11 +540,11 @@ def render_generate_image_local(input_path: Path) -> RunResult:
     image = Image.new("RGB", (width, height), "#f7f8fc")
     draw = ImageDraw.Draw(image)
 
-    title_font = load_font(64, bold=True)
-    subtitle_font = load_font(30)
-    card_title_font = load_font(28, bold=True)
-    card_body_font = load_font(22)
-    footer_font = load_font(20)
+    title_font = load_font(64, bold=True, image_font_module=ImageFont)
+    subtitle_font = load_font(30, image_font_module=ImageFont)
+    card_title_font = load_font(28, bold=True, image_font_module=ImageFont)
+    card_body_font = load_font(22, image_font_module=ImageFont)
+    footer_font = load_font(20, image_font_module=ImageFont)
 
     draw.rounded_rectangle((70, 60, width - 70, height - 60), radius=40, fill="#ffffff", outline="#e2e8f0", width=2)
     draw.rounded_rectangle((110, 110, width - 110, 270), radius=28, fill="#eef4ff")
@@ -533,18 +703,33 @@ def format_inline(text: str) -> str:
 
 def render_wechat_formatter_local(input_path: Path) -> RunResult:
     text = read_text(input_path)
+    writing_pack = load_writing_pack_json(input_path)
+    if writing_pack:
+        text = augment_markdown_with_writing_pack(text, writing_pack)
     title_match = re.search(r"^#\s+(.+)$", text, flags=re.MULTILINE)
     title = title_match.group(1).strip() if title_match else input_path.stem
     slug = re.sub(r"-article$", "", input_path.stem)
     output = html_output_path(slug)
     write_text(output, markdown_to_html(text, title))
-    return RunResult("wechat-formatter", str(output), {"slug": slug, "source_markdown": str(input_path), "provider": "local"})
+    return RunResult(
+        "wechat-formatter",
+        str(output),
+        {
+            "slug": slug,
+            "source_markdown": str(input_path),
+            "provider": "local",
+            "writing_pack_used": bool(writing_pack),
+        },
+    )
 
 
 def render_wechat_formatter(input_path: Path) -> RunResult:
     try:
         formatter_runtime = load_wechat_formatter_runtime()
         markdown = read_text(input_path)
+        writing_pack = load_writing_pack_json(input_path)
+        if writing_pack:
+            markdown = augment_markdown_with_writing_pack(markdown, writing_pack)
         slug = re.sub(r"-article$", "", input_path.stem)
         title = markdown_title(input_path)
         preview = formatter_runtime.render_article_html(
@@ -570,6 +755,7 @@ def render_wechat_formatter(input_path: Path) -> RunResult:
                 "theme": str(preview.get("themeName") or formatter_runtime.DEFAULT_THEME_NAME),
                 "template": str(preview.get("templateName") or formatter_runtime.DEFAULT_TEMPLATE_NAME),
                 "title": title,
+                "writing_pack_used": bool(writing_pack),
             },
         )
     except Exception as error:  # noqa: BLE001
@@ -580,7 +766,13 @@ def render_wechat_formatter(input_path: Path) -> RunResult:
 
 EXECUTORS = {
     "wechat_collect_v1": render_wechat_collect,
+    "news_collect_v1": render_news_collect,
+    "topic_research_v1": render_topic_research,
+    "wechat_report_v1": render_wechat_report,
+    "feishu_user_auth_v1": render_feishu_user_auth,
+    "feishu_bitable_sync_v1": render_feishu_bitable_sync,
     "case_writer_hybrid_v1": render_case_writer_hybrid,
+    "humanizer_zh_v1": render_humanizer_zh,
     "generate_image_card_v1": render_generate_image,
     "wechat_formatter_v1": render_wechat_formatter,
 }
@@ -627,6 +819,8 @@ def run_workflow(workflow_id: str, workflow_input: str) -> dict[str, Any]:
     workflow = load_workflow(workflow_id)
     results: dict[str, RunResult] = {}
     previous: RunResult | None = None
+    workflow_status = "completed"
+    interrupted_by = ""
 
     for step in workflow["steps"]:
         skill_id = step["skill"]
@@ -635,15 +829,25 @@ def run_workflow(workflow_id: str, workflow_input: str) -> dict[str, Any]:
         result = run_skill(skill_id, resolved_input)
         results[skill_id] = result
         previous = result
+        if result.blocking or result.run_status in {"quality_gate_failed", "awaiting_user_review"}:
+            workflow_status = "interrupted_for_review"
+            interrupted_by = skill_id
+            break
 
     manifest = {
         "workflow_id": workflow_id,
         "workflow_input": workflow_input,
         "ran_at": datetime.now().isoformat(timespec="seconds"),
+        "workflow_status": workflow_status,
+        "interrupted_by": interrupted_by,
         "results": {
             skill_id: {
                 "output_path": result.output_path,
                 "metadata": result.metadata,
+                "run_status": result.run_status,
+                "blocking": result.blocking,
+                "message": result.message,
+                "next_action": result.next_action,
             }
             for skill_id, result in results.items()
         },

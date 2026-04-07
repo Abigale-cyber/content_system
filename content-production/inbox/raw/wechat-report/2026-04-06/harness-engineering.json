@@ -1,0 +1,135 @@
+{
+  "generated_at": "2026-04-06T18:02:04",
+  "request": {
+    "topic": "Harness Engineering",
+    "slug": "harness-engineering",
+    "max_articles": 3,
+    "seed_urls": [
+      "https://mp.weixin.qq.com/s?__biz=MzA3OTYzMzI0Ng==&mid=2247484453&idx=1&sn=d84b3c422233d50bda63f0ea6ab420e7&chksm=9e692d92e99fe97bf6e7bae3a580d0f407047bc5afd4b536e05955fafd4af65f830765a28585#rd"
+    ],
+    "collect_engagement": true,
+    "discovery_mode": "topic_compare",
+    "notes": "优先验证结构化表格、互动状态和待同步状态。",
+    "request_path": "/Users/Abigale/All_project/content_system/content-production/inbox/20260406-harness-engineering-wechat-report-request.md"
+  },
+  "vendor_skill_path": "/Users/Abigale/All_project/content_system/skills/wechat-article-extractor-skill",
+  "discovery": {
+    "queries": [],
+    "results": [],
+    "scanned_results": 0,
+    "candidate_urls": [
+      "https://mp.weixin.qq.com/s?__biz=MzA3OTYzMzI0Ng==&mid=2247484453&idx=1&sn=d84b3c422233d50bda63f0ea6ab420e7&chksm=9e692d92e99fe97bf6e7bae3a580d0f407047bc5afd4b536e05955fafd4af65f830765a28585#rd"
+    ]
+  },
+  "articles": [
+    {
+      "source_url": "https://mp.weixin.qq.com/s?__biz=MzA3OTYzMzI0Ng==&mid=2247484453&idx=1&sn=d84b3c422233d50bda63f0ea6ab420e7&chksm=9ece5e818a31f2484e33fe59c0ce31b3c7313281ccc271d9de19901effa52b9da13a000a10d5#rd",
+      "identity": "MzA3OTYzMzI0Ng==|2247484453|1|d84b3c422233d50bda63f0ea6ab420e7",
+      "account_name": "陆三金",
+      "author": "陆三金",
+      "title": "Harness Engineering：给 Agent 一副好马鞍",
+      "summary": "聊聊最近火起来的 Harness Engineering",
+      "published_at": "2026/03/02 21:17:12",
+      "is_original": true,
+      "message_type": "post",
+      "cover_image": "https://mmbiz.qpic.cn/sz_mmbiz_jpg/K0WvxwFQO5sFvMyArzgYbKkgGKlKyKoqEcxVB0Xhibc810ftjFC6UqUuibYXINwNnFz9efOqNr6TmnibiapKqOQZAhcQgpoYnWUQSyJ5kicVy1sY/0?wx_fmt=jpeg",
+      "source_link": "",
+      "content_html_length": 14485,
+      "plain_text_length": 3831,
+      "paragraph_count": 48,
+      "heading_count": 0,
+      "list_item_count": 3,
+      "image_count": 7,
+      "external_link_count": 0,
+      "mp_link_count": 0,
+      "paragraphs_preview": [
+        "大家好呀，我是陆三金。",
+        "最近你可能看到过这个词，Harness Engineering。",
+        "你的第一反应可能是，什么鬼？",
+        "Prompt Engineering 还在学，Context Engineering 还没搞懂，怎么又来了个 Harness Engineering。",
+        "而且这玩意怎么翻译？"
+      ],
+      "headings_preview": [],
+      "image_urls": [
+        "https://mmbiz.qpic.cn/sz_mmbiz_jpg/K0WvxwFQO5skzoYoUENVxlpP2vAMfSSSSuuaEVZGrDGYTkmhYR6k23fHcS1sf5VoRnhN7bjaL8VgL8KB58vwIZfGZKmC4JICabeyp9jbHnE/640?wx_fmt=jpeg&from=appmsg",
+        "https://mmbiz.qpic.cn/mmbiz_png/K0WvxwFQO5tQT3XZFBXaibZWBh5KOyppAZib8xD6ibnFn1kG6fbJc7R4zMlhqJIiaswYGlnCBkCAKCogwTtSSGBep44lCOwPDKk0usvjRsFNfB0/640?wx_fmt=png&from=appmsg",
+        "https://mmbiz.qpic.cn/sz_mmbiz_png/K0WvxwFQO5uQjErG8UGX7vfrMCtHDDoLOP90q4H4ibiarChM8xg68k5BNZvCJsXicvrAM15PfbX6vJZFUwibTXlz940VTjeevfhAZpswvKX17Js/640?wx_fmt=png&from=appmsg",
+        "https://mmbiz.qpic.cn/mmbiz_png/K0WvxwFQO5uEudyd2uWjCYx1zyb6tWJc7IJdXPriaLqgPbXxshzalNyr3TmRcwbJxbAU0mO57uuAPJRAubCrJicgX2jHwkn0TVQxFtKSG4I4o/640?wx_fmt=png&from=appmsg",
+        "https://mmbiz.qpic.cn/mmbiz_png/K0WvxwFQO5tJC0vyryODbbtqib14uBUwj4z0yuMlAXP3XRbISTMNX5icPJ000GnftckgqQD0s83LRm4xPGwAoTaiaygexyawrdxOBQ9sJFFUfU/640?wx_fmt=png&from=appmsg",
+        "https://mmbiz.qpic.cn/sz_mmbiz_png/K0WvxwFQO5vXwt7zw7R33CPzMkhHwYZymRHDWY2nibZ0G60ibjNyC0e8eGibgtwYXShicK4FqPBulZuLZ3bicD7TGwB0GVh6SE5mHUicgwicxr1pP0/640?wx_fmt=png&from=appmsg",
+        "https://mmbiz.qpic.cn/sz_mmbiz_png/K0WvxwFQO5uiaekcuTqAuUSdhcZb8D9ErfUSLAIkP3Hcnmy1gjCzxKyrGc18IqlrG4iciact2j1lyEF2C9j9LraoQN3zTOEl8pdHlwYsrPNfz8/640?wx_fmt=png&from=appmsg"
+      ],
+      "external_links": [],
+      "mp_links": [],
+      "engagement": {
+        "read_count": null,
+        "like_count": null,
+        "old_like_count": null,
+        "comment_count": null,
+        "reward_total_count": null,
+        "comment_id": "4410145190338838529",
+        "appmsg_id": null,
+        "comment_enabled": null,
+        "friend_comment_enabled": null,
+        "status": "requires_logged_in_session",
+        "note": "这篇公众号公开页 HTML 未暴露点赞/阅读/评论等数字；若需要这些数值，通常要额外依赖登录态、页面运行时接口或浏览器会话。 Playwright 已尝试抓取，但当前浏览器会话仍未暴露互动数字；通常需要有效登录态或页面运行时接口。",
+        "metrics_visible": false
+      },
+      "engagement_public": {
+        "read_count": null,
+        "like_count": null,
+        "old_like_count": null,
+        "comment_count": null,
+        "reward_total_count": null,
+        "comment_id": "4410145190338838529",
+        "appmsg_id": null,
+        "comment_enabled": null,
+        "friend_comment_enabled": null,
+        "metrics_visible_in_public_html": false,
+        "status": "hidden_in_public_html",
+        "note": "这篇公众号公开页 HTML 未暴露点赞/阅读/评论等数字；若需要这些数值，通常要额外依赖登录态、页面运行时接口或浏览器会话。"
+      },
+      "engagement_browser": {
+        "read_count": null,
+        "like_count": null,
+        "old_like_count": null,
+        "comment_count": null,
+        "reward_total_count": null,
+        "comment_id": null,
+        "appmsg_id": null,
+        "comment_enabled": null,
+        "friend_comment_enabled": null,
+        "metrics_visible": false,
+        "status": "requires_logged_in_session",
+        "note": "Playwright 已尝试抓取，但当前浏览器会话仍未暴露互动数字；通常需要有效登录态或页面运行时接口。",
+        "page_title": "微信公众平台"
+      },
+      "discovery_source": {
+        "kind": "seed_url"
+      }
+    }
+  ],
+  "failures": [],
+  "feishu_sync": {
+    "status": "synced",
+    "synced_at": "2026-04-07T11:43:51",
+    "manifest_path": "/Users/Abigale/All_project/content_system/content-production/published/20260407-harness-engineering-feishu-sync.md",
+    "table": {
+      "app_token": "Uw93...znHh",
+      "table_id": "tbl5...61rM"
+    },
+    "auth_mode": "user",
+    "csv_path": "",
+    "error": "",
+    "user_auth_cache_path": "/Users/Abigale/.codex/feishu-auth/content-system-sync.json",
+    "records": [
+      {
+        "title": "Harness Engineering：给 Agent 一副好马鞍",
+        "account_name": "陆三金",
+        "source_url": "https://mp.weixin.qq.com/s?__biz=MzA3OTYzMzI0Ng==&mid=2247484453&idx=1&sn=d84b3c422233d50bda63f0ea6ab420e7&chksm=9ece5e818a31f2484e33fe59c0ce31b3c7313281ccc271d9de19901effa52b9da13a000a10d5#rd",
+        "action": "updated",
+        "record_id": "rec279XttwHwI1"
+      }
+    ]
+  }
+}

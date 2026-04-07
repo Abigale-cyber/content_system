@@ -1,0 +1,284 @@
+{
+  "generated_at": "2026-04-07T11:57:42",
+  "request": {
+    "topic": "Harness Engineering",
+    "slug": "harness-engineering-mirror-summary",
+    "max_articles": 7,
+    "seed_urls": [
+      "https://mp.weixin.qq.com/s?__biz=MzA3OTYzMzI0Ng==&mid=2247484453&idx=1&sn=d84b3c422233d50bda63f0ea6ab420e7&chksm=9ee9cead26c4d49d43b5c4abbb69806ecca6106ed5717fbf3ad10da548e8b9fb121a980cd781#rd",
+      "https://mp.weixin.qq.com/s?__biz=Mzg5NTc0MjgwMw==&mid=2247523279&idx=1&sn=ee25366cb30dc002c12e1f000affd91f&chksm=c1c8785cd95842d6f41e8d8ee73b45db0b6edc9e54ba1a0e749455f673c647a6170206062c9a#rd",
+      "https://mp.weixin.qq.com/s?__biz=Mzg2OTY0MDk0NQ==&mid=2247521717&idx=1&sn=580ed7960b5d56e8a1f2c7796c68708b&chksm=cf494d168b4e604405c32eb6658fc4b55e70cd9f77f417867f35e2b6f52871bad33ab30fac35#rd",
+      "https://mp.weixin.qq.com/s/Z6G25L3uv9-Dm1DRU3_Nhg#rd",
+      "https://mp.weixin.qq.com/s/4f45L1EkXzVGdArVgHEWaQ",
+      "https://mp.weixin.qq.com/s?__biz=MjM5MDIwODcyMA==&mid=2650381619&idx=1&sn=5dd1e0eac0b5cc1ea562d31f1f3fa4ff#rd",
+      "https://mp.weixin.qq.com/s?__biz=MzIzNjc5MjkwMg==&mid=2247489449&idx=1&sn=a1cb4126eb544cabe7940977835638d8&chksm=e956b332db1c42091a9de1c18da8296a3ac95629ce5350584a4c05bcc53230941778c736e949#rd"
+    ],
+    "collect_engagement": true,
+    "discovery_mode": "mirror_summary",
+    "notes": "在公众号原文入口已定位但受微信风控阻断的情况下，使用虎嗅镜像页补正文摘要，并同步到飞书。",
+    "request_path": "/Users/Abigale/All_project/content_system/content-production/inbox/20260407-harness-engineering-公众号镜像汇总.md"
+  },
+  "vendor_skill_path": "/Users/Abigale/All_project/content_system/skills/wechat-article-extractor-skill",
+  "discovery": {
+    "queries": [],
+    "results": [],
+    "scanned_results": 0,
+    "candidate_urls": [
+      "https://mp.weixin.qq.com/s?__biz=MzA3OTYzMzI0Ng==&mid=2247484453&idx=1&sn=d84b3c422233d50bda63f0ea6ab420e7&chksm=9ee9cead26c4d49d43b5c4abbb69806ecca6106ed5717fbf3ad10da548e8b9fb121a980cd781#rd",
+      "https://mp.weixin.qq.com/s?__biz=Mzg5NTc0MjgwMw==&mid=2247523279&idx=1&sn=ee25366cb30dc002c12e1f000affd91f&chksm=c1c8785cd95842d6f41e8d8ee73b45db0b6edc9e54ba1a0e749455f673c647a6170206062c9a#rd",
+      "https://mp.weixin.qq.com/s?__biz=Mzg2OTY0MDk0NQ==&mid=2247521717&idx=1&sn=580ed7960b5d56e8a1f2c7796c68708b&chksm=cf494d168b4e604405c32eb6658fc4b55e70cd9f77f417867f35e2b6f52871bad33ab30fac35#rd",
+      "https://mp.weixin.qq.com/s/Z6G25L3uv9-Dm1DRU3_Nhg#rd",
+      "https://mp.weixin.qq.com/s/4f45L1EkXzVGdArVgHEWaQ",
+      "https://mp.weixin.qq.com/s?__biz=MjM5MDIwODcyMA==&mid=2650381619&idx=1&sn=5dd1e0eac0b5cc1ea562d31f1f3fa4ff#rd",
+      "https://mp.weixin.qq.com/s?__biz=MzIzNjc5MjkwMg==&mid=2247489449&idx=1&sn=a1cb4126eb544cabe7940977835638d8&chksm=e956b332db1c42091a9de1c18da8296a3ac95629ce5350584a4c05bcc53230941778c736e949#rd"
+    ]
+  },
+  "articles": [
+    {
+      "source_url": "https://mp.weixin.qq.com/s?__biz=MzA3OTYzMzI0Ng==&mid=2247484453&idx=1&sn=d84b3c422233d50bda63f0ea6ab420e7&chksm=9ee9cead26c4d49d43b5c4abbb69806ecca6106ed5717fbf3ad10da548e8b9fb121a980cd781#rd",
+      "identity": "MzA3OTYzMzI0Ng==|2247484453|1|d84b3c422233d50bda63f0ea6ab420e7",
+      "account_name": "陆三金",
+      "author": "陆三金",
+      "title": "Harness Engineering：给 Agent 一副好马鞍",
+      "summary": "聊聊最近火起来的 Harness Engineering",
+      "published_at": "2026/03/02 21:17:12",
+      "is_original": true,
+      "message_type": "post",
+      "cover_image": "https://mmbiz.qpic.cn/sz_mmbiz_jpg/K0WvxwFQO5sFvMyArzgYbKkgGKlKyKoqEcxVB0Xhibc810ftjFC6UqUuibYXINwNnFz9efOqNr6TmnibiapKqOQZAhcQgpoYnWUQSyJ5kicVy1sY/0?wx_fmt=jpeg",
+      "source_link": "",
+      "content_html_length": 14485,
+      "plain_text_length": 3831,
+      "paragraph_count": 48,
+      "heading_count": 0,
+      "list_item_count": 3,
+      "image_count": 7,
+      "external_link_count": 0,
+      "mp_link_count": 0,
+      "paragraphs_preview": [
+        "大家好呀，我是陆三金。",
+        "最近你可能看到过这个词，Harness Engineering。",
+        "你的第一反应可能是，什么鬼？",
+        "Prompt Engineering 还在学，Context Engineering 还没搞懂，怎么又来了个 Harness Engineering。",
+        "而且这玩意怎么翻译？"
+      ],
+      "headings_preview": [],
+      "image_urls": [
+        "https://mmbiz.qpic.cn/sz_mmbiz_jpg/K0WvxwFQO5skzoYoUENVxlpP2vAMfSSSSuuaEVZGrDGYTkmhYR6k23fHcS1sf5VoRnhN7bjaL8VgL8KB58vwIZfGZKmC4JICabeyp9jbHnE/640?wx_fmt=jpeg&from=appmsg",
+        "https://mmbiz.qpic.cn/mmbiz_png/K0WvxwFQO5tQT3XZFBXaibZWBh5KOyppAZib8xD6ibnFn1kG6fbJc7R4zMlhqJIiaswYGlnCBkCAKCogwTtSSGBep44lCOwPDKk0usvjRsFNfB0/640?wx_fmt=png&from=appmsg",
+        "https://mmbiz.qpic.cn/sz_mmbiz_png/K0WvxwFQO5uQjErG8UGX7vfrMCtHDDoLOP90q4H4ibiarChM8xg68k5BNZvCJsXicvrAM15PfbX6vJZFUwibTXlz940VTjeevfhAZpswvKX17Js/640?wx_fmt=png&from=appmsg",
+        "https://mmbiz.qpic.cn/mmbiz_png/K0WvxwFQO5uEudyd2uWjCYx1zyb6tWJc7IJdXPriaLqgPbXxshzalNyr3TmRcwbJxbAU0mO57uuAPJRAubCrJicgX2jHwkn0TVQxFtKSG4I4o/640?wx_fmt=png&from=appmsg",
+        "https://mmbiz.qpic.cn/mmbiz_png/K0WvxwFQO5tJC0vyryODbbtqib14uBUwj4z0yuMlAXP3XRbISTMNX5icPJ000GnftckgqQD0s83LRm4xPGwAoTaiaygexyawrdxOBQ9sJFFUfU/640?wx_fmt=png&from=appmsg",
+        "https://mmbiz.qpic.cn/sz_mmbiz_png/K0WvxwFQO5vXwt7zw7R33CPzMkhHwYZymRHDWY2nibZ0G60ibjNyC0e8eGibgtwYXShicK4FqPBulZuLZ3bicD7TGwB0GVh6SE5mHUicgwicxr1pP0/640?wx_fmt=png&from=appmsg",
+        "https://mmbiz.qpic.cn/sz_mmbiz_png/K0WvxwFQO5uiaekcuTqAuUSdhcZb8D9ErfUSLAIkP3Hcnmy1gjCzxKyrGc18IqlrG4iciact2j1lyEF2C9j9LraoQN3zTOEl8pdHlwYsrPNfz8/640?wx_fmt=png&from=appmsg"
+      ],
+      "external_links": [],
+      "mp_links": [],
+      "engagement": {
+        "read_count": null,
+        "like_count": null,
+        "old_like_count": null,
+        "comment_count": null,
+        "reward_total_count": null,
+        "comment_id": "4410145190338838529",
+        "appmsg_id": null,
+        "comment_enabled": null,
+        "friend_comment_enabled": null,
+        "status": "requires_logged_in_session",
+        "note": "这篇公众号公开页 HTML 未暴露点赞/阅读/评论等数字；若需要这些数值，通常要额外依赖登录态、页面运行时接口或浏览器会话。 Playwright 已尝试抓取，但当前浏览器会话仍未暴露互动数字；通常需要有效登录态或页面运行时接口。",
+        "metrics_visible": false
+      },
+      "engagement_public": {
+        "read_count": null,
+        "like_count": null,
+        "old_like_count": null,
+        "comment_count": null,
+        "reward_total_count": null,
+        "comment_id": "4410145190338838529",
+        "appmsg_id": null,
+        "comment_enabled": null,
+        "friend_comment_enabled": null,
+        "metrics_visible_in_public_html": false,
+        "status": "hidden_in_public_html",
+        "note": "这篇公众号公开页 HTML 未暴露点赞/阅读/评论等数字；若需要这些数值，通常要额外依赖登录态、页面运行时接口或浏览器会话。"
+      },
+      "engagement_browser": {
+        "read_count": null,
+        "like_count": null,
+        "old_like_count": null,
+        "comment_count": null,
+        "reward_total_count": null,
+        "comment_id": null,
+        "appmsg_id": null,
+        "comment_enabled": null,
+        "friend_comment_enabled": null,
+        "metrics_visible": false,
+        "status": "requires_logged_in_session",
+        "note": "Playwright 已尝试抓取，但当前浏览器会话仍未暴露互动数字；通常需要有效登录态或页面运行时接口。",
+        "page_title": "微信公众平台"
+      },
+      "discovery_source": {
+        "kind": "seed_url"
+      }
+    },
+    {
+      "source_url": "https://mp.weixin.qq.com/s?__biz=Mzg5NTc0MjgwMw==&mid=2247523279&idx=1&sn=ee25366cb30dc002c12e1f000affd91f&chksm=c1c8785cd95842d6f41e8d8ee73b45db0b6edc9e54ba1a0e749455f673c647a6170206062c9a#rd",
+      "account_name": "Founder Park",
+      "author": "Founder Park",
+      "title": "提示词工程、上下文工程都过时了，现在是Harness Engineering 的时代",
+      "summary": "镜像整理摘要：AI辅助开发的核心竞争力已从优化模型转向构建运行环境（Harness Engineering），通过设计文档结构、验证回路和追踪系统等外部环境，可显著提升AI Agent的工程产出质量而不修改模型参数。 镜像页：https://www.huxiu.com/article/4841931.html",
+      "published_at": "2026-03-13 21:07",
+      "is_original": true,
+      "cover_image": "",
+      "plain_text_length": null,
+      "paragraph_count": null,
+      "image_count": null,
+      "external_link_count": null,
+      "mp_link_count": null,
+      "engagement": {
+        "comment_id": "",
+        "status": "captcha_blocked",
+        "note": "原公众号入口已定位，但当前被微信验证码拦住；正文摘要来自虎嗅镜像页 https://www.huxiu.com/article/4841931.html"
+      }
+    },
+    {
+      "source_url": "https://mp.weixin.qq.com/s?__biz=Mzg2OTY0MDk0NQ==&mid=2247521717&idx=1&sn=580ed7960b5d56e8a1f2c7796c68708b&chksm=cf494d168b4e604405c32eb6658fc4b55e70cd9f77f417867f35e2b6f52871bad33ab30fac35#rd",
+      "account_name": "海外独角兽",
+      "author": "George Zhang",
+      "title": "Harness Engineering 为什么是Agent 时代的“控制论”？",
+      "summary": "镜像整理摘要：工程师的角色正在从“直接写代码”转向“设计环境、制定规则，让 agent 在其中运行”，这种变化更接近控制论中的系统设计，而不只是新的 AI 概念包装。 镜像页：https://www.huxiu.com/article/4843126.html",
+      "published_at": "2026-03-18 12:17",
+      "is_original": true,
+      "cover_image": "",
+      "engagement": {
+        "comment_id": "",
+        "status": "captcha_blocked",
+        "note": "原公众号入口已定位，但当前被微信验证码拦住；正文摘要来自虎嗅镜像页 https://www.huxiu.com/article/4843126.html"
+      }
+    },
+    {
+      "source_url": "https://mp.weixin.qq.com/s/Z6G25L3uv9-Dm1DRU3_Nhg#rd",
+      "account_name": "海外独角兽",
+      "author": "Celia、Siqi",
+      "title": "Harness is the New Dataset：模型智能提升的下一个关键方向",
+      "summary": "镜像整理摘要：随着基模能力成熟，AI竞争焦点转向围绕模型构建的整套系统（Harness Engineering），其核心价值在于捕获高质量执行轨迹形成数据飞轮，决定Agent上限的已非模型本身而是系统设计。 镜像页：https://www.huxiu.com/article/4845732.html",
+      "published_at": "2026-03-26 20:14",
+      "is_original": true,
+      "cover_image": "",
+      "engagement": {
+        "comment_id": "",
+        "status": "param_error",
+        "note": "原公众号短链当前返回参数错误；正文摘要来自虎嗅镜像页 https://www.huxiu.com/article/4845732.html"
+      }
+    },
+    {
+      "source_url": "https://mp.weixin.qq.com/s/4f45L1EkXzVGdArVgHEWaQ",
+      "account_name": "未尽研究",
+      "author": "未尽研究",
+      "title": "Harness正在如何改变token经济学",
+      "summary": "镜像整理摘要：智能体时代下，token经济学正从静态单价转向动态结果成本，harness通过结构化控制与验证重构token价值分配，将失败成本而非生成量作为核心指标。 镜像页：https://www.huxiu.com/article/4846861.html",
+      "published_at": "2026-03-31 14:29",
+      "is_original": true,
+      "cover_image": "",
+      "engagement": {
+        "comment_id": "",
+        "status": "captcha_blocked",
+        "note": "原公众号入口已定位，但当前抓取受阻；正文摘要来自虎嗅镜像页 https://www.huxiu.com/article/4846861.html"
+      }
+    },
+    {
+      "source_url": "https://mp.weixin.qq.com/s?__biz=MjM5MDIwODcyMA==&mid=2650381619&idx=1&sn=5dd1e0eac0b5cc1ea562d31f1f3fa4ff#rd",
+      "account_name": "AI前线",
+      "author": "允毅",
+      "title": "堆推理链全错了，林俊旸离职首曝：曾在阿里 Qwen 踩中一个“致命”技术误区",
+      "summary": "镜像整理摘要：林俊旸提出大模型未来需从“推理思维”转向“智能体思维”，强调思考应服务于行动而非单纯延长推理链，并指出环境闭环与工具协同将成为竞争关键。 镜像页：https://www.huxiu.com/article/4845918.html",
+      "published_at": "2026-03-27 11:51",
+      "is_original": true,
+      "cover_image": "",
+      "engagement": {
+        "comment_id": "",
+        "status": "captcha_blocked",
+        "note": "原公众号入口已定位，但当前被微信验证码拦住；正文摘要来自虎嗅镜像页 https://www.huxiu.com/article/4845918.html"
+      }
+    },
+    {
+      "source_url": "https://mp.weixin.qq.com/s?__biz=MzIzNjc5MjkwMg==&mid=2247489449&idx=1&sn=a1cb4126eb544cabe7940977835638d8&chksm=e956b332db1c42091a9de1c18da8296a3ac95629ce5350584a4c05bcc53230941778c736e949#rd",
+      "account_name": "张鹏科技商业观察",
+      "author": "张鹏",
+      "title": "Harness 还是Environment? 这波Agent 创业还有护城河吗？",
+      "summary": "镜像整理摘要：AI创业的核心价值在于构建长期壁垒：当前阶段应聚焦harness engineering（控制层优化），而非盲目追逐模型API或环境重构；未来竞争将转向数据与环境闭环，但需分阶段布局。 镜像页：https://www.huxiu.com/article/4847254.html",
+      "published_at": "2026-04-01 16:45",
+      "is_original": true,
+      "cover_image": "",
+      "engagement": {
+        "comment_id": "",
+        "status": "captcha_blocked",
+        "note": "原公众号入口已定位，但当前被微信验证码拦住；正文摘要来自虎嗅镜像页 https://www.huxiu.com/article/4847254.html"
+      }
+    }
+  ],
+  "failures": [],
+  "feishu_sync": {
+    "status": "synced",
+    "auth_mode": "user",
+    "synced_at": "2026-04-07T13:24:44",
+    "manifest_path": "/Users/Abigale/All_project/content_system/content-production/published/20260407-harness-engineering-mirror-summary-feishu-sync.md",
+    "csv_path": "",
+    "error": "",
+    "user_auth_cache_path": "/Users/Abigale/.codex/feishu-auth/content-system-sync.json",
+    "table": {
+      "app_token": "Uw93...znHh",
+      "table_id": "tbl5...61rM"
+    },
+    "records": [
+      {
+        "title": "Harness Engineering：给 Agent 一副好马鞍",
+        "account_name": "陆三金",
+        "source_url": "https://mp.weixin.qq.com/s?__biz=MzA3OTYzMzI0Ng==&mid=2247484453&idx=1&sn=d84b3c422233d50bda63f0ea6ab420e7&chksm=9ee9cead26c4d49d43b5c4abbb69806ecca6106ed5717fbf3ad10da548e8b9fb121a980cd781#rd",
+        "action": "created",
+        "record_id": "recvg4NIbGf7S5"
+      },
+      {
+        "title": "提示词工程、上下文工程都过时了，现在是Harness Engineering 的时代",
+        "account_name": "Founder Park",
+        "source_url": "https://mp.weixin.qq.com/s?__biz=Mzg5NTc0MjgwMw==&mid=2247523279&idx=1&sn=ee25366cb30dc002c12e1f000affd91f&chksm=c1c8785cd95842d6f41e8d8ee73b45db0b6edc9e54ba1a0e749455f673c647a6170206062c9a#rd",
+        "action": "created",
+        "record_id": "recvg50K0LPfbk"
+      },
+      {
+        "title": "Harness Engineering 为什么是Agent 时代的“控制论”？",
+        "account_name": "海外独角兽",
+        "source_url": "https://mp.weixin.qq.com/s?__biz=Mzg2OTY0MDk0NQ==&mid=2247521717&idx=1&sn=580ed7960b5d56e8a1f2c7796c68708b&chksm=cf494d168b4e604405c32eb6658fc4b55e70cd9f77f417867f35e2b6f52871bad33ab30fac35#rd",
+        "action": "created",
+        "record_id": "recvg50KosnwIJ"
+      },
+      {
+        "title": "Harness is the New Dataset：模型智能提升的下一个关键方向",
+        "account_name": "海外独角兽",
+        "source_url": "https://mp.weixin.qq.com/s/Z6G25L3uv9-Dm1DRU3_Nhg#rd",
+        "action": "created",
+        "record_id": "recvg50KQexznv"
+      },
+      {
+        "title": "Harness正在如何改变token经济学",
+        "account_name": "未尽研究",
+        "source_url": "https://mp.weixin.qq.com/s/4f45L1EkXzVGdArVgHEWaQ",
+        "action": "created",
+        "record_id": "recvg50LaxX90J"
+      },
+      {
+        "title": "堆推理链全错了，林俊旸离职首曝：曾在阿里 Qwen 踩中一个“致命”技术误区",
+        "account_name": "AI前线",
+        "source_url": "https://mp.weixin.qq.com/s?__biz=MjM5MDIwODcyMA==&mid=2650381619&idx=1&sn=5dd1e0eac0b5cc1ea562d31f1f3fa4ff#rd",
+        "action": "created",
+        "record_id": "recvg50Lxiy0KG"
+      },
+      {
+        "title": "Harness 还是Environment? 这波Agent 创业还有护城河吗？",
+        "account_name": "张鹏科技商业观察",
+        "source_url": "https://mp.weixin.qq.com/s?__biz=MzIzNjc5MjkwMg==&mid=2247489449&idx=1&sn=a1cb4126eb544cabe7940977835638d8&chksm=e956b332db1c42091a9de1c18da8296a3ac95629ce5350584a4c05bcc53230941778c736e949#rd",
+        "action": "created",
+        "record_id": "recvg50LQxOrzx"
+      }
+    ]
+  }
+}

@@ -3,10 +3,17 @@ const state = {
   articles: [],
   selectedId: "",
   detail: null,
+  coverPromptDraft: undefined,
+  inlinePromptDrafts: {},
   activeView: "workbench",
   previewMode: "preview",
   lastSavedName: "wechat-preview.html",
   autoPreviewTimer: null,
+  articleMenuOpen: false,
+  articleInfoCollapsed: true,
+  pendingSlotMoveId: "",
+  editorSelection: null,
+  editorSaveTimers: {},
   form: {
     tone: {
       theme: "",
@@ -15,20 +22,12 @@ const state = {
       opacity: 88,
     },
     typography: {
-      template: "default",
-      titleStyle: "standard",
       bodySize: 16,
       lineHeight: 1.9,
       paragraphGap: 16,
       sectionStyle: "editorial",
       imageRadius: 24,
       imageSpacing: 22,
-    },
-    coverPrompt: "",
-    inlinePrompt: "",
-    inlinePositions: {
-      1: "",
-      2: "",
     },
     coverCandidatePath: "",
   },
@@ -40,15 +39,18 @@ const refs = {
   uploadDropzone: document.getElementById("uploadDropzone"),
   articleCount: document.getElementById("articleCount"),
   articleSwitcherWrap: document.getElementById("articleSwitcherWrap"),
-  articleSwitcher: document.getElementById("articleSwitcher"),
+  articleSwitcherButton: document.getElementById("articleSwitcherButton"),
+  articleSwitcherCurrent: document.getElementById("articleSwitcherCurrent"),
+  articleSwitcherMenu: document.getElementById("articleSwitcherMenu"),
   detailEmptyState: document.getElementById("detailEmptyState"),
   detailWrap: document.getElementById("detailWrap"),
   workspaceBadge: document.getElementById("workspaceBadge"),
   detailTitle: document.getElementById("detailTitle"),
   detailSubtitle: document.getElementById("detailSubtitle"),
-  detailThemeBadge: document.getElementById("detailThemeBadge"),
-  detailCoverBadge: document.getElementById("detailCoverBadge"),
-  detailDraftBadge: document.getElementById("detailDraftBadge"),
+  articleInfoCard: document.getElementById("articleInfoCard"),
+  articleInfoToggle: document.getElementById("articleInfoToggle"),
+  articleInfoToggleLabel: document.getElementById("articleInfoToggleLabel"),
+  articleInfoContent: document.getElementById("articleInfoContent"),
   infoAuthor: document.getElementById("infoAuthor"),
   infoChars: document.getElementById("infoChars"),
   infoPath: document.getElementById("infoPath"),
@@ -68,35 +70,18 @@ const refs = {
   saturationValue: document.getElementById("saturationValue"),
   opacityRange: document.getElementById("opacityRange"),
   opacityValue: document.getElementById("opacityValue"),
-  templateSelect: document.getElementById("templateSelect"),
-  templateHint: document.getElementById("templateHint"),
-  titleStyleSelect: document.getElementById("titleStyleSelect"),
-  bodySizeRange: document.getElementById("bodySizeRange"),
-  bodySizeValue: document.getElementById("bodySizeValue"),
-  lineHeightRange: document.getElementById("lineHeightRange"),
-  lineHeightValue: document.getElementById("lineHeightValue"),
-  paragraphGapRange: document.getElementById("paragraphGapRange"),
-  paragraphGapValue: document.getElementById("paragraphGapValue"),
-  sectionStyleSelect: document.getElementById("sectionStyleSelect"),
-  imageRadiusRange: document.getElementById("imageRadiusRange"),
-  imageRadiusValue: document.getElementById("imageRadiusValue"),
-  imageSpacingRange: document.getElementById("imageSpacingRange"),
-  imageSpacingValue: document.getElementById("imageSpacingValue"),
-  coverPromptInput: document.getElementById("coverPromptInput"),
-  inlinePromptInput: document.getElementById("inlinePromptInput"),
-  inlinePositionSlot1: document.getElementById("inlinePositionSlot1"),
-  inlinePositionSlot2: document.getElementById("inlinePositionSlot2"),
   generateCoverButton: document.getElementById("generateCoverButton"),
   coverResultCard: document.getElementById("coverResultCard"),
   coverResultMeta: document.getElementById("coverResultMeta"),
   coverResultImage: document.getElementById("coverResultImage"),
-  coverResultPrompt: document.getElementById("coverResultPrompt"),
+  coverResultPlaceholder: document.getElementById("coverResultPlaceholder"),
+  coverResultPromptInput: document.getElementById("coverResultPromptInput"),
+  coverResultPromptHelp: document.getElementById("coverResultPromptHelp"),
   selectCoverButton: document.getElementById("selectCoverButton"),
   deleteCoverButton: document.getElementById("deleteCoverButton"),
   coverHistoryGallery: document.getElementById("coverHistoryGallery"),
   generateInlineButton: document.getElementById("generateInlineButton"),
   inlineGallery: document.getElementById("inlineGallery"),
-  inlineHistoryGallery: document.getElementById("inlineHistoryGallery"),
   coverCandidatePath: document.getElementById("coverCandidatePath"),
   pushDraftButton: document.getElementById("pushDraftButton"),
   draftStatusTitle: document.getElementById("draftStatusTitle"),
@@ -105,14 +90,14 @@ const refs = {
   copyHtmlButton: document.getElementById("copyHtmlButton"),
   saveHtmlButton: document.getElementById("saveHtmlButton"),
   previewCharCount: document.getElementById("previewCharCount"),
-  previewModeBadge: document.getElementById("previewModeBadge"),
-  previewThemeBadge: document.getElementById("previewThemeBadge"),
-  previewReferenceBadge: document.getElementById("previewReferenceBadge"),
   previewKicker: document.getElementById("previewKicker"),
   previewTitle: document.getElementById("previewTitle"),
-  previewSummary: document.getElementById("previewSummary"),
   previewFrame: document.getElementById("previewFrame"),
-  sourceView: document.getElementById("sourceView"),
+  editorView: document.getElementById("editorView"),
+  editorSelectionToolbar: document.getElementById("editorSelectionToolbar"),
+  editorHighlightButton: document.getElementById("editorHighlightButton"),
+  editorDeleteButton: document.getElementById("editorDeleteButton"),
+  editorInsertImageButton: document.getElementById("editorInsertImageButton"),
   workbenchView: document.getElementById("workbenchView"),
   settingsView: document.getElementById("settingsView"),
   wechatMode: document.getElementById("wechatMode"),
@@ -126,6 +111,13 @@ const refs = {
   settingsCover: document.getElementById("settingsCover"),
   toast: document.getElementById("toast"),
 };
+
+const LOCKED_THEME_ID = "winter-slate";
+const LOCKED_THEME_LABEL = "OPC专用";
+const LOCKED_THEME_DESCRIPTION = "当前固定使用 OPC 专用风格。";
+const LOCKED_TEMPLATE_ID = "xiumi-winter-ins";
+const LOCKED_TEMPLATE_LABEL = "OPC专属排版";
+const LOCKED_TEMPLATE_DESCRIPTION = "当前固定使用 OPC 专属版式，自动关联主视觉、标题区和正文编排。";
 
 function basename(path) {
   if (!path) return "";
@@ -148,6 +140,15 @@ function sanitizeFilename(value) {
 
 function assetUrl(item) {
   return item?.localPreviewUrl || item?.previewUrl || item?.draftUrl || "";
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function normalizeAssetUrl(value) {
@@ -195,17 +196,34 @@ function renderSelect(select, items, currentValue, placeholder = "暂无可选�
 
 function themeCatalog() {
   const items = Array.isArray(state.settings?.themes) ? state.settings.themes : [];
-  return items.map((item) => (typeof item === "string" ? { id: item, label: item, description: "" } : item));
+  const catalog = items.map((item) => (typeof item === "string" ? { id: item, label: item, description: "" } : item));
+  const lockedTheme = catalog.find((item) => item.id === LOCKED_THEME_ID) || null;
+  if (!lockedTheme) return catalog;
+  return [
+    {
+      ...lockedTheme,
+      label: LOCKED_THEME_LABEL,
+      description: LOCKED_THEME_DESCRIPTION,
+    },
+  ];
 }
 
-function templateCatalog() {
+function lockedTemplateMeta() {
   const items = Array.isArray(state.settings?.templates) ? state.settings.templates : [];
-  return items.map((item) => (typeof item === "string" ? { id: item, label: item, description: "" } : item));
-}
-
-function titleStyleCatalog() {
-  const items = Array.isArray(state.settings?.titleStyles) ? state.settings.titleStyles : [];
-  return items.map((item) => (typeof item === "string" ? { id: item, label: item, description: "" } : item));
+  const catalog = items.map((item) => (typeof item === "string" ? { id: item, label: item, description: "" } : item));
+  const lockedTemplate = catalog.find((item) => item.id === LOCKED_TEMPLATE_ID) || null;
+  if (!lockedTemplate) {
+    return {
+      id: LOCKED_TEMPLATE_ID,
+      label: LOCKED_TEMPLATE_LABEL,
+      description: LOCKED_TEMPLATE_DESCRIPTION,
+    };
+  }
+  return {
+    ...lockedTemplate,
+    label: LOCKED_TEMPLATE_LABEL,
+    description: lockedTemplate.description || LOCKED_TEMPLATE_DESCRIPTION,
+  };
 }
 
 function sectionStyleCatalog() {
@@ -218,11 +236,9 @@ function themeMeta(themeId) {
 }
 
 function templateMeta(templateId) {
-  return templateCatalog().find((item) => item.id === templateId) || null;
-}
-
-function titleStyleMeta(styleId) {
-  return titleStyleCatalog().find((item) => item.id === styleId) || null;
+  const lockedTemplate = lockedTemplateMeta();
+  if (!templateId || templateId === lockedTemplate.id) return lockedTemplate;
+  return null;
 }
 
 function sectionStyleMeta(styleId) {
@@ -230,19 +246,19 @@ function sectionStyleMeta(styleId) {
 }
 
 function themeLabel(themeId) {
-  return themeMeta(themeId)?.label || themeId || "未设置";
+  if (!themeId) return "未设置";
+  const lockedTheme = themeCatalog()[0];
+  return lockedTheme?.label || themeMeta(themeId)?.label || themeId;
 }
 
 function themeDescription(themeId) {
-  return themeMeta(themeId)?.description || "";
+  if (!themeId) return "";
+  const lockedTheme = themeCatalog()[0];
+  return lockedTheme?.description || themeMeta(themeId)?.description || "";
 }
 
 function templateLabel(templateId) {
-  return templateMeta(templateId)?.label || templateId || "默认正文";
-}
-
-function templateDescription(templateId) {
-  return templateMeta(templateId)?.description || "";
+  return templateMeta(templateId)?.label || templateId || LOCKED_TEMPLATE_LABEL;
 }
 
 function updateWorkspaceBadge() {
@@ -255,28 +271,20 @@ function updateRangeReadouts() {
   refs.primaryColorValue.textContent = refs.primaryColorInput.value;
   refs.saturationValue.textContent = `${refs.saturationRange.value}%`;
   refs.opacityValue.textContent = `${refs.opacityRange.value}%`;
-  refs.bodySizeValue.textContent = `${refs.bodySizeRange.value}px`;
-  refs.lineHeightValue.textContent = Number(refs.lineHeightRange.value).toFixed(2);
-  refs.paragraphGapValue.textContent = `${refs.paragraphGapRange.value}px`;
-  refs.imageRadiusValue.textContent = `${refs.imageRadiusRange.value}px`;
-  refs.imageSpacingValue.textContent = `${refs.imageSpacingRange.value}px`;
 }
 
 function syncFormFromDetail() {
   if (!state.detail || !state.settings) return;
   const tone = state.detail.tone || {};
   const typography = state.detail.typography || {};
-  const inlineTargetOptions = Array.isArray(state.detail.images?.inlineTargetOptions) ? state.detail.images.inlineTargetOptions : [];
-  const inlinePositions = state.detail.images?.inlinePositions || {};
+  const lockedTheme = themeCatalog()[0];
   state.form.tone = {
-    theme: tone.theme || state.settings.defaultTheme || "elegant-gold",
+    theme: lockedTheme?.id || tone.theme || state.settings.defaultTheme || "elegant-gold",
     primaryColor: tone.primaryColor || "#b3832f",
     saturation: Number(tone.saturation || 100),
     opacity: Number(tone.opacity || 88),
   };
   state.form.typography = {
-    template: typography.template || state.settings.defaultTemplate || "default",
-    titleStyle: typography.titleStyle || "standard",
     bodySize: Number(typography.bodySize || 16),
     lineHeight: Number(typography.lineHeight || 1.9),
     paragraphGap: Number(typography.paragraphGap || 16),
@@ -284,93 +292,89 @@ function syncFormFromDetail() {
     imageRadius: Number(typography.imageRadius || 24),
     imageSpacing: Number(typography.imageSpacing || 22),
   };
-  state.form.coverPrompt = state.detail.images?.coverPrompt || "";
-  state.form.inlinePrompt = state.detail.images?.inlinePrompt || "";
-  state.form.inlinePositions = {
-    1: inlinePositions["1"] || inlineTargetOptions[0]?.id || "",
-    2: inlinePositions["2"] || inlineTargetOptions[1]?.id || inlineTargetOptions[0]?.id || "",
-  };
   state.form.coverCandidatePath = state.detail.images?.coverCandidatePath || "";
 
   renderSelect(
     refs.themeSelect,
     themeCatalog().map((item) => ({
       value: item.id,
-      label: item.description ? `${item.label} · ${item.description}` : item.label,
+      label: item.label,
     })),
     state.form.tone.theme,
     "暂无主题"
   );
-  renderSelect(
-    refs.templateSelect,
-    templateCatalog().map((item) => ({
-      value: item.id,
-      label: item.description ? `${item.label} · ${item.description}` : item.label,
-    })),
-    state.form.typography.template,
-    "暂无模板"
-  );
-  renderSelect(
-    refs.titleStyleSelect,
-    titleStyleCatalog().map((item) => ({ value: item.id, label: item.label })),
-    state.form.typography.titleStyle,
-    "暂无标题样式"
-  );
-  renderSelect(
-    refs.sectionStyleSelect,
-    sectionStyleCatalog().map((item) => ({ value: item.id, label: item.label })),
-    state.form.typography.sectionStyle,
-    "暂无小节样式"
-  );
-  renderSelect(
-    refs.inlinePositionSlot1,
-    inlineTargetOptions.map((item) => ({
-      value: item.id,
-      label: item.description || item.label || item.id,
-    })),
-    state.form.inlinePositions[1],
-    "暂无可选位置"
-  );
-  renderSelect(
-    refs.inlinePositionSlot2,
-    inlineTargetOptions.map((item) => ({
-      value: item.id,
-      label: item.description || item.label || item.id,
-    })),
-    state.form.inlinePositions[2],
-    "暂无可选位置"
-  );
-
   refs.themeHint.textContent = themeDescription(state.form.tone.theme) || "选择文章的整体气质基底。";
-  refs.templateHint.textContent = templateDescription(state.form.typography.template) || "控制标题区、小节结构和图文节奏。";
   refs.primaryColorInput.value = state.form.tone.primaryColor;
   refs.saturationRange.value = String(state.form.tone.saturation);
   refs.opacityRange.value = String(state.form.tone.opacity);
-  refs.bodySizeRange.value = String(state.form.typography.bodySize);
-  refs.lineHeightRange.value = String(state.form.typography.lineHeight);
-  refs.paragraphGapRange.value = String(state.form.typography.paragraphGap);
-  refs.imageRadiusRange.value = String(state.form.typography.imageRadius);
-  refs.imageSpacingRange.value = String(state.form.typography.imageSpacing);
-  refs.coverPromptInput.value = state.form.coverPrompt;
-  refs.inlinePromptInput.value = state.form.inlinePrompt;
   refs.coverCandidatePath.value = state.form.coverCandidatePath;
   updateRangeReadouts();
+}
+
+function setArticleMenuOpen(open) {
+  state.articleMenuOpen = Boolean(open) && Boolean(state.articles.length);
+  refs.articleSwitcherButton.setAttribute("aria-expanded", state.articleMenuOpen ? "true" : "false");
+  refs.articleSwitcherMenu.classList.toggle("hidden", !state.articleMenuOpen);
+}
+
+function renderArticleInfoCollapse() {
+  const collapsed = Boolean(state.articleInfoCollapsed);
+  refs.articleInfoCard.classList.toggle("is-collapsed", collapsed);
+  refs.articleInfoToggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
+  refs.articleInfoToggle.setAttribute("aria-label", collapsed ? "展开文章信息" : "折叠文章信息");
+  refs.articleInfoToggleLabel.textContent = collapsed ? "展开" : "收起";
+  refs.articleInfoContent.classList.toggle("hidden", collapsed);
+  refs.articleInfoContent.setAttribute("aria-hidden", collapsed ? "true" : "false");
+}
+
+function setArticleInfoCollapsed(collapsed) {
+  state.articleInfoCollapsed = Boolean(collapsed);
+  renderArticleInfoCollapse();
 }
 
 function renderArticleList() {
   const articles = state.articles || [];
   refs.articleCount.textContent = `${articles.length} 篇`;
   refs.articleSwitcherWrap.classList.toggle("hidden", articles.length === 0);
+  refs.articleSwitcherMenu.innerHTML = "";
   if (!articles.length) {
-    refs.articleSwitcher.innerHTML = '<option value="">当前工作区暂无文章</option>';
-    refs.articleSwitcher.disabled = true;
+    refs.articleSwitcherCurrent.textContent = "当前工作区暂无文章";
+    refs.articleSwitcherButton.disabled = true;
+    setArticleMenuOpen(false);
     return;
   }
-  refs.articleSwitcher.innerHTML = articles
-    .map((article, index) => `<option value="${article.id}">${articles.length > 1 ? `${index + 1}. ` : ""}${article.title}</option>`)
-    .join("");
-  refs.articleSwitcher.value = articles.some((article) => article.id === state.selectedId) ? state.selectedId : articles[0].id;
-  refs.articleSwitcher.disabled = articles.length <= 1;
+  refs.articleSwitcherButton.disabled = false;
+  const selectedArticle = articles.find((article) => article.id === state.selectedId) || articles[0];
+  refs.articleSwitcherCurrent.textContent = selectedArticle?.title || "选择文章";
+
+  articles.forEach((article, index) => {
+    const row = document.createElement("div");
+    row.className = "article-switcher-item";
+
+    const selectButton = document.createElement("button");
+    selectButton.className = `article-switcher-select${article.id === state.selectedId ? " active" : ""}`;
+    selectButton.type = "button";
+    selectButton.dataset.articleId = article.id;
+
+    const title = document.createElement("strong");
+    title.textContent = `${articles.length > 1 ? `${index + 1}. ` : ""}${article.title}`;
+    const meta = document.createElement("span");
+    meta.textContent = `${article.updatedAt || "未知时间"} · ${formatCount(article.charCount)} 字`;
+
+    selectButton.appendChild(title);
+    selectButton.appendChild(meta);
+
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "secondary-btn danger small article-switcher-delete";
+    deleteButton.type = "button";
+    deleteButton.dataset.articleDeleteId = article.id;
+    deleteButton.dataset.articleDeleteTitle = article.title || article.id;
+    deleteButton.textContent = "删除";
+
+    row.appendChild(selectButton);
+    row.appendChild(deleteButton);
+    refs.articleSwitcherMenu.appendChild(row);
+  });
 }
 
 function renderArticleInfo(detail) {
@@ -399,15 +403,6 @@ function renderWarnings(detail) {
 }
 
 function renderVisualStatus(detail) {
-  const tone = detail.tone || {};
-  const typography = detail.typography || {};
-  const previewReady = Boolean(detail.preview?.ready);
-  refs.detailThemeBadge.textContent = `${themeLabel(tone.theme)} / ${templateLabel(typography.template)}`;
-  refs.previewThemeBadge.textContent = previewReady
-    ? `${themeLabel(detail.preview?.themeName || tone.theme)} / ${templateLabel(detail.preview?.template || typography.template)}`
-    : "预览待生成";
-  refs.previewReferenceBadge.textContent = `${tone.primaryColor || "#b3832f"} · ${tone.saturation || 100}% / ${tone.opacity || 88}%`;
-  refs.previewReferenceBadge.classList.remove("muted");
 }
 
 function renderPathDisclosure(path) {
@@ -415,41 +410,69 @@ function renderPathDisclosure(path) {
   return `
     <details class="path-disclosure">
       <summary>本地路径</summary>
-      <code>${value}</code>
+      <code>${escapeHtml(value)}</code>
     </details>
   `;
 }
 
+function inlinePromptValue(item) {
+  const slotId = String(item?.slotId || "");
+  if (slotId && Object.prototype.hasOwnProperty.call(state.inlinePromptDrafts, slotId)) {
+    return state.inlinePromptDrafts[slotId];
+  }
+  return item?.prompt || item?.currentItem?.promptOverride || item?.currentItem?.style || "";
+}
+
+function coverPromptValue(item) {
+  if (state.coverPromptDraft !== undefined) {
+    return state.coverPromptDraft;
+  }
+  return item?.promptOverride || item?.prompt || item?.style || "";
+}
+
 function renderCover(detail) {
   const generated = detail.images?.coverGenerated;
+  const draft = detail.images?.coverDraft || null;
   const history = detail.images?.coverHistory || [];
   const candidatePath = detail.images?.coverCandidatePath || "";
-  refs.detailCoverBadge.textContent = candidatePath ? `封面 · ${basename(candidatePath)}` : "未选封面";
-  refs.detailCoverBadge.classList.toggle("muted", !candidatePath);
   refs.coverCandidatePath.value = candidatePath;
   state.form.coverCandidatePath = candidatePath;
 
-  if (!assetUrl(generated)) {
+  const hasGenerated = Boolean(assetUrl(generated));
+  const generatedHasCustomPrompt = Boolean(
+    String(generated?.promptOverride || generated?.customPrompt || "").trim()
+  );
+  const promptSource = generatedHasCustomPrompt ? (generated || draft || null) : (draft || generated || null);
+
+  if (!promptSource) {
     refs.coverResultCard.classList.add("hidden");
-    refs.selectCoverButton.dataset.coverPath = "";
-    refs.deleteCoverButton.dataset.deleteCoverPath = "";
-    refs.deleteCoverButton.disabled = true;
   } else {
     refs.coverResultCard.classList.remove("hidden");
-    refs.coverResultImage.src = assetUrl(generated);
-    refs.coverResultMeta.textContent = `${generated.styleLabel || generated.preset || "cover"} · ${generated.width || "?"}x${generated.height || "?"}`;
-    refs.coverResultPrompt.textContent = generated.prompt
-      ? `提示词：${generated.prompt}\n素材路径：${generated.localPath || "未保存"}`
-      : `素材路径：${generated.localPath || "未保存"}`;
-    refs.selectCoverButton.dataset.coverPath = generated.localPath || "";
-    refs.deleteCoverButton.dataset.deleteCoverPath = generated.localPath || "";
-    refs.deleteCoverButton.disabled = !generated.localPath;
+    const promptValue = coverPromptValue(promptSource);
+    refs.coverResultImage.classList.toggle("hidden", !hasGenerated);
+    refs.coverResultPlaceholder.classList.toggle("hidden", hasGenerated);
+    if (hasGenerated) {
+      refs.coverResultImage.src = assetUrl(generated);
+    } else {
+      refs.coverResultImage.removeAttribute("src");
+    }
+    refs.coverResultMeta.textContent = "";
+    refs.coverResultPromptInput.value = promptValue;
+    refs.coverResultPromptInput.dataset.promptBaseline = promptSource.promptOverride || promptSource.prompt || promptSource.style || "";
+    refs.coverResultPromptInput.dataset.coverStyleId = promptSource.styleId || generated?.styleId || draft?.styleId || "";
+    refs.coverResultPromptHelp.textContent = hasGenerated
+      ? (generated.localPath ? `本地路径：${generated.localPath}` : "当前封面还没有本地路径。")
+      : "这是系统自动生成的默认封面配图 Prompt；如果要微调，只补充画面意象再点上方 generate。";
+    refs.selectCoverButton.dataset.coverPath = hasGenerated ? (generated.localPath || "") : "";
+    refs.deleteCoverButton.dataset.deleteCoverPath = hasGenerated ? (generated.localPath || "") : "";
+    refs.selectCoverButton.disabled = !hasGenerated;
+    refs.deleteCoverButton.disabled = !hasGenerated;
   }
 
   refs.coverHistoryGallery.innerHTML = "";
   const historyItems = history.filter((item) => item?.localPath);
   if (!historyItems.length) {
-    refs.coverHistoryGallery.innerHTML = '<div class="history-empty">还没有封面候选。导入后或点击“重新生成封面候选”会自动生成 4 张核心封面。</div>';
+    refs.coverHistoryGallery.innerHTML = '<div class="history-empty">还没有封面候选。导入后或点击“generate”会自动生成 4 张核心封面。</div>';
     return;
   }
   historyItems.forEach((item, index) => {
@@ -476,70 +499,81 @@ function renderCover(detail) {
 }
 
 function renderInlineImages(detail) {
-  const items = detail.images?.inlineItems || [];
-  const history = detail.images?.inlineHistory || [];
+  const items = detail.editor?.imageSlots || detail.images?.inlineSlots || [];
   refs.inlineGallery.innerHTML = "";
   if (!items.length) {
-    refs.inlineGallery.innerHTML = '<div class="inline-empty">还没有正文配图。导入后会自动生成 2 张，或点击“重新生成正文配图”重新生成。</div>';
+    refs.inlineGallery.innerHTML = '<div class="inline-empty">还没有插图位。先在右侧编辑区把光标放到正文中，再插入插图位。</div>';
   } else {
     items.forEach((item) => {
+      const promptValue = inlinePromptValue(item);
+      const currentItem = item.currentItem || null;
+      const slotId = String(item.slotId || "");
+      const historyItems = Array.isArray(item.history) ? item.history : [];
       const card = document.createElement("article");
       card.className = "inline-card";
-      card.dataset.inlineCardSlot = String(item.slot || "");
+      card.dataset.inlineCardSlot = slotId;
+      const currentImage = currentItem ? assetUrl(currentItem) : "";
+      const historyMarkup = historyItems.length
+        ? historyItems
+            .map((historyItem, index) => {
+              const isCurrent = currentItem?.localPath && historyItem.localPath === currentItem.localPath;
+              return `
+                <article class="mini-history-card">
+                  ${assetUrl(historyItem) ? `<img src="${assetUrl(historyItem)}" alt="${escapeHtml(historyItem.label || `历史插图 ${index + 1}`)}" />` : ""}
+                  <div class="mini-history-meta">
+                    <strong>${escapeHtml(historyItem.label || `历史插图 ${index + 1}`)}</strong>
+                    <span>${escapeHtml(historyItem.createdAt || "未知时间")}</span>
+                  </div>
+                  <div class="history-actions">
+                    <button class="secondary-btn small" type="button" data-inline-slot-id="${slotId}" data-inline-path="${historyItem.localPath || ""}" ${isCurrent ? "disabled" : ""}>${isCurrent ? "当前已用" : "切换"}</button>
+                    <button class="secondary-btn danger small image-delete-btn" type="button" data-delete-inline-path="${historyItem.localPath || ""}">删除</button>
+                  </div>
+                </article>
+              `;
+            })
+            .join("")
+        : '<div class="history-empty">这张插图位还没有历史图。</div>';
       card.innerHTML = `
-        <div class="inline-card-head">
-          <div>
-            <strong>插图 ${item.slot}</strong>
-            <span>${item.label}</span>
-          </div>
-          <button class="secondary-btn small" type="button" data-inline-regenerate="${item.slot}">重生成此位置</button>
+      <div class="inline-card-head">
+        <div>
+          <strong>插图 ${item.order}</strong>
+          <span>${item.anchorPreviewText || "未定位到正文上下文"}</span>
         </div>
-        <img src="${assetUrl(item)}" alt="${item.label}" />
-        <p>${item.targetLabel ? `插入位置：${item.targetLabel}\n` : ""}${item.prompt ? `提示词：${item.prompt}` : "图片已生成。"}</p>
-        ${renderPathDisclosure(item.localPath)}
-        <div class="history-actions">
-          <button class="secondary-btn danger small image-delete-btn" type="button" data-delete-inline-path="${item.localPath || ""}">删除</button>
+        <div class="inline-slot-actions">
+          <button class="secondary-btn small" type="button" data-inline-move-slot="${slotId}">改位置</button>
+          <button class="secondary-btn danger small" type="button" data-inline-delete-slot="${slotId}">删除插图位</button>
+          <button class="secondary-btn small" type="button" data-inline-regenerate="${slotId}">generate</button>
+        </div>
+      </div>
+        <div class="inline-card-meta">${item.anchorPreviewText ? `插入位置：${escapeHtml(item.anchorPreviewText)}` : "还没有正文位置。"}</div>
+        ${currentImage ? `<img src="${currentImage}" alt="${escapeHtml(item.anchorPreviewText || `插图 ${item.order}`)}" />` : '<div class="inline-image-empty">这个插图位还没有生成图片。</div>'}
+        <div class="generated-prompt-editor">
+          <label class="generated-prompt-label" for="inlinePromptEditor-${slotId}">配图 Prompt</label>
+          <textarea
+            class="generated-prompt-input"
+            id="inlinePromptEditor-${slotId}"
+            data-inline-prompt-slot="${slotId}"
+            rows="12"
+            placeholder="这里可以直接修改这张图的配图 Prompt，然后点 generate。"
+          >${escapeHtml(promptValue)}</textarea>
+          <p class="generated-prompt-help">${state.pendingSlotMoveId === slotId ? "正在等待你在右侧编辑区重新选择新的插图位置。" : "修改后点 generate，会优先按这张图自己的配图 Prompt 出图。"}</p>
+        </div>
+        ${currentItem?.localPath ? renderPathDisclosure(currentItem.localPath) : ""}
+        <div class="inline-history-stack">
+          <strong class="inline-history-title">历史图</strong>
+          <div class="mini-history-grid">
+            ${historyMarkup}
+          </div>
         </div>
       `;
       refs.inlineGallery.appendChild(card);
     });
   }
-
-  refs.inlineHistoryGallery.innerHTML = "";
-  const currentPaths = new Set(items.map((item) => item.localPath).filter(Boolean));
-  const historyItems = history.filter((item) => item?.localPath);
-  if (!historyItems.length) {
-    refs.inlineHistoryGallery.innerHTML = '<div class="history-empty">历史正文配图会保存在本地，后续可回切到当前插图位置。</div>';
-    return;
-  }
-  historyItems.forEach((item, index) => {
-    const isCurrent = currentPaths.has(item.localPath);
-    const card = document.createElement("article");
-    card.className = "history-card";
-    card.innerHTML = `
-      <div class="history-card-head">
-        <div>
-          <strong>插图 ${item.slot || "?"} · 历史 ${index + 1}</strong>
-          <span>${item.label || "正文插图"}</span>
-        </div>
-        <span class="list-chip ${isCurrent ? "success" : ""}">${isCurrent ? "当前在文中" : (item.createdAt || "未知时间")}</span>
-      </div>
-      ${assetUrl(item) ? `<img src="${assetUrl(item)}" alt="${item.label || "历史插图"}" />` : ""}
-      ${renderPathDisclosure(item.localPath)}
-      <div class="history-actions">
-        <button class="secondary-btn small" type="button" data-inline-slot="${item.slot || ""}" data-inline-path="${item.localPath || ""}" ${isCurrent ? "disabled" : ""}>${isCurrent ? "当前已使用" : "切换到此插图"}</button>
-        <button class="secondary-btn danger small image-delete-btn" type="button" data-delete-inline-path="${item.localPath || ""}">删除</button>
-      </div>
-    `;
-    refs.inlineHistoryGallery.appendChild(card);
-  });
 }
 
 function renderDraft(detail) {
   const draft = detail.draft || {};
   const hasDraft = Boolean(draft.mediaId);
-  refs.detailDraftBadge.textContent = hasDraft ? `草稿 · ${draft.mediaId.slice(0, 8)}...` : "未推草稿";
-  refs.detailDraftBadge.classList.toggle("muted", !hasDraft);
   refs.draftStatusTitle.textContent = hasDraft ? "已推送到草稿箱" : "尚未推送";
   refs.draftStatusText.textContent = hasDraft
     ? `最近一次推送时间：${draft.pushedAt || "未知"}。media_id：${draft.mediaId}`
@@ -600,33 +634,32 @@ function renderPreview(detail) {
   const preview = detail.preview || {};
   const ready = Boolean(preview.ready);
   const title = preview.title || detail.article.title;
-  const summary = ready
-    ? (preview.summary || detail.article.summary || "暂无摘要")
-    : (preview.statusText || "先调整风格和配色，再手动生成预览。");
+  const previewMessage = preview.statusText || "先调整风格和配色，再手动生成预览。";
   refs.previewTitle.textContent = title;
-  refs.previewSummary.textContent = summary;
   refs.previewCharCount.textContent = formatCount(preview.charCount || detail.article.charCount || 0);
   refs.previewKicker.textContent = ready ? "微信发布预览" : "预览待生成";
-  refs.previewModeBadge.textContent = ready ? "推草稿同源" : "等待手动刷新";
   refs.previewFrame.srcdoc = ready
     ? (preview.standaloneHtml || "")
-    : previewPlaceholderHtml(title, summary);
-  refs.sourceView.textContent = ready ? (preview.sourceHtml || "") : summary;
-  refs.previewModeButton.disabled = !ready;
+    : previewPlaceholderHtml(title, previewMessage);
+  renderEditorView(detail);
+  refs.previewModeButton.disabled = !(detail.editor?.blocks || []).length;
   refs.copyHtmlButton.disabled = !ready;
   refs.saveHtmlButton.disabled = !ready;
   state.lastSavedName = `${sanitizeFilename(title)}.html`;
-  if (!ready && state.previewMode === "source") {
+  if (!(detail.editor?.blocks || []).length && state.previewMode === "edit") {
     state.previewMode = "preview";
   }
   renderPreviewMode();
 }
 
 function renderPreviewMode() {
-  const isSource = state.previewMode === "source";
-  refs.previewModeButton.textContent = isSource ? "预览" : "源码";
-  refs.previewFrame.classList.toggle("hidden", isSource);
-  refs.sourceView.classList.toggle("hidden", !isSource);
+  const isEdit = state.previewMode === "edit";
+  refs.previewModeButton.textContent = isEdit ? "预览" : "编辑";
+  refs.previewFrame.classList.toggle("hidden", isEdit);
+  refs.editorView.classList.toggle("hidden", !isEdit);
+  if (!isEdit) {
+    hideEditorToolbar();
+  }
 }
 
 function resizePreviewFrame() {
@@ -643,10 +676,10 @@ function resizePreviewFrame() {
   }, 80);
 }
 
-function focusInlineEditor(slot) {
-  const card = refs.inlineGallery.querySelector(`[data-inline-card-slot="${slot}"]`);
+function focusInlineEditor(slotId) {
+  const card = refs.inlineGallery.querySelector(`[data-inline-card-slot="${slotId}"]`);
   if (!card) {
-    showToast(`没找到插图 ${slot} 的编辑卡片`);
+    showToast("没找到这个插图位的编辑卡片");
     return;
   }
   card.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -655,13 +688,392 @@ function focusInlineEditor(slot) {
   card.classList.add("is-focused");
   clearTimeout(card.highlightTimer);
   card.highlightTimer = setTimeout(() => card.classList.remove("is-focused"), 2200);
+  const promptInput = card.querySelector(`[data-inline-prompt-slot="${slotId}"]`);
+  if (promptInput) {
+    promptInput.focus({ preventScroll: true });
+    promptInput.setSelectionRange?.(promptInput.value.length, promptInput.value.length);
+    return;
+  }
   const actionButton =
-    card.querySelector(`[data-inline-regenerate="${slot}"]`) ||
+    card.querySelector(`[data-inline-regenerate="${slotId}"]`) ||
     card.querySelector("[data-delete-inline-path]") ||
     card.querySelector("button");
   if (actionButton) {
     actionButton.focus({ preventScroll: true });
   }
+}
+
+function editorBlocks(detail = state.detail) {
+  return Array.isArray(detail?.editor?.blocks) ? detail.editor.blocks : [];
+}
+
+function editorSlots(detail = state.detail) {
+  return Array.isArray(detail?.editor?.imageSlots) ? detail.editor.imageSlots : [];
+}
+
+function hideEditorToolbar() {
+  state.editorSelection = null;
+  refs.editorSelectionToolbar.classList.add("hidden");
+}
+
+function selectionOffsetsWithinElement(element) {
+  const selection = window.getSelection();
+  if (!selection || !selection.rangeCount) return null;
+  const range = selection.getRangeAt(0);
+  if (!element.contains(range.startContainer) || !element.contains(range.endContainer)) return null;
+  const preStart = range.cloneRange();
+  preStart.selectNodeContents(element);
+  preStart.setEnd(range.startContainer, range.startOffset);
+  const preEnd = range.cloneRange();
+  preEnd.selectNodeContents(element);
+  preEnd.setEnd(range.endContainer, range.endOffset);
+  return {
+    blockId: element.dataset.blockId || "",
+    start: preStart.toString().length,
+    end: preEnd.toString().length,
+    collapsed: range.collapsed,
+    rect: range.getBoundingClientRect(),
+    elementRect: element.getBoundingClientRect(),
+  };
+}
+
+function serializeEditorNode(node) {
+  if (!node) return "";
+  if (node.nodeType === Node.TEXT_NODE) {
+    return node.textContent || "";
+  }
+  if (node.nodeType !== Node.ELEMENT_NODE) {
+    return "";
+  }
+  if (node.tagName === "BR") {
+    return " ";
+  }
+  const childrenText = Array.from(node.childNodes || []).map((child) => serializeEditorNode(child)).join("");
+  if (node.classList?.contains("editor-theme-highlight")) {
+    return `**${childrenText}**`;
+  }
+  return childrenText;
+}
+
+function serializeEditorBlockContent(element) {
+  if (!element) return "";
+  return Array.from(element.childNodes || [])
+    .map((child) => serializeEditorNode(child))
+    .join("")
+    .replace(/\u00a0/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function cleanupEditorBlockHighlights(element) {
+  if (!element) return;
+  element.querySelectorAll(".editor-theme-highlight .editor-theme-highlight").forEach((highlight) => {
+    const fragment = document.createDocumentFragment();
+    while (highlight.firstChild) {
+      fragment.appendChild(highlight.firstChild);
+    }
+    highlight.replaceWith(fragment);
+  });
+  element.querySelectorAll(".editor-theme-highlight").forEach((highlight) => {
+    while (
+      highlight.nextSibling &&
+      highlight.nextSibling.nodeType === Node.ELEMENT_NODE &&
+      highlight.nextSibling.classList?.contains("editor-theme-highlight")
+    ) {
+      const nextHighlight = highlight.nextSibling;
+      while (nextHighlight.firstChild) {
+        highlight.appendChild(nextHighlight.firstChild);
+      }
+      nextHighlight.remove();
+    }
+    if (!highlight.textContent?.trim()) {
+      highlight.remove();
+    }
+  });
+  element.normalize();
+}
+
+function currentEditorRange() {
+  const selection = window.getSelection();
+  if (!selection || !selection.rangeCount) return null;
+  const range = selection.getRangeAt(0);
+  const block = range.commonAncestorContainer?.nodeType === Node.ELEMENT_NODE
+    ? range.commonAncestorContainer.closest?.("[data-editor-text-block='true']")
+    : range.commonAncestorContainer?.parentElement?.closest?.("[data-editor-text-block='true']");
+  if (!block || !refs.editorView.contains(block)) return null;
+  if (!block.contains(range.startContainer) || !block.contains(range.endContainer)) return null;
+  return { selection, range, block };
+}
+
+function updateEditorInsertButtonLabel() {
+  refs.editorInsertImageButton.textContent = state.pendingSlotMoveId ? "移动插图位" : "插入插图位";
+}
+
+function updateEditorSelectionToolbar() {
+  updateEditorInsertButtonLabel();
+  if (state.previewMode !== "edit") {
+    hideEditorToolbar();
+    return;
+  }
+  const selection = window.getSelection();
+  if (!selection || !selection.rangeCount) {
+    hideEditorToolbar();
+    return;
+  }
+  const block = selection.anchorNode?.parentElement?.closest?.("[data-editor-text-block='true']");
+  if (!block || !refs.editorView.contains(block)) {
+    hideEditorToolbar();
+    return;
+  }
+  const offsets = selectionOffsetsWithinElement(block);
+  if (!offsets || !offsets.blockId) {
+    hideEditorToolbar();
+    return;
+  }
+  state.editorSelection = offsets;
+  refs.editorHighlightButton.disabled = offsets.collapsed;
+  refs.editorDeleteButton.disabled = offsets.collapsed;
+  const rect = offsets.rect && (offsets.rect.width || offsets.rect.height) ? offsets.rect : offsets.elementRect;
+  refs.editorSelectionToolbar.style.left = `${Math.max(18, rect.left + rect.width / 2)}px`;
+  refs.editorSelectionToolbar.style.top = `${Math.max(18, rect.top + window.scrollY - 54)}px`;
+  refs.editorSelectionToolbar.classList.remove("hidden");
+}
+
+function editorCoverAsset(detail) {
+  return detail?.images?.coverModuleCurrent || detail?.images?.coverModule || detail?.images?.coverGenerated || null;
+}
+
+function editorSummary(detail) {
+  return detail?.preview?.summary || detail?.article?.summary || "暂无摘要";
+}
+
+function editorYear(detail) {
+  const updatedAt = String(detail?.article?.updatedAt || "").trim();
+  const matched = updatedAt.match(/\b(20\d{2})\b/);
+  return matched?.[1] || String(new Date().getFullYear());
+}
+
+function renderEditorHero(detail) {
+  const cover = editorCoverAsset(detail);
+  const coverUrl = assetUrl(cover);
+  const title = escapeHtml(detail?.article?.title || "未命名文章");
+  const summary = escapeHtml(editorSummary(detail));
+  const year = escapeHtml(editorYear(detail));
+  const section = document.createElement("section");
+  section.className = "editor-hero";
+  section.innerHTML = `
+    <div class="editor-hero-kicker">&nbsp;<span>&nbsp;</span></div>
+    <div class="editor-hero-strip">
+      <span>&nbsp;</span>
+      <span>&nbsp;</span>
+    </div>
+    <div class="editor-hero-center">
+      <span class="editor-hero-year">${year}</span>
+      <p class="editor-hero-title"><span>|</span> ${title} <span>|</span></p>
+      <p class="editor-hero-summary">${summary}</p>
+    </div>
+    <div class="editor-hero-cover-shell">
+      <div class="editor-hero-cover-frame">
+        <div class="editor-hero-cover-card">
+          <div class="editor-hero-cover-media">
+            ${coverUrl ? `<img src="${coverUrl}" alt="${title}" />` : '<div class="editor-hero-cover-placeholder">当前还没有封面图</div>'}
+          </div>
+          <p class="editor-hero-cover-text">${summary}</p>
+        </div>
+      </div>
+    </div>
+  `;
+  return section;
+}
+
+function renderEditorListBlock(block) {
+  const items = Array.isArray(block?.items) ? block.items : [];
+  const ordered = Boolean(block?.ordered);
+  const list = document.createElement(ordered ? "ol" : "ul");
+  list.className = `editor-list-block${ordered ? " is-ordered" : ""}`;
+  items.forEach((item, index) => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <span class="editor-list-badge">${ordered ? index + 1 : "•"}</span>
+      <span>${escapeHtml(item)}</span>
+    `;
+    list.appendChild(li);
+  });
+  return list;
+}
+
+function renderEditorImageSlotBlock(detail, block) {
+  const slot = editorSlots(detail).find((item) => item.slotId === block.slotId);
+  const currentItem = slot?.currentItem || null;
+  const currentImage = currentItem ? assetUrl(currentItem) : "";
+  const slotId = String(block.slotId || "");
+  const label = escapeHtml(slot?.anchorPreviewText || `插图位 ${slot?.order || slotId || ""}`);
+  const node = document.createElement("section");
+  node.className = `editor-inline-figure${state.pendingSlotMoveId === slotId ? " is-moving" : ""}`;
+  node.dataset.editorSlotId = slotId;
+  node.innerHTML = `
+    <div class="editor-inline-figure-rule"></div>
+    <div class="editor-inline-figure-frame">
+      <div class="editor-inline-figure-inner">
+        ${
+          currentImage
+            ? `<img src="${currentImage}" alt="" />`
+            : `<div class="editor-inline-placeholder">
+                <strong>插图位 ${slot?.order || slotId}</strong>
+                <span>这里只增加图片占位，不改正文</span>
+              </div>`
+        }
+      </div>
+    </div>
+    <div class="editor-inline-slot-actions">
+      <button class="secondary-btn small" type="button" data-editor-slot-move="${slotId}">改位置</button>
+      <button class="secondary-btn danger small" type="button" data-editor-slot-delete="${slotId}">删除</button>
+    </div>
+  `;
+  return node;
+}
+
+function renderEditorView(detail) {
+  const blocks = editorBlocks(detail);
+  refs.editorView.innerHTML = "";
+  refs.editorView.style.setProperty("--editor-accent", detail?.tone?.primaryColor || "#b3832f");
+  if (!blocks.length) {
+    refs.editorView.innerHTML = '<div class="editor-empty">当前还没有可编辑的正文块。</div>';
+    hideEditorToolbar();
+    return;
+  }
+  const shell = document.createElement("section");
+  shell.className = "editor-preview-shell";
+  const canvas = document.createElement("article");
+  canvas.className = "editor-canvas";
+  const body = document.createElement("div");
+  body.className = "editor-preview-body";
+  body.appendChild(renderEditorHero(detail));
+  blocks.forEach((block) => {
+    if (block.kind === "image-slot") {
+      body.appendChild(renderEditorImageSlotBlock(detail, block));
+      return;
+    }
+    if (block.kind === "list") {
+      body.appendChild(renderEditorListBlock(block));
+      return;
+    }
+    const tagName = block.kind === "heading" ? `h${Math.min(Math.max(Number(block.level || 2), 2), 4)}` : "p";
+    const element = document.createElement(tagName);
+    element.className = `editor-block editor-block-${block.kind}${block.kind === "heading" ? ` editor-block-heading-level-${Math.min(Math.max(Number(block.level || 2), 2), 4)}` : ""}`;
+    element.contentEditable = "true";
+    element.spellcheck = false;
+    element.dataset.blockId = block.id || "";
+    element.dataset.editorTextBlock = "true";
+    element.innerHTML = block.htmlText || escapeHtml(block.text || "");
+    body.appendChild(element);
+  });
+  canvas.appendChild(body);
+  shell.appendChild(canvas);
+  refs.editorView.appendChild(shell);
+  hideEditorToolbar();
+}
+
+async function refreshDetailFromResult(result, { toastMessage = "", clearPendingMove = false } = {}) {
+  const previewMode = state.previewMode;
+  state.detail = result.detail;
+  if (clearPendingMove) {
+    state.pendingSlotMoveId = "";
+  }
+  renderDetail();
+  state.previewMode = previewMode;
+  renderPreviewMode();
+  if (toastMessage) {
+    showToast(toastMessage);
+  }
+}
+
+function queueEditorBlockSave(element) {
+  const blockId = element?.dataset?.blockId || "";
+  if (!blockId || !state.selectedId) return;
+  clearTimeout(state.editorSaveTimers[blockId]);
+  const nextText = serializeEditorBlockContent(element);
+  state.editorSaveTimers[blockId] = setTimeout(() => {
+    saveEditorBlock(blockId, nextText).catch((error) => showToast(error.message || "正文自动保存失败"));
+  }, 400);
+}
+
+async function saveEditorBlock(blockId, text) {
+  if (!state.selectedId || !blockId) return;
+  delete state.editorSaveTimers[blockId];
+  const result = await requestJson(`/api/articles/${encodeURIComponent(state.selectedId)}/editor/text`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ blockId, text }),
+  });
+  await refreshDetailFromResult(result);
+}
+
+async function handleEditorSelectionAction(action) {
+  if (!state.selectedId || !state.editorSelection?.blockId) return;
+  const current = currentEditorRange();
+  if (!current) return;
+  const { selection, range, block } = current;
+  if (range.collapsed) {
+    showToast(action === "highlight" ? "请先选中要高亮的文字" : "请先选中要删除的文字");
+    return;
+  }
+
+  if (action === "highlight") {
+    const highlight = document.createElement("span");
+    highlight.className = "editor-theme-highlight";
+    const fragment = range.extractContents();
+    highlight.appendChild(fragment);
+    range.insertNode(highlight);
+  } else if (action === "delete") {
+    range.deleteContents();
+  } else {
+    return;
+  }
+
+  cleanupEditorBlockHighlights(block);
+  selection.removeAllRanges();
+  hideEditorToolbar();
+  await saveEditorBlock(block.dataset.blockId || "", serializeEditorBlockContent(block));
+  showToast(action === "highlight" ? "文字已高亮" : "文字已删除");
+}
+
+async function handleEditorInsertImageSlot() {
+  if (!state.selectedId || !state.editorSelection?.blockId) return;
+  const moving = Boolean(state.pendingSlotMoveId);
+  const url = moving
+    ? `/api/articles/${encodeURIComponent(state.selectedId)}/editor/image-slot/move`
+    : `/api/articles/${encodeURIComponent(state.selectedId)}/editor/image-slot/insert`;
+  const body = moving
+    ? {
+        slotId: state.pendingSlotMoveId,
+        blockId: state.editorSelection.blockId,
+        offset: state.editorSelection.start,
+      }
+    : {
+        blockId: state.editorSelection.blockId,
+        offset: state.editorSelection.start,
+      };
+  const result = await requestJson(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  await refreshDetailFromResult(result, {
+    toastMessage: moving ? "插图位位置已更新" : "插图位已插入",
+    clearPendingMove: moving,
+  });
+}
+
+async function handleDeleteInlineSlot(slotId) {
+  if (!state.selectedId || !slotId) return;
+  if (!window.confirm("删除这个插图位后，正文里的占位也会一起删掉，是否继续？")) return;
+  const result = await requestJson(`/api/articles/${encodeURIComponent(state.selectedId)}/editor/image-slot/delete`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ slotId }),
+  });
+  await refreshDetailFromResult(result, { toastMessage: "插图位已删除", clearPendingMove: state.pendingSlotMoveId === slotId });
 }
 
 function injectPreviewInlineEditorStyles(doc) {
@@ -712,7 +1124,7 @@ function attachPreviewInlineEditControl(doc, figure, img, slot) {
     button.type = "button";
     button.className = "preview-inline-edit-btn";
     button.dataset.inlineSlot = String(slot);
-    button.textContent = `编辑插图 ${slot}`;
+    button.textContent = `编辑插图`;
     button.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
@@ -757,14 +1169,16 @@ function hideDuplicatePreviewImage(primaryImg, duplicateImg) {
 
 function enhancePreviewInlineEditors(doc) {
   if (!doc || !state.detail) return;
-  const inlineItems = Array.isArray(state.detail.images?.inlineItems) ? state.detail.images.inlineItems : [];
+  const inlineItems = editorSlots(state.detail)
+    .map((slot) => (slot.currentItem ? { ...slot.currentItem, slotId: slot.slotId } : null))
+    .filter(Boolean);
   if (!inlineItems.length) return;
   injectPreviewInlineEditorStyles(doc);
 
   const assetMap = new Map();
   inlineItems.forEach((item) => {
     const normalized = normalizeAssetUrl(assetUrl(item));
-    const slot = Number(item.slot || 0);
+    const slot = String(item.slotId || "");
     if (normalized && slot) {
       assetMap.set(normalized, slot);
     }
@@ -801,9 +1215,14 @@ function renderDetail() {
   const hasDetail = Boolean(state.detail);
   refs.detailEmptyState.classList.toggle("hidden", hasDetail);
   refs.detailWrap.classList.toggle("hidden", !hasDetail);
-  if (!hasDetail) return;
+  if (!hasDetail) {
+    setArticleMenuOpen(false);
+    hideEditorToolbar();
+    return;
+  }
   syncFormFromDetail();
   renderArticleInfo(state.detail);
+  renderArticleInfoCollapse();
   renderWarnings(state.detail);
   renderVisualStatus(state.detail);
   renderCover(state.detail);
@@ -843,27 +1262,12 @@ function currentActionPayload() {
       saturation: Number(refs.saturationRange.value || state.form.tone.saturation),
       opacity: Number(refs.opacityRange.value || state.form.tone.opacity),
     },
-    typography: {
-      template: refs.templateSelect.value || state.form.typography.template,
-      titleStyle: refs.titleStyleSelect.value || state.form.typography.titleStyle,
-      bodySize: Number(refs.bodySizeRange.value || state.form.typography.bodySize),
-      lineHeight: Number(refs.lineHeightRange.value || state.form.typography.lineHeight),
-      paragraphGap: Number(refs.paragraphGapRange.value || state.form.typography.paragraphGap),
-      sectionStyle: refs.sectionStyleSelect.value || state.form.typography.sectionStyle,
-      imageRadius: Number(refs.imageRadiusRange.value || state.form.typography.imageRadius),
-      imageSpacing: Number(refs.imageSpacingRange.value || state.form.typography.imageSpacing),
-    },
-    inlinePositions: {
-      1: refs.inlinePositionSlot1.value || state.form.inlinePositions[1],
-      2: refs.inlinePositionSlot2.value || state.form.inlinePositions[2],
-    },
   };
 }
 
 function schedulePreviewRefresh() {
   updateRangeReadouts();
   refs.themeHint.textContent = themeDescription(refs.themeSelect.value) || "选择文章的整体气质基底。";
-  refs.templateHint.textContent = templateDescription(refs.templateSelect.value) || "控制标题区、小节结构和图文节奏。";
   if (!state.selectedId) return;
   clearTimeout(state.autoPreviewTimer);
   state.autoPreviewTimer = setTimeout(() => {
@@ -891,14 +1295,51 @@ async function loadArticles() {
 async function loadArticleDetail(articleId) {
   if (!articleId) {
     state.detail = null;
+    state.coverPromptDraft = undefined;
+    state.inlinePromptDrafts = {};
+    state.pendingSlotMoveId = "";
+    state.editorSelection = null;
     renderDetail();
     return;
   }
+  state.coverPromptDraft = undefined;
+  state.inlinePromptDrafts = {};
+  state.pendingSlotMoveId = "";
+  state.editorSelection = null;
   state.selectedId = articleId;
   renderArticleList();
   const payload = await requestJson(`/api/articles/${encodeURIComponent(articleId)}`);
   state.detail = payload.detail;
   renderDetail();
+}
+
+async function handleDeleteArticle(articleId) {
+  if (!articleId) return;
+  const article = (state.articles || []).find((item) => item.id === articleId);
+  const articleTitle = article?.title || articleId;
+  if (!window.confirm(`删除后会移除《${articleTitle}》的本地文章目录与相关素材，是否继续？`)) return;
+  const deletingCurrent = articleId === state.selectedId;
+  setArticleMenuOpen(false);
+  const result = await requestJson(`/api/articles/${encodeURIComponent(articleId)}/delete`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({}),
+  });
+
+  if (deletingCurrent) {
+    state.selectedId = "";
+    state.detail = null;
+  }
+
+  await loadArticles();
+  if (!state.selectedId) {
+    state.detail = null;
+    renderDetail();
+  } else if (deletingCurrent) {
+    await loadArticleDetail(state.selectedId);
+  }
+
+  showToast(result.message || "文章已删除");
 }
 
 async function handlePreview({ silent = false } = {}) {
@@ -939,6 +1380,8 @@ async function handleUpload(file) {
     await loadArticles();
     state.selectedId = result.detail.article.id;
     state.detail = result.detail;
+    state.coverPromptDraft = undefined;
+    state.inlinePromptDrafts = {};
     renderArticleList();
     renderDetail();
     const warningCount = Array.isArray(result.detail.source?.warnings) ? result.detail.source.warnings.length : 0;
@@ -952,21 +1395,28 @@ async function handleUpload(file) {
 
 async function handleGenerateCover() {
   if (!state.selectedId) return;
-  setButtonBusy(refs.generateCoverButton, true, "重新生成封面候选", "生成中...");
+  const generated = state.detail?.images?.coverGenerated || null;
+  const promptValue = refs.coverResultPromptInput.value.trim();
+  const promptBaseline = (refs.coverResultPromptInput.dataset.promptBaseline || "").trim();
+  const promptEdited = Boolean(promptValue && promptValue !== promptBaseline);
+  const payload = { ...currentActionPayload() };
+  if (promptEdited) {
+    payload.promptOverride = promptValue;
+    payload.styleId = refs.coverResultPromptInput.dataset.coverStyleId || generated?.styleId || "";
+  }
+  setButtonBusy(refs.generateCoverButton, true, "generate", "generating");
   try {
     const result = await requestJson(`/api/articles/${encodeURIComponent(state.selectedId)}/images/cover`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...currentActionPayload(),
-        prompt: refs.coverPromptInput.value.trim(),
-      }),
+      body: JSON.stringify(payload),
     });
     state.detail = result.detail;
+    state.coverPromptDraft = undefined;
     renderDetail();
     showToast(result.message || "封面候选已生成");
   } finally {
-    setButtonBusy(refs.generateCoverButton, false, "重新生成封面候选", "生成中...");
+    setButtonBusy(refs.generateCoverButton, false, "generate", "generating");
   }
 }
 
@@ -995,38 +1445,55 @@ async function handleDeleteCover(localPath) {
   showToast(result.message || "封面图片已删除");
 }
 
-async function handleGenerateInline(slot = 0) {
+function collectInlinePromptOverrides() {
+  const overrides = {};
+  refs.inlineGallery.querySelectorAll("[data-inline-prompt-slot]").forEach((input) => {
+    const slotId = String(input.dataset.inlinePromptSlot || "").trim();
+    if (!slotId) return;
+    overrides[slotId] = String(input.value || "");
+  });
+  return overrides;
+}
+
+async function handleGenerateInline(slotId = "", promptOverride = null, triggerButton = null) {
   if (!state.selectedId) return;
-  const idleLabel = slot ? `重生成插图 ${slot}` : "重新生成正文配图";
-  setButtonBusy(refs.generateInlineButton, true, "重新生成正文配图", "生成中...");
+  setButtonBusy(refs.generateInlineButton, true, "generate", "generating");
+  if (triggerButton) {
+    setButtonBusy(triggerButton, true, "generate", "generating");
+  }
   try {
+    const payload = {
+      ...currentActionPayload(),
+      promptOverrides: collectInlinePromptOverrides(),
+      slotId,
+    };
+    if (slotId && promptOverride !== null) {
+      payload.promptOverride = String(promptOverride);
+    }
     const result = await requestJson(`/api/articles/${encodeURIComponent(state.selectedId)}/images/inline`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...currentActionPayload(),
-        prompt: refs.inlinePromptInput.value.trim(),
-        slot,
-      }),
+      body: JSON.stringify(payload),
     });
-    state.detail = result.detail;
-    renderDetail();
-    showToast(slot ? `${idleLabel} 已完成` : (result.message || "正文配图已生成"));
+    await refreshDetailFromResult(result, {
+      toastMessage: slotId ? "插图已生成" : (result.message || "正文配图已生成"),
+    });
   } finally {
-    setButtonBusy(refs.generateInlineButton, false, "重新生成正文配图", "生成中...");
+    setButtonBusy(refs.generateInlineButton, false, "generate", "generating");
+    if (triggerButton) {
+      setButtonBusy(triggerButton, false, "generate", "generating");
+    }
   }
 }
 
-async function handleSelectInline(slot, localPath) {
-  if (!state.selectedId || !slot || !localPath) return;
+async function handleSelectInline(slotId, localPath) {
+  if (!state.selectedId || !slotId || !localPath) return;
   const result = await requestJson(`/api/articles/${encodeURIComponent(state.selectedId)}/images/inline/select`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ slot, path: localPath }),
+    body: JSON.stringify({ slotId, path: localPath }),
   });
-  state.detail = result.detail;
-  renderDetail();
-  showToast(result.message || "正文插图已切换");
+  await refreshDetailFromResult(result, { toastMessage: result.message || "正文插图已切换" });
 }
 
 async function handleDeleteInline(localPath) {
@@ -1037,9 +1504,7 @@ async function handleDeleteInline(localPath) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ path: localPath }),
   });
-  state.detail = result.detail;
-  renderDetail();
-  showToast(result.message || "正文配图已删除");
+  await refreshDetailFromResult(result, { toastMessage: result.message || "正文配图已删除" });
 }
 
 async function handlePushDraft() {
@@ -1138,10 +1603,38 @@ function bindEvents() {
 
   bindUploadEvents();
 
-  refs.articleSwitcher.addEventListener("change", (event) => {
-    const articleId = event.target.value;
+  refs.articleSwitcherButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    if (refs.articleSwitcherButton.disabled) return;
+    setArticleMenuOpen(!state.articleMenuOpen);
+  });
+
+  refs.articleInfoToggle.addEventListener("click", () => {
+    setArticleInfoCollapsed(!state.articleInfoCollapsed);
+  });
+
+  refs.articleSwitcherMenu.addEventListener("click", (event) => {
+    const deleteButton = event.target.closest("[data-article-delete-id]");
+    if (deleteButton) {
+      handleDeleteArticle(deleteButton.dataset.articleDeleteId).catch((error) => showToast(error.message || "文章删除失败"));
+      return;
+    }
+    const selectButton = event.target.closest("[data-article-id]");
+    if (!selectButton) return;
+    const articleId = selectButton.dataset.articleId || "";
+    setArticleMenuOpen(false);
     if (!articleId || articleId === state.selectedId) return;
     loadArticleDetail(articleId).catch((error) => showToast(error.message || "加载文章失败"));
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!(event.target instanceof Node)) return;
+    if (refs.articleSwitcherWrap.contains(event.target)) return;
+    setArticleMenuOpen(false);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") setArticleMenuOpen(false);
   });
 
   [
@@ -1149,16 +1642,6 @@ function bindEvents() {
     refs.primaryColorInput,
     refs.saturationRange,
     refs.opacityRange,
-    refs.templateSelect,
-    refs.titleStyleSelect,
-    refs.bodySizeRange,
-    refs.lineHeightRange,
-    refs.paragraphGapRange,
-    refs.sectionStyleSelect,
-    refs.imageRadiusRange,
-    refs.imageSpacingRange,
-    refs.inlinePositionSlot1,
-    refs.inlinePositionSlot2,
   ].forEach((input) => {
     input.addEventListener("input", schedulePreviewRefresh);
     input.addEventListener("change", schedulePreviewRefresh);
@@ -1197,43 +1680,109 @@ function bindEvents() {
   });
 
   refs.inlineGallery.addEventListener("click", (event) => {
+    const deleteSlotButton = event.target.closest("[data-inline-delete-slot]");
+    if (deleteSlotButton) {
+      handleDeleteInlineSlot(deleteSlotButton.dataset.inlineDeleteSlot).catch((error) => showToast(error.message || "插图位删除失败"));
+      return;
+    }
+    const moveSlotButton = event.target.closest("[data-inline-move-slot]");
+    if (moveSlotButton) {
+      state.pendingSlotMoveId = moveSlotButton.dataset.inlineMoveSlot || "";
+      renderInlineImages(state.detail);
+      updateEditorInsertButtonLabel();
+      showToast("请在右侧编辑区重新选中一个位置，然后点“插入插图位”完成移动。");
+      return;
+    }
     const deleteButton = event.target.closest("[data-delete-inline-path]");
     if (deleteButton) {
       handleDeleteInline(deleteButton.dataset.deleteInlinePath).catch((error) => showToast(error.message || "正文配图删除失败"));
+      return;
+    }
+    const historyButton = event.target.closest("[data-inline-slot-id]");
+    if (historyButton) {
+      const slotId = historyButton.dataset.inlineSlotId || "";
+      const localPath = historyButton.dataset.inlinePath || "";
+      if (!slotId || !localPath) return;
+      handleSelectInline(slotId, localPath).catch((error) => showToast(error.message || "插图切换失败"));
       return;
     }
     const button = event.target.closest("[data-inline-regenerate]");
     if (!button) return;
-    const slot = Number(button.dataset.inlineRegenerate || "0");
-    if (!slot) return;
-    handleGenerateInline(slot).catch((error) => showToast(error.message || "插图重生成失败"));
+    const slotId = String(button.dataset.inlineRegenerate || "").trim();
+    if (!slotId) return;
+    const card = button.closest("[data-inline-card-slot]");
+    const promptInput = card?.querySelector(`[data-inline-prompt-slot="${slotId}"]`);
+    const promptOverride = promptInput ? promptInput.value : null;
+    handleGenerateInline(slotId, promptOverride, button).catch((error) => showToast(error.message || "插图重生成失败"));
   });
 
-  refs.inlineHistoryGallery.addEventListener("click", (event) => {
-    const deleteButton = event.target.closest("[data-delete-inline-path]");
-    if (deleteButton) {
-      handleDeleteInline(deleteButton.dataset.deleteInlinePath).catch((error) => showToast(error.message || "正文配图删除失败"));
-      return;
-    }
-    const button = event.target.closest("[data-inline-slot]");
-    if (!button) return;
-    const slot = Number(button.dataset.inlineSlot || "0");
-    const localPath = button.dataset.inlinePath || "";
-    if (!slot || !localPath) return;
-    handleSelectInline(slot, localPath).catch((error) => showToast(error.message || "插图切换失败"));
+  refs.inlineGallery.addEventListener("input", (event) => {
+    const promptInput = event.target.closest("[data-inline-prompt-slot]");
+    if (!promptInput) return;
+    const slotId = String(promptInput.dataset.inlinePromptSlot || "").trim();
+    if (!slotId) return;
+    state.inlinePromptDrafts[slotId] = promptInput.value;
+  });
+
+  refs.coverResultPromptInput.addEventListener("input", () => {
+    state.coverPromptDraft = refs.coverResultPromptInput.value;
   });
 
   refs.previewModeButton.addEventListener("click", () => {
-    state.previewMode = state.previewMode === "preview" ? "source" : "preview";
+    state.previewMode = state.previewMode === "preview" ? "edit" : "preview";
     renderPreviewMode();
   });
   refs.copyHtmlButton.addEventListener("click", () => copyHtml());
   refs.saveHtmlButton.addEventListener("click", saveHtml);
   refs.previewFrame.addEventListener("load", resizePreviewFrame);
+
+  refs.editorView.addEventListener("input", (event) => {
+    const block = event.target.closest("[data-editor-text-block='true']");
+    if (!block) return;
+    queueEditorBlockSave(block);
+  });
+  refs.editorView.addEventListener("mouseup", () => {
+    setTimeout(updateEditorSelectionToolbar, 0);
+  });
+  refs.editorView.addEventListener("keyup", () => {
+    setTimeout(updateEditorSelectionToolbar, 0);
+  });
+  refs.editorView.addEventListener("click", (event) => {
+    const deleteButton = event.target.closest("[data-editor-slot-delete]");
+    if (deleteButton) {
+      handleDeleteInlineSlot(deleteButton.dataset.editorSlotDelete).catch((error) => showToast(error.message || "插图位删除失败"));
+      return;
+    }
+    const moveButton = event.target.closest("[data-editor-slot-move]");
+    if (moveButton) {
+      state.pendingSlotMoveId = moveButton.dataset.editorSlotMove || "";
+      renderInlineImages(state.detail);
+      renderEditorView(state.detail);
+      updateEditorInsertButtonLabel();
+      showToast("请继续在正文里选中新的位置，然后点“移动插图位”。");
+      return;
+    }
+    setTimeout(updateEditorSelectionToolbar, 0);
+  });
+  document.addEventListener("selectionchange", () => {
+    if (state.previewMode === "edit") {
+      updateEditorSelectionToolbar();
+    }
+  });
+  refs.editorHighlightButton.addEventListener("click", () => {
+    handleEditorSelectionAction("highlight").catch((error) => showToast(error.message || "文字高亮失败"));
+  });
+  refs.editorDeleteButton.addEventListener("click", () => {
+    handleEditorSelectionAction("delete").catch((error) => showToast(error.message || "文字删除失败"));
+  });
+  refs.editorInsertImageButton.addEventListener("click", () => {
+    handleEditorInsertImageSlot().catch((error) => showToast(error.message || "插图位操作失败"));
+  });
 }
 
 async function init() {
   bindEvents();
+  renderArticleInfoCollapse();
   renderActiveView();
   try {
     await loadSettings();

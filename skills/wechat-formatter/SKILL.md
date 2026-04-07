@@ -5,7 +5,7 @@ description: Render article markdown into WeChat-style HTML as an independent ex
 
 # WeChat Formatter
 
-Convert article markdown into WeChat-style HTML for preview, inspection, and downstream publishing.
+Convert article markdown into WeChat-style HTML for preview, inspection, and downstream publishing. If a sibling `*-writing-pack.json` exists, this executor will also consume summary points, highlight quotes, share copy, and ending CTA blocks.
 
 ## Quick Start
 
@@ -18,13 +18,15 @@ Run the default command:
 ## Prepare Source Article
 
 Start from an article markdown draft that is already written and ready for visual formatting.
+If a sibling `*-writing-pack.json` exists, it will be used as an optional sidecar.
 
 ## Follow Formatting Workflow
 
 1. Read the article markdown draft.
 2. Render the content through the shared formatter runtime in `skills/wechat-formatter/runtime.py`.
 3. Produce standalone WeChat preview HTML for inspection and downstream publishing.
-4. If `wechat-studio` is involved, let the workbench apply its own theme, typography, inline image placement, and draft-push workflow on top of this executor.
+4. When a writing-pack sidecar exists, append summary / quotes / share-copy / CTA presentation blocks without altering the source article file.
+5. If `wechat-studio` is involved, let the workbench apply its own theme, typography, inline image placement, and draft-push workflow on top of this executor.
 
 ## Write Output
 

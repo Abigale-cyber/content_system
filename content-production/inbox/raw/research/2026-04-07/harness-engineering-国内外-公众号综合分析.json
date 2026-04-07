@@ -1,0 +1,119 @@
+{
+  "generated_at": "2026-04-07T13:52:48",
+  "request": {
+    "topic": "Harness Engineering：国内外 + 公众号综合分析",
+    "question": "2025 到 2026 年，海外一手工程文章、中文技术媒体与公众号文章，分别如何定义和讨论 Harness Engineering？它与 vibe coding、context engineering、agent evals、commercial delivery 的关系是什么？请特别分析：为什么 vibe coding 只能稳定做简单应用，而一旦进入商业化交付，就必须回到工程师思维、运行时约束、反馈回路与可验证性；并评估“在 Anthropic 明确提出这个概念以前，我们已经在做工程化的全栈 vibe coding”这一中文内容命题是否成立。",
+    "model": "pro",
+    "source_file": "/Users/Abigale/All_project/content_system/content-production/inbox/20260407-harness-engineering-公众号镜像汇总.md",
+    "seed_urls": [
+      "https://martinfowler.com/articles/harness-engineering.html",
+      "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
+      "https://www.firecrawl.dev/blog/what-is-an-agent-harness",
+      "https://factory.ai/news/factory-signals",
+      "https://www.humanlayer.dev/blog/skill-issue-harness-engineering-for-coding-agents",
+      "https://cloud.tencent.com/developer/article/2649371?policyId=1003",
+      "https://www.huxiu.com/article/4841931.html",
+      "https://www.huxiu.com/article/4845732.html"
+    ],
+    "request_path": "/Users/Abigale/All_project/content_system/content-production/inbox/20260407-harness-engineering-综合分析-request.md"
+  },
+  "vendor_skill_path": "/Users/Abigale/All_project/content_system/skills/tavily-research",
+  "command": [
+    "tvly",
+    "research",
+    "研究主题：Harness Engineering：国内外 + 公众号综合分析\n\n研究问题：2025 到 2026 年，海外一手工程文章、中文技术媒体与公众号文章，分别如何定义和讨论 Harness Engineering？它与 vibe coding、context engineering、agent evals、commercial delivery 的关系是什么？请特别分析：为什么 vibe coding 只能稳定做简单应用，而一旦进入商业化交付，就必须回到工程师思维、运行时约束、反馈回路与可验证性；并评估“在 Anthropic 明确提出这个概念以前，我们已经在做工程化的全栈 vibe coding”这一中文内容命题是否成立。\n\n请输出适合中文内容团队做选题判断的结构化研究，重点关注最新事实、分歧点、行业信号和可写角度。\n\n优先参考这些链接：\n- https://martinfowler.com/articles/harness-engineering.html\n- https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents\n- https://www.firecrawl.dev/blog/what-is-an-agent-harness\n- https://factory.ai/news/factory-signals\n- https://www.humanlayer.dev/blog/skill-issue-harness-engineering-for-coding-agents\n- https://cloud.tencent.com/developer/article/2649371?policyId=1003\n- https://www.huxiu.com/article/4841931.html\n- https://www.huxiu.com/article/4845732.html\n\n首轮扫描上下文：\n# Harness Engineering 公众号文章汇总 ## 总览 - 截至本轮检索，我当前确认到 `7` 篇与 `Harness Engineering` 直接相关的公众号文章。 - 其中 `1` 篇已经成功直抓公众号原文，`6` 篇原公众号入口已经定位到，但当前会被微信的人机校验或参数错误拦住。 - 为了先把内容整理完整，这份文档对 `6` 篇受阻文章使用了虎嗅镜像页做正文摘要，同时保留原公众号入口，方便后续再补原文。 ## 清单 | 公众号 | 标题 | 发布时间 | 当前原文状态 | 原公众号入口 | 镜像页 | | --- | --- | --- | --- | --- | --- | | 陆三金 | Harness Engineering：给 Agent 一副好马鞍 | 2026/03/02 21:17:12 | 已成功直抓原文 | https://mp.weixin.qq.com/s?__biz=MzA3OTYzMzI0Ng==&mid=2247484453&idx=1&sn=d84b3c422233d50bda63f0ea6ab420e7&chksm=9ee9cead26c4d49d43b5c4abbb69806ecca6106ed5717fbf3ad10da548e8b9fb121a980cd781#rd | 无 | | Founder Park | 提示词工程、上下文工程都过时了，现在是Harness Engineering 的时代 | 2026-03-13 21:07 | `captcha_blocked` | https://mp.weixin.qq.com/s?__biz=Mzg5NTc0MjgwMw==&mid=2247523279&idx=1&sn=ee25366cb30dc002c12e1f000affd91f&chksm=c1c8785cd95842d6f41e8d8ee73b45db0b6edc9e54ba1a0e749455f673c647a6170206062c9a#rd | https://www.huxiu.com/article/4841931.html | | 海外独角兽 | Harness Engineering 为什么是Agent 时代的“控制论”？ | 2026-03-18 12:17 | `captcha_blocked` | https://mp.weixin.qq.com/s?__biz=Mzg2OTY0MDk0NQ==&mid=2247521717&idx=1&sn=580ed7960b5d56e8a1f2c7796c68708b&chksm=cf494d168b4e604405c32eb6658fc4b55e70cd9f77f417867f35e2b6f52871bad33ab30fac3…\n\n补充要求：\n补充要求：\n\n1. 输出要能直接服务中文公众号写作，不只做概念科普，要判断这个概念为什么会在 2026 年重新组织“vibe coding”的生产范式。\n2. 请重点分析“AI 一人公司”视角下的可执行判断：demo 型 vibe coding 和商业化交付型全栈工程之间的分水岭是什么。\n3. 如果材料不足以直接证明“我们在 Anthropic 提出前就已经在做 Harness Engineering”，请明确说哪些部分可成立、哪些部分只能作为叙事性主张。",
+    "--json",
+    "--model",
+    "pro"
+  ],
+  "stderr": "",
+  "payload": {
+    "content": "# Harness Engineering：2025–2026 年国内外语境对比与公众号编辑决策研究报告\n\n执行要点（单页编辑决策卡）\n- 核心结论（可直接放在推文/文章首段）  \n  - Harness Engineering 指的是围绕大模型/代理构建的“运行时＋工具链＋验证回路”整套环境（context、工具、检查点、人机交互、回滚等），其目标是把概率性的模型输出带入可重复、可观测、可审计的工程交付流。事实证据：Anthropic、OpenAI 的工程案例以及 Martin Fowler 的技术建议均以“约束/回路/可观测性”为核心定义 [2][5][1]。\n- 推荐选题角度（优先级）  \n  1) 对比解读型：“vibe coding → context engineering → harness engineering”的演进与实务差异（科普+工程实例）[7][2][1]；  \n  2) 实操清单：“AI 一人公司”的最小可行 harness（AGENTS.md、MCP、linters、CI、回退策略）并给门槛指标（用户数/并发/隐私/营收）[12][6]；  \n  3) 案例讲述：Anthropic/OpenAI/Stripe/LangChain 的失败/成功对照，聚焦“加不加 harness 导致的差异”[2][5][6]。  \n- 标题候选（钩子）  \n  - 「从 Vibe 到 Harness：为什么 2026 年要把 AI 的“随性”收起来？」  \n  - 「AI 一人公司生存指南：何时从试验走向可交付的 Harness？」  \n- 头图建议  \n  - 抽象化的“模型（脑）被机械化外壳（harness）包裹”的插图；或流水线式分阶段（Plan → Act → Verify → Rollback）图。  \n- 直接可复用元素（供编辑）  \n  - 一页“AI 一人公司门槛”Checklist（见后文）；一张“vibe vs harness”对比表；1–2 个短案例摘录（Anthropic long‑running agents、OpenAI Codex harness）供引用并标注来源。  \n\n—分割线—\n\n## 一、总体概览（核心结论与证据速览）\n最新事实（综合）  \n- Harness Engineering 在 2025–2026 年成为工程讨论的中心词，核心定义为“把模型当作‘脑’，在其周围建立能约束、验证、回滚和观测的运行环境（context、工具、技能、反馈回路、权限与垃圾回收）”，该定义在 Anthropic 的长时运行 agent 报告、OpenAI 的内部 Codex 实验与 Martin Fowler 的技术文章中一致出现 [2][5][1]。  \n- 实证成效（工程实验性证据）：在 Anthropic 与 OpenAI 的内部或公开实验中，带有 harness 的多代理或 Codex‑agent 流水线在任务成功率、错误率与交付速度上均显著优于“prompt/vibe/单次调用”方法（例如 Anthropic/第三方报道显示前端开发速度提升约 40%、错误率下降约 25%；OpenAI 报道 Codex‑agents 在 harness 下产出 ~1M 行代码的内部试验）[16][5]。  \n- 核心工程组成被普遍归纳为：上下文/记忆管理、工具与技能边界（skill/tool metadata）、编排与重试策略（orchestration）、可观测性/日志与评估（evals）、人工审查钩子与回退（human‑in‑the‑loop & rollback）[3][6][1]。  \n\n事实来源（代表）：Anthropic 长时运行 agents 报告、OpenAI 内部实验、Martin Fowler 文章、LangChain/Firecrawl 等工程博客与中文媒体汇总 [2][5][1][6][3][7]。  \n\n事实驱动 / 推论 / 需验证说明：上述关于“定义与组成”为事实驱动（直接出自工程文章与公司博文）[2][1][3]；关于性能提升的具体百分比基于 Anthropic /第三方报道，应视为工程实验级别证据（高可信度但外推到所有场景需谨慎）[16][5]。\n\n## 二、概念与谱系（“Harness”如何被定义与与其他概念的边界）\n最新事实  \n- 定义汇总：Martin Fowler 强调 harness 是持续的工程实践（包含 linters、结构化测试与 context providers）以约束解空间并提高信任度；Anthropic 把 harness 描述为可将短提示扩展为跨冲刺实施、带验证器（evaluator）和回退机制的多代理系统；HumanLayer/社区将其视为“agentfiles + MCP servers + skills + hooks + back‑pressure” 的集合[1][2][4]。这三类定义在“目标（可靠可重复交付）”与“组成（context、工具、验证回路）”上高度一致[1][2][4]。  \n- 概念谱系（与 prompt/context/agent evals 的关系）：多数来源把历史演进表述为“Prompt Engineering（生成单次输出）→ Context Engineering（精心供给模型信息、记忆与检索）→ Harness Engineering（设计运行时与边界、工具与回路）”，并将 context engineering 视为 harness 的一个子集或构件而非同义词[7][2][1]。LangChain、Awesome Harness 教程等也强调 evals/观测是 harness 的组成部分[6][12]。\n\n分歧点  \n- 是否存在“权力顺序（进化路径）”的确定性结论：大多数工程文章呈现“演进”叙事，但在学界/行业内仍有争议（有观点认为未来单体模型能力可能弱化 harness 需求）。OpenAI/Anthropic 的实践倾向于把 harness 视为长期必要的工程层；同时也有声音认为随着模型能力增强，部分 harness 功能可能被模型本身替代（该观点在公开讨论中出现但非一致结论）[16][2][1]。\n\n可写角度（公众号）  \n- 教程＋历史：用时间线展示 2022–2026 的“prompt → context → harness”演进（引入 Martin Fowler 的三层架构作为技术框架）[1][7]；  \n- 辩题类：若模型越来越强，harness 是否会“失业”？以 Anthropic/OpenAI 的实践为对照进行讨论并给出工程结论。  \n\n证据链（本节主要依据）  \n- Martin Fowler 定义与三层架构 [1]；Anthropic 长时运行 agents 报告 [2]；HumanLayer 关于“term”与组成描述 [4]；社区演进叙事（中文媒体/汇总）[7]。可信度评估：公司工程博文/论文与 Martin Fowler 属高，中间的社区解释属中等。\n\n## 三、实践与技术细节（工程视角的构成、约束与开源实现）\n最新事实（工程要素与实现样式）  \n- 典型 harness 必含：工具/技能边界（skills、tool metadata）、上下文/记忆管理（外部 KV/文件与 compaction）、验证回路（linters、单元/集成测试、视觉回放）、重试与退避策略、权限与沙箱、可观测性（JSONL traces、token counts、日志、快照）以及明确的人工审查门控与回滚策略[6][3][10]。LangChain、Firecrawl、Claude SDK 等实现了上述若干构件（例如 Firecrawl 提供结构化网页抓取以节省 token；LangChain 提供 compaction 与测评中间件）[3][6]。  \n- 错误处理范式与运行时约束：常见实践包括错误类型分类（transient / LLM‑recoverable / user‑fixable / unexpected），对不同错误采用不同降级策略（重试、作为工具消息返回、中断人工干预、放入死信队列），以及 circuit‑breaker/半开策略用于停止高失败率代理的自动运行[10][11]。Anthropic/Stripe 等工程实现对危险操作有分级确认与有限自动修复尝试（例如 Stripe 对 CI 失败的自动修复尝试次数有限）[16][10]。  \n- 开源/业界实现证据：社区有“Awesome Harness Engineering”、“Agent.md / AGENTS.md”模式、Firecrawl 抓取器、LangChain 中间件、AutoBe 的编译器‑验证循环等，均为可观测的工程实例或库（示例代码片段与 repo‑level约定如 .agent/verify.sh、AGENTS.md 被广泛建议）[12][3][14]。  \n\n工程验收指标（区分 demo 与生产化）  \n- 常见的验收维度包括：稳定性/错误率（含重试后成功率与死信占比）、延迟与吞吐、可复现性（同一 harness 在同一配置下的行为一致性）、合规/审计能力（完整的调用/决策日志与证据链）、SLO/SLA 指标、成本（token/工具调用/infra）和可运维性（harness debt 指标）[6][5][12]。LangChain 与 Anthropic 的实验显示，改进 harness（而非模型）能显著提升终端 benchmark 排名与任务成功率，表明“可观测性+验证回路”是把 demo 推向交付的关键变量[6][2]。  \n\n证据链（本节主要依据）  \n- LangChain 实践与工具链说明 [6]；Firecrawl 作为抓取/工具化示例 [3]；dailydoseofds 关于错误分类与回路示例 [10]；AutoBe 编译器验证循环的开源实验 [14]。可信度评估：官方工程博文与开源 repo 为高；第三方总结/博客为中。\n\n## 四、为什么 vibe coding 只能稳定支持简单应用（瓶颈与失败机制）\n技术/运行/组织限制（事实驱动总结）  \n- 模型不确定性与自我评估能力不足：多个来源指出模型不能可靠地自我评判其产物，需要外部化评估器或独立 evaluator 才能建立收敛的自修正回路[16][11]。  \n- 有限上下文窗口与长期状态管理：长时任务会遇到 context overflow 与半完成状态导致的“早期标记完成”问题，Anthropic 明确把这列为长运行 agent 的失败模式并建议特定缓解（feature list、compaction）[2][16]。  \n- 并发/多租户、权限与隐私：生产环境需处理并发访问、最小权限与数据治理（例如对写操作的显式确认），这些在 demo 级 vibe coding 中常被忽略[10][11]。  \n- 成本模型与运行预算：频繁的重试、工具调用与长上下文读写会放大成本，生产级需要成本边界策略与退化方案（降级到较小模型或删除富功能）[6][10]。  \n- 法律/审计/安全要求：对敏感操作的审计链、回滚与人工批准是合规性要求，vibe coding 通常缺乏这些工程化输出追踪与审批流程[11][10]。  \n\n典型失败/对比案例（可直接做成小故事）  \n- Demo 成功但生产化失败：公开报道与工程博文多次指出“缺乏 harness 导致的生产失败”，例如某些 agent 在长会话中“提前完成”或反复进入错误循环（Anthropic 的四类失败模式说明）[2][16]。  \n- 加入 harness 后成功的对照：LangChain/AutoBe/Anthropic/ OpenAI 的内部实验普遍显示，加入验证回路、CI/linters 与权限控制后，任务成功率与产出质量显著上升（LangChain benchmark 排名提升、OpenAI Codex 在 harness 下产出大规模可合并 PR 的内测）[6][5][16]。  \n\n证据链（本节主要依据）  \n- Anthropic 的长时 agents 失败模式与缓解建议 [2]；Agent 性能提升的工程实验（LangChain / OpenAI / AutoBe）[6][5][14]；错误分类与自修正机制讨论[11][10]。可信度评估：公司工程报告与开源实验为高；博客类次之。\n\n## 五、商业化交付的“工程师思维”边界与可操作 checklist（面向 AI 一人公司）\n必须回归的工程实践（生产化门槛清单，事实/实践导向）  \n- 必备工程清单（生产最低门槛；每项后标注出处编号）  \n  1) 明确运行时约束与 SLO：定义成功/失败的量化标准、延迟与可用性目标（观测与告警必须到位）[6].  \n  2) 可测性与回路闭合：自动化测试（linters、unit/integration）、验证回路（agent → test → fail→ feedback）与流水线（CI）[10][5].  \n  3) 可观测性与审计日志：记录所有 LLM 调用、工具调用与决策快照（JSONL traces、token counts）以供复现与审计[12][6].  \n  4) 错误分类与降级策略：实现 circuit breaker / dead‑letter queue / 半开检测，并对不同错误类型给出明确策略[10][11].  \n  5) 权限与沙箱：对写操作与高风险工具加入分级确认或人工门控，必要时设 kill‑switch[16][3].  \n  6) 版本与回滚：对 harness 配置、AGENTS.md、skills 与 provider 接口做版本控制与回滚路径[12][1].  \n\n- AI 一人公司/独立开发者的最低可行工程投入（可直接用为“门槛判断”）  \n  最低清单（时间/工具/外包建议，基于社区实践与开源建议）：  \n  - 时间：1–4 周完成最小 harness（AGENTS.md、基础 verify.sh、token/trace logging、单个 human approval gate）[12][14].  \n  - 人力：1 开发者 + 可按需外包的安全/infra 工程（若涉及企业客户或敏感数据，建议外包安全评审）[9].  \n  - 工具：现成 OSS 库（LangChain）、简单 MCP 工具或脚本、CI（GitHub Actions）、linters、基本可视化日志。示例文件：.agent/verify.sh、AGENTS.md、pre‑commit 钩子[12][14].  \n  - 预算：以云 infra + token 成本为主，早期可用低成本模型或本地 compaction 降本，具体数字因场景而异（研究材料未给出统一数值）[6][10].  \n\n判断分水岭（何时需要从 vibe coding 转向全栈 harness）——可量化/可操作指标（以已有实践为依据）  \n- 用户数/并发：当并发请求/用户增长导致无法用人工审核逐条处理（典型阈值视团队而定，但工程实践建议在出现持续性人工干预瓶颈时转入 harness）[10][5].  \n- 交付承诺/营收：一旦产品对外承诺 SLA 或产生可计量营收，需强制满足审计/回滚/可测性条目[5][16].  \n- 数据敏感度：涉及权限/隐私/安全配置（身份、访问控制、系统修改）的场景必须早期投入 harness（不可推迟）[16][11].  \n- 错误成本：当单次错误或错误率的业务影响超出人工可接受修复成本（例：数据泄露、错误下单等）时必须上线更严的 harness 控制[16][11].  \n\n证据链（本节主要依据）  \n- AGENTS.md / best‑practice 与小型 harness 模板建议 [12][14]；OpenAI/Anthropic 的生产化实验与 SLO/审计需要说明[5][2]；错误策略与 circuit breaker 建议[10][11]。可信度评估：开源实践与公司工程博客为高；社区总结为中等。\n\n## 六、命题检验：“在 Anthropic 明确提出这个概念以前，我们已经在做工程化的全栈 vibe coding”——证据评估\n可支持的结论（部分成立）  \n- 有力支持的事实：在 Anthropic/2025–2026 之前，社区与开源已有大量“harness‑like”做法在落地，例如 AGENTS.md、LangChain 的中间件、AutoBe 的编译‑验证循环、多个开源 skill/agent 仓库和早期 context‑engineering 项目（GitHub 上 2025 年已有 Agent‑Skills 等项目获得关注），说明“实践上存在 harness 要素”这一主张成立[15][14][12]。  \n- 不成立或需谨慎的方面：把这些实践直接等同于“Anthropic 正式化的 Harness Engineering 概念”在时间点与术语权上并不成立——多来源指出“harness”一词在 2025 年末到 2026 年被广泛命名与标准化（有不同作者标注为 2025 late / Feb 2026 的概念形成），因此把“概念首创/命名”归于 Anthropic/OpenAI 具有一定依据，而把“我们早就做到了完全相同的工程学定义”则需要更具体的工程档案与时间线证据才能严格成立[14][16][7]。  \n\n证据缺口（需要进一步获取的材料）  \n- 精确的时间线证据（早期仓库 commit 历史、AGENTS.md 最早出现日期、公司内部工程手册的公开片段）以严格判断“谁先实践/谁先命名”。  \n- 内部邮件、PR 讨论或工程手册以证明“某公司在 Anthropic 提前已做出等同于 Anthropic 定义的完整 harness”——目前公开证据多为开源片段、博客与新闻汇总，缺少公司内部手册或法定文件。  \n\n证据链（本节主要依据）  \n- 社区/开源示例（Agent‑Skills 项目、AutoBe、AGENTS.md 等）[15][14][12]；关于“术语流行化/命名时间”的不同说法与报道（Madplay / agent‑engineering / Anthropic 公告）显示存在时间点差异[14][16][2]。可信度评估：开源 repo 与公司工程博客为高；媒体对“命名先后”的报道为中。\n\n## 七、行业信号、采纳路径与给公众号的写作建议\n行业信号（可直接作为新闻脚注或章节）  \n- 投资与产品化：多起大额融资/产品新闻与 KubeCon、行业峰会讨论表明 harness 相关工具与平台成为 VC/企业关注点（例如 Harness 公司 2025 年融资、若干企业发布 agent‑orchestration/observability 产品）[16][13]。  \n- 人才需求：中文社区与招聘市场已将 harness 技能列为 AI‑smart engineer 的关键能力，薪资/岗位期望反映该方向的行业旺盛需求[9].  \n- 社区活跃度：开源 agent skill 库、AGENTS.md 模式、LangChain 的中间件与 AutoBe/AutoHarness 等项目在 2025–2026 年间活跃，显示出从实验到工程化的迁移正在发生[15][14][6].  \n\n写作钩子与栏目化建议（面向中文公众号读者）  \n- 系列一：科普＋工程化示例（“vibe vs harness”两篇连载：第一篇讲为什么 vibe 能做快速原型；第二篇给出一个可复现的最小 harness 实现与代码片段）[7][12].  \n- 系列二：AI 一人公司生存指南（门槛 checklist + 成本/人力建议 + 何时外包/何时上 harness 的量化分水岭）[12][5].  \n- 专题评论：对 Anthropic/OpenAI 等厂商“话语权”的评析，区分“先有实践”与“先有命名/系统化”的区别（历史化话题）[14][16].  \n- 证据呈现形式推荐：结构化对比表（vibe vs context vs harness）、工程清单（copy‑paste 可用的 AGENTS.md 模板）、访谈摘录（优先一线工程博文的引用）与“可复现 demo 的最小工程蓝图”。  \n\n证据链（本节主要依据）  \n- 行业融资/峰会/招聘报道与社区 repo 活跃度（Harness 融资、KubeCon 讨论、招聘与社区项目）[16][13][9][15]. 可信度评估：行业新闻与官方会议议程为高；媒体解读为中等。\n\n## 八、可交付物清单（供编辑直接使用）\n1) 编辑决策卡（见文首）——可直接放入稿件策划。  \n2) 详尽研究稿（本文件）——按六大维度结构化。  \n3) 证据附件——下方“Works Cited/References”部分列出所有引用的可访问链接（并编号）；本文在每节末列出主要依据及可信度评估。  \n4) 针对“AI 一人公司”的可执行 checklist —— 摘要如下（可拷贝为单页图文）：\n\nAI 一人公司：最小可行 harness Checklist（可复制）\n- AGENTS.md（仓库根目录，含 repo 概览、关键命令、验证步骤）[12]  \n- .agent/verify.sh（类型检查、测试、lint）并纳入 CI（GitHub Actions）[14]  \n- 基本可观测：JSONL traces、token counts、工具调用日志（每次 run 都记录）[12]  \n- 权限门控：对任何写/部署/机密访问加入显式确认；实现单个 kill‑switch[16][3]  \n- 错误回路：分类错误并实现 dead‑letter queue 与简单 circuit‑breaker（阈值示例：连续高失败率触发半开检测）[10][11]  \n- 成本/降级策略：在 cost 超阈值时自动降级到 cheaper model 或关闭富功能[6][10]  \n\n门槛指示器（建议触发从 demo→harness 的判断点）  \n- 出现持续人工干预瓶颈（无法通过运维人力维持每天 < X 次人工审批）[10]  \n- 产品涉及敏感数据/权限写操作（必须立即上 harness）[16]  \n- 对外 SLA/营收承诺（立即上 harness 并要求可审计的日志与回退）[5]  \n\n事实/推论/需验证说明：Checklist 的条目基于开源实践与公司工程博文，为事实驱动（高可信度）；“门槛示例”中的量化阈值为工程建议性推论（研究材料未给出统一数值），需要团队根据自身流量/成本数据进一步量化。\n\n## 九、证据缺口（重要但尚未在公开材料中找到的证据）\n- 企业内部工程手册、早期 commit/PR 的原始时间线（用于严格判断“谁最早实施了完整 harness”）。  \n- 更大规模的、跨公司对照实验数据（例如同一任务在不同 harness 设计下的可重复 benchmark），除了若干公司内部案例外，公开的可重复性数据仍不足。  \n- 针对“人工在回路中成为瓶颈的具体定量阈值（用户数/并发/错误成本）”的行业共识或调查报告。  \n\n## 结语（给编辑的快速建议）\n- 若目标是“让读者理解为什么 2026 年要把 vibe 收起来”：首篇用“演进+案例”框定（引用 Anthropic/OpenAI/Martin Fowler 的工程实践），第二篇推出“AI 一人公司实操清单与门槛”，并在后续推文中发布可复现 demo（AGENTS.md + verify.sh）的仓库链接与截图。  \n- 在话语策略上，区分“实践先行”与“术语命名”的历史争议，既承认社区开源实践的累积价值，也指出 Anthropic/OpenAI 在系统化与工程化宣传上的关键作用（这样既客观又有争议点，利于引发讨论）。  \n\n## References（Works Cited）\n每个链接在正文中作为事实证据被引用或用于构建结论。若需原文摘录或图片，请按编号获取原始页面。  \n[1] https://martinfowler.com/articles/harness-engineering.html  \n[2] https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents  \n[3] https://firecrawl.dev/blog/what-is-an-agent-harness  \n[4] https://www.humanlayer.dev/blog/skill-issue-harness-engineering-for-coding-agents  \n[5] https://openai.com/index/harness-engineering/  \n[6] https://langchain.com/blog/the-anatomy-of-an-agent-harness  \n[7] https://huxiu.com/article/4838398.html  \n[8] https://huxiu.com/article/4845732.html  \n[9] https://cloud.tencent.com/developer/article/2649503  \n[10] https://blog.dailydoseofds.com/p/the-anatomy-of-an-agent-harness  \n[11] https://medium.com/@Micheal-Lanham/self-correcting-agents-are-not-what-you-think-they-are-d19398186373  \n[12] https://lobehub.com/skills/aradotso-trending-skills-awesome-harness-engineering  \n[13] https://36kr.com/p/3659033412887429  \n[14] https://agent-engineering.dev/article/harness-engineering-in-2026-the-discipline-that-makes-ai-agents-production-ready  \n[15] https://news.qq.com/rain/a/20251226A02HTW00  \n[16] https://blockchain.news/ainews/anthropic-s-multi-agent-harness-latest-analysis-on-pushing-claude-3-7-for-frontend-design-and-autonomous-software-engineering\n\n（本报告在正文各节末已标注主要依据并对证据可信度作了区分。需要进一步把“证据附件”（逐条摘录/关键图表/代码片段位置）整理为可直接供编辑粘贴的稿件附件，请指出优先要素以便补充。）",
+    "sources": [
+      {
+        "url": "https://blockchain.news/ainews/anthropic-s-multi-agent-harness-latest-analysis-on-pushing-claude-3-7-for-frontend-design-and-autonomous-software-engineering",
+        "title": "Anthropic’s Multi Agent Harness: Latest Analysis on Pushing Claude 3.7 for Frontend Design and Autonomous Software Engineering | AI News Detail | Blockchain.News",
+        "favicon": "https://blockchain.news/favicon.ico"
+      },
+      {
+        "url": "https://martinfowler.com/articles/harness-engineering.html",
+        "title": "Harness engineering for coding agent users - Martin Fowler",
+        "favicon": "https://martinfowler.com/favicon.ico"
+      },
+      {
+        "url": "https://www.firecrawl.dev/blog/what-is-an-agent-harness",
+        "title": "What Is an Agent Harness? The Infrastructure That Makes AI Agents ...",
+        "favicon": "https://www.firecrawl.dev/favicon.ico"
+      },
+      {
+        "url": "https://www.humanlayer.dev/blog/skill-issue-harness-engineering-for-coding-agents",
+        "title": "Skill Issue: Harness Engineering for Coding Agents - HumanLayer",
+        "favicon": "https://www.humanlayer.dev/favicon.ico?favicon.b590251f.ico"
+      },
+      {
+        "url": "https://openai.com/index/harness-engineering/",
+        "title": "Harness engineering: leveraging Codex in an agent-first world",
+        "favicon": "https://openai.com/favicon.svg"
+      },
+      {
+        "url": "https://lobehub.com/skills/aradotso-trending-skills-awesome-harness-engineering",
+        "title": "Awesome Harness Engineering | Skills...",
+        "favicon": "https://lobehub.com/apple-touch-icon.png"
+      },
+      {
+        "url": "https://blog.dailydoseofds.com/p/the-anatomy-of-an-agent-harness",
+        "title": "The Anatomy of an Agent Harness - by Avi Chawla",
+        "favicon": "https://substackcdn.com/image/fetch/$s_!YHYf!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F1a039798-62e1-4323-b47f-4fa3c6bf6744%2Fapple-touch-icon-114x114.png"
+      },
+      {
+        "url": "https://medium.com/@Micheal-Lanham/self-correcting-agents-are-not-what-you-think-they-are-d19398186373",
+        "title": "Self-Correcting Agents Are Not What You Think They Are - Medium",
+        "favicon": "https://miro.medium.com/v2/resize:fill:152:152/10fd5c419ac61637245384e7099e131627900034828f4f386bdaa47a74eae156"
+      },
+      {
+        "url": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
+        "title": "Effective harnesses for long-running agents - Anthropic",
+        "favicon": "https://cdn.prod.website-files.com/67ce28cfec624e2b733f8a52/67d31dd7aa394792257596c5_webclip.png"
+      },
+      {
+        "url": "https://www.langchain.com/blog/the-anatomy-of-an-agent-harness",
+        "title": "The Anatomy of an Agent Harness - LangChain",
+        "favicon": "https://cdn.prod.website-files.com/65b8cd72835ceeacd4449a53/69a17e4f0c916c644f4de1cd_webclip%20lg.png"
+      },
+      {
+        "url": "https://www.agent-engineering.dev/article/harness-engineering-in-2026-the-discipline-that-makes-ai-agents-production-ready",
+        "title": "Agent-engineering",
+        "favicon": "https://www.agent-engineering.dev/favicon.ico"
+      },
+      {
+        "url": "https://www.huxiu.com/article/4838398.html",
+        "title": "Harness Engineering：给Agent 一副好马鞍-虎嗅网",
+        "favicon": "https://www.huxiu.com/favicon.ico"
+      },
+      {
+        "url": "https://www.huxiu.com/article/4845732.html",
+        "title": "Harness is the New Dataset：模型智能提升的下一个关键方向 - 虎嗅",
+        "favicon": "https://www.huxiu.com/favicon.ico"
+      },
+      {
+        "url": "https://news.qq.com/rain/a/20251226A02HTW00",
+        "title": "上下文工程的Agent Skills来了，CC、Codex直接用，一周获2.3k star",
+        "favicon": "https://mat1.gtimg.com/qqcdn/xw/20211215/images/apple-touch-icon.png"
+      },
+      {
+        "url": "https://36kr.com/p/3659033412887429",
+        "title": "64笔超1亿美元融资，从这16家“新晋AI顶流”，看懂硅谷的新逻辑-36氪",
+        "favicon": "https://36kr.com/favicon.ico"
+      },
+      {
+        "url": "https://cloud.tencent.com/developer/article/2649503",
+        "title": "Harness Engineering：AI 原生软件开发的未来范式与职业指南 - 腾讯云",
+        "favicon": "https://cloudcache.tencent-cloud.com/qcloud/favicon.ico?t=201902181234"
+      }
+    ],
+    "status": "completed",
+    "created_at": "2026-04-07T05:48:41.318015+00:00",
+    "response_time": 245.28,
+    "request_id": "fdbd7b2e-962a-4c57-8c57-87f7179273fb"
+  }
+}

@@ -1,0 +1,262 @@
+{
+  "topic": "Vibe Coding 做得出 Demo，Harness Engineering 才能交付",
+  "slug": "harness-engineering-vibe-coding-重构",
+  "topic_score": {
+    "story_potential": 74,
+    "long_term_value": 42,
+    "pain_point_strength": 64,
+    "timeliness": 100,
+    "human_nature_fit": 40,
+    "evidence_density": 100,
+    "total": 70,
+    "recommendation": "revise_before_write"
+  },
+  "reader_profile": "AI 一人公司创业者、独立开发者、在做小程序或轻应用商业化交付的小团队",
+  "primary_pain_point": "很多人已经能用 AI 很快把产品做出来，但一旦进入真实交付，就会卡在稳定性、回归、回滚、状态管理和责任边界上。",
+  "chosen_structure": {
+    "type": "progressive",
+    "reason": "先承认 vibe coding 的价值，再指出它在商业化交付里的边界，接着用小程序实践承接，最后落到 AI 一人公司的工程师思维。"
+  },
+  "opening_options": [
+    {
+      "type": "relevance_utility",
+      "label": "与我有关/对我有用",
+      "text": "如果你正在做 AI 一人公司、独立开发，或者正把一个小程序和轻应用往商业化交付推，你很快就会发现，真正卡住你的不是 AI 会不会写代码，而是这套东西能不能稳定活下去。"
+    },
+    {
+      "type": "direct_claim",
+      "label": "开门见山表明观点",
+      "text": "先说结论：vibe coding 很适合把产品从 0 推到 1，但一旦开始做真实交付，最后决定结果的仍然是工程师思维。"
+    },
+    {
+      "type": "pain_point",
+      "label": "痛点切入",
+      "text": "很多 demo 死得并不难看，甚至一开始还很好看。问题是它们一进入真实用户和真实迭代，立刻就暴露出同一个短板：写得出来，不代表交付得出去。"
+    },
+    {
+      "type": "story",
+      "label": "讲故事",
+      "text": "我们做小程序时，最先感受到的不是 AI 真会写，而是 AI 写得越快，我们越需要一套外层系统来约束、验证和回滚它。"
+    }
+  ],
+  "ending_options": [
+    {
+      "type": "summary",
+      "label": "总结全文",
+      "text": "vibe coding 降低了做产品的门槛，Harness Engineering 提高了交付结果的下限。前者让一个人能开始，后者让一个人能持续。"
+    },
+    {
+      "type": "restate_claim",
+      "label": "强调观点",
+      "text": "AI 一人公司真正的护城河，不是比别人更会写 prompt，而是比别人更早把个人和 agent 组织成一条稳定交付的工程流水线。"
+    },
+    {
+      "type": "cta",
+      "label": "互动引导",
+      "text": "如果你也在做 AI 产品，不妨回头看一眼：你现在最缺的，到底是更强的模型，还是一套能让模型持续稳定工作的系统？"
+    }
+  ],
+  "title_options": [
+    {
+      "title": "Vibe Coding 做得出 Demo，Harness Engineering 才能交付",
+      "pattern": "contrast",
+      "pattern_label": "对比式",
+      "drivers": [
+        "utility",
+        "curiosity",
+        "emotion"
+      ],
+      "driver_labels": [
+        "对我有用",
+        "引发好奇",
+        "挑动情绪"
+      ],
+      "length": 39,
+      "score": 9.2
+    },
+    {
+      "title": "AI 一人公司的分水岭，不是会不会写，而是能不能交付",
+      "pattern": "emphasis",
+      "pattern_label": "结论式",
+      "drivers": [
+        "relevance",
+        "utility",
+        "voice_of_reader"
+      ],
+      "driver_labels": [
+        "与我有关",
+        "对我有用",
+        "替我说话"
+      ],
+      "length": 27,
+      "score": 9.1
+    },
+    {
+      "title": "从 vibe coding 到 Harness Engineering：AI 一人公司为什么最终还是要回到工程师思维",
+      "pattern": "experience",
+      "pattern_label": "经验式",
+      "drivers": [
+        "relevance",
+        "utility",
+        "curiosity"
+      ],
+      "driver_labels": [
+        "与我有关",
+        "对我有用",
+        "引发好奇"
+      ],
+      "length": 55,
+      "score": 8.9
+    },
+    {
+      "title": "商业化一开始，vibe coding 就不够用了",
+      "pattern": "emphasis",
+      "pattern_label": "强调式",
+      "drivers": [
+        "relevance",
+        "emotion",
+        "voice_of_reader"
+      ],
+      "driver_labels": [
+        "与我有关",
+        "挑动情绪",
+        "替我说话"
+      ],
+      "length": 27,
+      "score": 8.8
+    },
+    {
+      "title": "我们做小程序时，其实已经在做 Harness Engineering 的雏形",
+      "pattern": "experience",
+      "pattern_label": "经验式",
+      "drivers": [
+        "relevance",
+        "curiosity",
+        "voice_of_reader"
+      ],
+      "driver_labels": [
+        "与我有关",
+        "引发好奇",
+        "替我说话"
+      ],
+      "length": 40,
+      "score": 8.8
+    },
+    {
+      "title": "真正拉开 AI 一人公司差距的，不是 prompt，而是 harness",
+      "pattern": "emphasis",
+      "pattern_label": "强调式",
+      "drivers": [
+        "relevance",
+        "utility",
+        "curiosity"
+      ],
+      "driver_labels": [
+        "与我有关",
+        "对我有用",
+        "引发好奇"
+      ],
+      "length": 35,
+      "score": 8.7
+    },
+    {
+      "title": "会写代码不等于能交付：AI 一人公司为什么必须补上工程账",
+      "pattern": "label",
+      "pattern_label": "结论式",
+      "drivers": [
+        "relevance",
+        "utility",
+        "voice_of_reader"
+      ],
+      "driver_labels": [
+        "与我有关",
+        "对我有用",
+        "替我说话"
+      ],
+      "length": 31,
+      "score": 8.7
+    },
+    {
+      "title": "Anthropic 把它讲明白之前，我们已经在小程序交付里遇到同一个问题",
+      "pattern": "suspense",
+      "pattern_label": "悬念式",
+      "drivers": [
+        "curiosity",
+        "emotion",
+        "voice_of_reader"
+      ],
+      "driver_labels": [
+        "引发好奇",
+        "挑动情绪",
+        "替我说话"
+      ],
+      "length": 38,
+      "score": 8.4
+    },
+    {
+      "title": "AI 能把东西做出来，但谁来保证它别崩？",
+      "pattern": "question",
+      "pattern_label": "提问式",
+      "drivers": [
+        "relevance",
+        "emotion",
+        "curiosity"
+      ],
+      "driver_labels": [
+        "与我有关",
+        "挑动情绪",
+        "引发好奇"
+      ],
+      "length": 20,
+      "score": 8.4
+    },
+    {
+      "title": "2026 年，Harness Engineering 重构的不是 coding，而是生产范式",
+      "pattern": "emphasis",
+      "pattern_label": "结论式",
+      "drivers": [
+        "utility",
+        "curiosity"
+      ],
+      "driver_labels": [
+        "对我有用",
+        "引发好奇"
+      ],
+      "length": 47,
+      "score": 8.3
+    }
+  ],
+  "share_copy_options": [
+    "这篇把 AI 一人公司最容易忽略的一件事讲透了：能把东西做出来，不等于能把东西交付出去。",
+    "如果你也在做小程序、轻应用或者 AI 一人公司，这篇很值得看。真正拉开差距的，不是 prompt，是你有没有一套让 agent 稳定出活的系统。",
+    "很多时候不是模型不够强，而是工程系统不够稳。最认同的一句是：vibe coding 解决的是先做出来，Harness Engineering 解决的是做出来以后别崩。"
+  ],
+  "highlight_quotes": [
+    "vibe coding 解决的是先做出来，Harness Engineering 解决的是做出来以后别崩。",
+    "商业化交付卖的不是一段代码，卖的是一个在变化中仍然能工作的系统。",
+    "我们不是比谁更早发明了 Harness Engineering 这个词，我们只是更早在真实交付里遇到了同一个问题。",
+    "AI 一人公司真正的护城河，不是最强模型，而是让 agent 长期稳定交付的微型研发体系。"
+  ],
+  "summary_points": [
+    "vibe coding 最擅长的是把 0 快速变成 1，但商业化交付考验的是能不能长期稳定。",
+    "我们做小程序时，真正开始补的不是更强的 prompt，而是文档、约束、验证、回滚和阶段拆分。",
+    "Harness Engineering 重构的不是 coding 这一个动作，而是 AI 一人公司的整个生产范式。",
+    "真正拉开差距的，不是模型更强，而是你有没有一套让 agent 持续稳定交付的工程系统。"
+  ],
+  "ending_cta": "如果你也在做 AI 产品，不妨回头看一眼：你现在最该补的，到底是更强的模型，还是一套能让模型持续稳定工作的系统？",
+  "judge_summary": {
+    "score": 8.1,
+    "scores": {
+      "headline_hook": 6.7,
+      "structure_logic": 8.9,
+      "evidence_substance": 9.8,
+      "reader_value": 9.6,
+      "pacing_length": 5.2
+    },
+    "ai_trace_risk": "low",
+    "pass": true
+  },
+  "publish_ready": true,
+  "run_status": "completed",
+  "next_action": ""
+}
