@@ -1,11 +1,11 @@
-# 🗞️ News Aggregator Skill
+# 🛰️ AI Frontier Radar
 
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub stars](https://img.shields.io/github/stars/cclank/news-aggregator-skill.svg?style=social&label=Star)](https://github.com/cclank/news-aggregator-skill)
 [![GitHub forks](https://img.shields.io/github/forks/cclank/news-aggregator-skill.svg?style=social&label=Fork)](https://github.com/cclank/news-aggregator-skill/network)
 
-**全网科技/金融/AI深度新闻聚合助手，专为智能 Agent 打造的高效信息引擎。**
+**全网科技/金融/AI深度新闻聚合助手，专为智能 Agent 打造的高效信息引擎。** (Renamed from news-aggregator-skill)
 
 ---
 

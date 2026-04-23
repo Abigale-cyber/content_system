@@ -1,9 +1,9 @@
 ---
-name: news-aggregator-skill
-description: "Comprehensive news aggregator that fetches, filters, and deeply analyzes real-time content from 28 sources including Hacker News, GitHub, Hugging Face Papers, AI Newsletters, WallStreetCN, Weibo, and Podcasts. Use when user requests 'daily scans', 'tech news', 'finance updates', 'AI briefings', 'deep analysis', or says '如意如意' to open the interactive menu."
+name: ai-frontier-radar
+description: "AI 前沿雷达：聚合 28+ 全球信源（HN、GitHub、HF Papers、AI Newsletters、华尔街见闻、微博等），深度分析实时资讯并生成中文报告。触发词：'每日扫描'、'AI 日报'、'如意如意'。"
 ---
 
-# News Aggregator Skill
+# AI Frontier Radar
 
 Fetch real-time hot news from 28 sources, generate deep analysis reports in Chinese.
 
