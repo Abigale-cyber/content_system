@@ -1,4 +1,4 @@
-# 🗞️ News Aggregator 指令菜单
+# 🛰️ AI Frontier Radar 指令菜单
 
 请回复 **序号** 执行任务。所有报告均自动保存到 `reports/YYYY-MM-DD/` 并以中文呈现。
 
@@ -64,6 +64,7 @@
 | 33 | 🍉 吃瓜早报 (Social) | `daily_briefing.py --profile social --no-save` |
 | 34 | 🧠 AI 深度日报 (AI Daily) | `daily_briefing.py --profile ai_daily --no-save` |
 | 35 | 📚 深度阅读清单 | `daily_briefing.py --profile reading_list --no-save` |
+| 36 | 📢 推送今日 Top5 到飞书 | Fetch → Top5 report → `push_feishu.py` |
 
 ---
 
@@ -79,4 +80,4 @@ hackernews,github,wallstreetcn
 
 ---
 
-**✨ 请输入序号 (1-35) 或源名组合来执行**
+**✨ 请输入序号 (1-36) 或源名组合来执行**

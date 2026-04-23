@@ -34,6 +34,20 @@ Read the output JSON and format **every** item using the **Unified Report Templa
 ### Step 3: Save & Present
 Save the report to `reports/YYYY-MM-DD/<source>_report.md`, then display the full content to the user.
 
+### Step 4: Push to Feishu (Optional)
+When the user requests a Feishu push, or during scheduled daily runs:
+
+```bash
+# Push an existing report file
+python3 scripts/push_feishu.py --input reports/YYYY-MM-DD/<report>.md
+
+# Dry-run (preview without sending)
+python3 scripts/push_feishu.py --input reports/YYYY-MM-DD/<report>.md --dry-run
+
+# Pipe from stdin
+python3 scripts/push_feishu.py --input -
+```
+
 ---
 
 ## 📰 Unified Report Template
@@ -125,6 +139,37 @@ python3 scripts/daily_briefing.py --profile <profile>
 | `reading_list` | Essays, Podcasts | (Use universal template) |
 
 **Workflow**: Execute script → Read corresponding instruction file → Generate report following both the instruction file AND the universal template.
+
+---
+
+## 📢 Feishu Daily Push (飞书每日推送)
+
+### Scheduled Workflow
+For automated daily push to the AI news Feishu group:
+
+1. **Fetch**: `python3 scripts/daily_briefing.py --profile general --no-save`
+2. **AI processes** the JSON output into a compact Top5 Markdown report, following `instructions/briefing_feishu_top5.md`
+3. **Save** the report to `reports/YYYY-MM-DD/feishu_top5_HHMM.md`
+4. **Push**: `python3 scripts/push_feishu.py --input reports/YYYY-MM-DD/feishu_top5_HHMM.md`
+
+### Target
+- Chat: AI资讯群 (`oc_5957da1b76ad64aa9b037eebb2899999`)
+- Auth: Bot identity (tenant_access_token via `lark-cli --as bot`)
+
+### Output Format (Feishu Top5)
+```markdown
+**每日热点 Top5 | 2026-04-23**
+
+**1. [9分] Anthropic重新允许OpenClaw使用**
+Twitter | 89.1万阅读
+> 第三方Agent工具的API访问政策恢复，平台与生态的博弈仍在持续
+
+**2. [8分] 第二条新闻标题**
+来源 | 热度
+> 一句话摘要
+
+📊 今日收录 8 条
+```
 
 ---
 
