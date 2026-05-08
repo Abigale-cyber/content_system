@@ -1,0 +1,27 @@
+{
+  "id": "topic-to-wechat-pipeline",
+  "name": "Topic To WeChat Pipeline",
+  "description": "题目/草稿 markdown -> content-brief-builder -> case-writer-hybrid -> adversarial-content-review -> generate-image -> wechat-formatter",
+  "steps": [
+    {
+      "skill": "content-brief-builder",
+      "input": "workflow_input"
+    },
+    {
+      "skill": "case-writer-hybrid",
+      "input": "step:content-brief-builder"
+    },
+    {
+      "skill": "adversarial-content-review",
+      "input": "step:case-writer-hybrid"
+    },
+    {
+      "skill": "generate-image",
+      "input": "step:case-writer-hybrid"
+    },
+    {
+      "skill": "wechat-formatter",
+      "input": "step:case-writer-hybrid"
+    }
+  ]
+}

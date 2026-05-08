@@ -36,6 +36,7 @@ def run_humanizer_zh(input_path: Path, *, workspace_root: Path) -> dict[str, Any
             "ai_trace_risk": result["ai_trace_risk"],
             "pattern_hit_count": result["pattern_hit_count"],
             "pattern_hits": result["pattern_hits"],
+            "sentence_metrics": result["sentence_metrics"],
             "changes": result["changes"],
         },
     )
@@ -46,4 +47,5 @@ def run_humanizer_zh(input_path: Path, *, workspace_root: Path) -> dict[str, Any
         "report_path": report_path,
         "ai_trace_risk": result["ai_trace_risk"],
         "changed_line_count": result["changed_line_count"],
+        "sentence_metrics": result["sentence_metrics"],
     }

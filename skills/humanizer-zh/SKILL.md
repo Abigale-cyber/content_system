@@ -17,9 +17,10 @@ This repo-local skill is inspired by `op7418/Humanizer-zh` and `blader/humanizer
 ## What It Does
 
 - Detects obvious AI-writing traces in Chinese prose
+- Detects long sentences with weak breath gaps and mechanical connectors such as `首先/其次/最后`
 - Applies a surgical rewrite pass on body paragraphs
 - Preserves facts, numbers, headings, structure, and article intent
-- Writes a humanized copy plus a JSON report
+- Writes a humanized copy plus a JSON report with pattern hits and sentence metrics
 
 ## Output
 
@@ -32,3 +33,4 @@ This repo-local skill is inspired by `op7418/Humanizer-zh` and `blader/humanizer
 - Do not flatten strong viewpoints into neutral filler
 - Do not rewrite headings or titles by default
 - Do not pretend the text comes from personal experience if it does not
+- Treat `sentence_metrics.long_sentence_count` and `mechanical_connector_count` as editorial warnings; do not over-rewrite just to make every metric zero

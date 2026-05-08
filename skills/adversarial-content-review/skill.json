@@ -1,0 +1,9 @@
+{
+  "id": "adversarial-content-review",
+  "name": "Adversarial Content Review",
+  "layer": "review",
+  "executor": "adversarial_content_review_v1",
+  "input_kind": "article_markdown",
+  "output_kind": "review_report_markdown",
+  "description": "Review a finished markdown article with writer, reader, and judge passes before downstream publishing."
+}

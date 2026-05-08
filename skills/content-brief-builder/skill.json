@@ -1,0 +1,9 @@
+{
+  "id": "content-brief-builder",
+  "name": "Content Brief Builder",
+  "layer": "collect",
+  "executor": "content_brief_builder_v1",
+  "input_kind": "topic_or_notes_markdown",
+  "output_kind": "brief_markdown",
+  "description": "Turn a topic note or rough markdown into a stage-1 compatible brief in content-production/inbox/ for case-writer-hybrid."
+}

@@ -1,0 +1,11 @@
+{
+  "id": "article-to-short-script-pipeline",
+  "name": "Article To Short Script Pipeline",
+  "description": "Markdown article -> script-writer-short",
+  "steps": [
+    {
+      "skill": "script-writer-short",
+      "input": "workflow_input"
+    }
+  ]
+}

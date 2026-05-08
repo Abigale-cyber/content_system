@@ -114,6 +114,11 @@ PAIN_TOKENS = [
 ]
 
 AI_PHRASE_REPLACEMENTS = [
+    (r"在当今数字化时代[，,]?", ""),
+    (r"在当今时代[，,]?", ""),
+    (r"首先[，,]?", "先看，"),
+    (r"其次[，,]?", "再看，"),
+    (r"(^|[。！？!?]\s*)最后[，,]", r"\1收尾时，"),
     (r"值得注意的是[，,]?", ""),
     (r"需要指出的是[，,]?", ""),
     (r"总的来说[，,]?", ""),
@@ -148,6 +153,7 @@ AI_TRACE_RULES = [
     ("generic_conclusion", "通用积极结尾", r"(未来可期|前景广阔|值得期待|一切才刚刚开始)"),
     ("em_dash_overuse", "破折号滥用", r"[—]{1,}"),
     ("excessive_hedging", "过度限定", r"(可能也许|或许可能|可以说是|某种程度上)"),
+    ("mechanical_connectors", "机械连接词", r"(首先|其次|最后|第一|第二|第三)[，,、]"),
 ]
 
 
@@ -588,6 +594,16 @@ def detect_ai_trace_patterns(text: str) -> dict[str, Any]:
                     "samples": [truncate_text(match, 48) for match in matches[:3]],
                 }
             )
+    sentence_metrics = analyze_sentence_metrics(text)
+    if sentence_metrics["long_sentence_count"]:
+        hits.append(
+            {
+                "key": "long_sentence",
+                "label": "长句缺少气口",
+                "count": sentence_metrics["long_sentence_count"],
+                "samples": sentence_metrics["long_sentence_samples"][:3],
+            }
+        )
     total_hits = sum(item["count"] for item in hits)
     if total_hits >= 9:
         risk = "high"
@@ -595,7 +611,52 @@ def detect_ai_trace_patterns(text: str) -> dict[str, Any]:
         risk = "medium"
     else:
         risk = "low"
-    return {"risk": risk, "total_hits": total_hits, "patterns": hits}
+    return {"risk": risk, "total_hits": total_hits, "patterns": hits, "sentence_metrics": sentence_metrics}
+
+
+def body_text_lines(text: str) -> list[str]:
+    lines: list[str] = []
+    for raw in text.splitlines():
+        stripped = raw.strip()
+        if not stripped or stripped.startswith(("#", ">", "- ", "* ", "|")):
+            continue
+        lines.append(stripped)
+    return lines
+
+
+def split_cn_sentences(text: str) -> list[str]:
+    sentences: list[str] = []
+    for chunk in re.split(r"[。！？!?]\s*", text):
+        cleaned = clean_text(chunk)
+        if cleaned:
+            sentences.append(cleaned)
+    return sentences
+
+
+def analyze_sentence_metrics(text: str) -> dict[str, Any]:
+    body = "\n".join(body_text_lines(text))
+    sentences = split_cn_sentences(body)
+    lengths = [len(re.sub(r"\s+", "", sentence)) for sentence in sentences]
+    long_samples = [
+        truncate_text(sentence, 72)
+        for sentence, length in zip(sentences, lengths)
+        if length >= 55
+    ]
+    mechanical_connector_count = len(re.findall(r"(首先|其次|最后|第一|第二|第三)[，,、]", body))
+    if lengths:
+        average_length = round(sum(lengths) / len(lengths), 1)
+        max_length = max(lengths)
+    else:
+        average_length = 0
+        max_length = 0
+    return {
+        "sentence_count": len(sentences),
+        "average_sentence_length": average_length,
+        "max_sentence_length": max_length,
+        "long_sentence_count": len(long_samples),
+        "long_sentence_samples": long_samples[:5],
+        "mechanical_connector_count": mechanical_connector_count,
+    }
 
 
 def _humanize_line(line: str) -> tuple[str, int]:
@@ -618,6 +679,7 @@ def _humanize_line(line: str) -> tuple[str, int]:
 
 
 def humanize_markdown(text: str, *, mode: str = "surgical") -> dict[str, Any]:
+    initial_trace = detect_ai_trace_patterns(text)
     lines = text.splitlines()
     output: list[str] = []
     changed_line_count = 0
@@ -636,15 +698,16 @@ def humanize_markdown(text: str, *, mode: str = "surgical") -> dict[str, Any]:
                 change_samples.append({"before": truncate_text(raw, 80), "after": truncate_text(updated, 80)})
 
     humanized = "\n".join(output).rstrip() + "\n"
-    trace = detect_ai_trace_patterns(humanized)
+    final_trace = detect_ai_trace_patterns(humanized)
     return {
         "text": humanized,
         "mode": mode,
         "changed_line_count": changed_line_count,
         "changes": change_samples,
-        "ai_trace_risk": trace["risk"],
-        "pattern_hits": trace["patterns"],
-        "pattern_hit_count": trace["total_hits"],
+        "ai_trace_risk": final_trace["risk"],
+        "pattern_hits": initial_trace["patterns"],
+        "pattern_hit_count": initial_trace["total_hits"],
+        "sentence_metrics": initial_trace["sentence_metrics"],
     }
 
 
@@ -695,6 +758,51 @@ def critique_article(markdown_text: str, *, chosen_structure: str) -> dict[str, 
         reader_value_score -= 1.0
         reader_issues.append("读者收益还不够前置，容易写成作者自我表达。")
 
+    story_signals = len(
+        re.findall(
+            r"(有个|有位|朋友|读者|创作者|工程师|后来|转折|故事|经历|连续|写废|遇到过|这个情况)",
+            full_text,
+        )
+    )
+    resonance_signals = len(
+        re.findall(
+            r"(你有没有这种感觉|说白了|如果你也|很多人卡在这一步|这说的就是|换句话说)",
+            full_text,
+        )
+    )
+    story_resonance_score = 5.5 + min(story_signals, 4) * 0.55 + min(resonance_signals, 3) * 0.65
+    story_issues: list[str] = []
+    if story_signals < 2:
+        story_resonance_score -= 1.1
+        story_issues.append("故事或场景信号偏少，文章容易只讲道理、不见人物。")
+    if resonance_signals < 1:
+        story_resonance_score -= 0.9
+        story_issues.append("缺少共鸣锚点，可以补一句“你有没有这种感觉”或“说白了就是”。")
+
+    template_patterns = [
+        r"这不是抽象判断",
+        r"至少可以从三个层面去看",
+        r"真正有用的地方不只是听懂一个观点",
+        r"先把这个判断放回读者现场",
+        r"背后的结构说清楚",
+    ]
+    template_hits = sum(len(re.findall(pattern, full_text)) for pattern in template_patterns)
+    paragraph_starts: list[str] = []
+    for paragraph in body_paragraphs:
+        first_sentence = re.split(r"[。！？!?]", paragraph, maxsplit=1)[0]
+        normalized_start = truncate_text(clean_text(first_sentence), 24)
+        if normalized_start:
+            paragraph_starts.append(normalized_start)
+    repeated_starts = sum(count - 1 for count in {item: paragraph_starts.count(item) for item in paragraph_starts}.values() if count > 1)
+    template_repetition_score = 8.4
+    template_issues: list[str] = []
+    if template_hits >= 3:
+        template_repetition_score -= min(3.2, (template_hits - 2) * 0.8)
+        template_issues.append("固定模板句重复偏多，文章会显得像流水线拼接。")
+    if repeated_starts >= 2:
+        template_repetition_score -= min(2.0, repeated_starts * 0.6)
+        template_issues.append("段落开头重复偏多，需要换成场景、问题或案例切入。")
+
     avg_para_len = 0.0
     if body_paragraphs:
         avg_para_len = sum(len(item) for item in body_paragraphs) / len(body_paragraphs)
@@ -716,6 +824,8 @@ def critique_article(markdown_text: str, *, chosen_structure: str) -> dict[str, 
         "structure_logic": round(max(0.0, min(structure_score, 10.0)), 1),
         "evidence_substance": round(max(0.0, min(evidence_score, 10.0)), 1),
         "reader_value": round(max(0.0, min(reader_value_score, 10.0)), 1),
+        "story_resonance": round(max(0.0, min(story_resonance_score, 10.0)), 1),
+        "template_repetition": round(max(0.0, min(template_repetition_score, 10.0)), 1),
         "pacing_length": round(max(0.0, min(pacing_score, 10.0)), 1),
     }
     issues = {
@@ -723,6 +833,8 @@ def critique_article(markdown_text: str, *, chosen_structure: str) -> dict[str, 
         "structure_logic": structure_issues,
         "evidence_substance": evidence_issues,
         "reader_value": reader_issues,
+        "story_resonance": story_issues,
+        "template_repetition": template_issues,
         "pacing_length": pacing_issues,
     }
     return {"scores": scores, "issues": issues}

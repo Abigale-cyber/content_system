@@ -1,0 +1,9 @@
+{
+  "id": "script-writer-short",
+  "name": "Script Writer Short",
+  "layer": "create",
+  "executor": "script_writer_short_v1",
+  "input_kind": "article_or_topic_markdown",
+  "output_kind": "short_video_script_markdown",
+  "description": "Turn an article draft, brief, or topic note into a short oral video script for social platforms."
+}

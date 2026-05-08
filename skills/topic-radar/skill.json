@@ -1,0 +1,9 @@
+{
+  "id": "topic-radar",
+  "name": "Topic Radar",
+  "layer": "collect",
+  "executor": "topic_radar_v1",
+  "input_kind": "topic_or_hotspot_markdown",
+  "output_kind": "topic_angle_report",
+  "description": "Turn a hotspot, rough note, or news summary into scored writing angles before brief creation."
+}

@@ -1,0 +1,15 @@
+{
+  "id": "topic-radar-to-brief-pipeline",
+  "name": "Topic Radar To Brief Pipeline",
+  "description": "热点/粗笔记 markdown -> topic-radar -> content-brief-builder",
+  "steps": [
+    {
+      "skill": "topic-radar",
+      "input": "workflow_input"
+    },
+    {
+      "skill": "content-brief-builder",
+      "input": "step:topic-radar"
+    }
+  ]
+}

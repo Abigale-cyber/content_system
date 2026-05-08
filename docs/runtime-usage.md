@@ -2,6 +2,10 @@
 
 当前项目已提供一个本地 Python 版 skill runtime，用于把阶段 1 的三个核心技能变成可调用程序。
 
+如果你是按“平时该怎么对我说”来使用，而不是想看底层命令，请优先看：
+
+- [skill-workflow-guide.md](./skill-workflow-guide.md)
+
 同时，项目还保留了一个可选工作台：
 
 - **`wechat-studio`**
@@ -13,8 +17,12 @@
 
 ## 当前可调用的 Skills
 
+- `content-brief-builder`
+- `topic-radar`
 - `case-writer-hybrid`
+- `adversarial-content-review`
 - `humanizer-zh`
+- `script-writer-short`
 - `generate-image`
 - `wechat-formatter`
 
@@ -28,7 +36,11 @@
 
 ## 当前可调用的 Workflow
 
+- `topic-to-wechat-pipeline`
+- `topic-radar-to-brief-pipeline`
+- `article-to-short-script-pipeline`
 - `stage1-pipeline`
+- `stage2-wechat-pipeline`
 
 ## 1. 安装依赖
 
@@ -53,6 +65,20 @@ python3 -m venv .venv
 
 ## 4. 单独运行某个 Skill
 
+### 生成阶段 1 Brief
+
+```bash
+.venv/bin/python -m skill_runtime.cli run-skill content-brief-builder \
+  --input notes/my-topic.md
+```
+
+### 生成选题雷达
+
+```bash
+.venv/bin/python -m skill_runtime.cli run-skill topic-radar \
+  --input notes/my-hot-topic.md
+```
+
 ### 生成 Markdown 主稿
 
 ```bash
@@ -64,6 +90,13 @@ python3 -m venv .venv
 
 ```bash
 .venv/bin/python -m skill_runtime.cli run-skill humanizer-zh \
+  --input content-production/drafts/ai-content-system-article.md
+```
+
+### 生成短视频口播脚本
+
+```bash
+.venv/bin/python -m skill_runtime.cli run-skill script-writer-short \
   --input content-production/drafts/ai-content-system-article.md
 ```
 
@@ -85,6 +118,15 @@ python3 -m venv .venv
 
 ## 5. 一次运行完整工作流
 
+### 从题目草稿直接跑到微信 HTML
+
+```bash
+.venv/bin/python -m skill_runtime.cli run-workflow topic-to-wechat-pipeline \
+  --input notes/my-topic.md
+```
+
+### 从结构化 brief 跑主链路
+
 ```bash
 .venv/bin/python -m skill_runtime.cli run-workflow stage1-pipeline \
   --input content-production/inbox/20260403-ai-content-system-brief.md
@@ -94,10 +136,13 @@ python3 -m venv .venv
 
 运行完整 workflow 后，默认会生成：
 
+- `content-production/inbox/YYYYMMDD-<slug>-gzh-brief.md`
 - `content-production/drafts/ai-content-system-article.md`
 - `content-production/drafts/ai-content-system-writing-pack.md`
 - `content-production/drafts/ai-content-system-writing-pack.json`
 - `content-production/drafts/ai-content-system-review-trace.json`
+- `content-production/reviews/ai-content-system-review-report.md`
+- `content-production/reviews/ai-content-system-review-report.json`
 - `content-production/ready/ai-content-system-img-1.png`
 - `content-production/ready/ai-content-system-wechat.html`
 - `content-production/published/stage1-pipeline-last-run.json`
@@ -108,12 +153,19 @@ python3 -m venv .venv
 - 会额外写出 `content-production/published/YYYYMMDD-{slug}-quality-gate.md`
 - manifest 中会出现 `workflow_status: interrupted_for_review`
 
+若 `adversarial-content-review` 判定为 `需修改` 或 `需重写`：
+
+- workflow 会在审稿步中断，不再继续跑 `generate-image` / `wechat-formatter`
+- 会写出 `content-production/reviews/{slug}-review-report.md` 和对应 JSON sidecar
+- manifest 中会出现 `workflow_status: interrupted_for_review`
+
 ## 7. 当前版本能力边界
 
 这是第一版本地 runtime，目标是先把 skill 变成可调用节点，而不是一开始就接全量模型与平台 API。
 
 当前实现方式：
 
+- `content-brief-builder`：把题目/草稿整理成主链路兼容的阶段 1 brief
 - `case-writer-hybrid`：基于 brief 生成结构化 Markdown 主稿
 - `generate-image`：作为独立执行器，基于文章生成一张信息图风格 PNG
 - `wechat-formatter`：作为独立执行器，把 Markdown 转为简单、可读的微信 HTML

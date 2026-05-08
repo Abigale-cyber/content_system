@@ -26,6 +26,10 @@ _WECHAT_REPORT_RUNTIME: Any | None = None
 _FEISHU_BITABLE_SYNC_RUNTIME: Any | None = None
 _FEISHU_USER_AUTH_RUNTIME: Any | None = None
 _HUMANIZER_ZH_RUNTIME: Any | None = None
+_CONTENT_BRIEF_BUILDER_RUNTIME: Any | None = None
+_ADVERSARIAL_CONTENT_REVIEW_RUNTIME: Any | None = None
+_TOPIC_RADAR_RUNTIME: Any | None = None
+_SCRIPT_WRITER_SHORT_RUNTIME: Any | None = None
 
 
 @dataclass
@@ -272,6 +276,46 @@ def load_humanizer_zh_runtime() -> Any:
     return _HUMANIZER_ZH_RUNTIME
 
 
+def load_content_brief_builder_runtime() -> Any:
+    global _CONTENT_BRIEF_BUILDER_RUNTIME
+    if _CONTENT_BRIEF_BUILDER_RUNTIME is not None:
+        return _CONTENT_BRIEF_BUILDER_RUNTIME
+
+    runtime_path = SKILLS_DIR / "content-brief-builder" / "runtime.py"
+    _CONTENT_BRIEF_BUILDER_RUNTIME = load_runtime_module("content_brief_builder_runtime", runtime_path)
+    return _CONTENT_BRIEF_BUILDER_RUNTIME
+
+
+def load_adversarial_content_review_runtime() -> Any:
+    global _ADVERSARIAL_CONTENT_REVIEW_RUNTIME
+    if _ADVERSARIAL_CONTENT_REVIEW_RUNTIME is not None:
+        return _ADVERSARIAL_CONTENT_REVIEW_RUNTIME
+
+    runtime_path = SKILLS_DIR / "adversarial-content-review" / "runtime.py"
+    _ADVERSARIAL_CONTENT_REVIEW_RUNTIME = load_runtime_module("adversarial_content_review_runtime", runtime_path)
+    return _ADVERSARIAL_CONTENT_REVIEW_RUNTIME
+
+
+def load_topic_radar_runtime() -> Any:
+    global _TOPIC_RADAR_RUNTIME
+    if _TOPIC_RADAR_RUNTIME is not None:
+        return _TOPIC_RADAR_RUNTIME
+
+    runtime_path = SKILLS_DIR / "topic-radar" / "runtime.py"
+    _TOPIC_RADAR_RUNTIME = load_runtime_module("topic_radar_runtime", runtime_path)
+    return _TOPIC_RADAR_RUNTIME
+
+
+def load_script_writer_short_runtime() -> Any:
+    global _SCRIPT_WRITER_SHORT_RUNTIME
+    if _SCRIPT_WRITER_SHORT_RUNTIME is not None:
+        return _SCRIPT_WRITER_SHORT_RUNTIME
+
+    runtime_path = SKILLS_DIR / "script-writer-short" / "runtime.py"
+    _SCRIPT_WRITER_SHORT_RUNTIME = load_runtime_module("script_writer_short_runtime", runtime_path)
+    return _SCRIPT_WRITER_SHORT_RUNTIME
+
+
 def resolve_repo_skill_dependency(skill_name: str) -> Path:
     allowed = {
         "news-aggregator-skill": SKILLS_DIR / "news-aggregator-skill",
@@ -352,6 +396,8 @@ def render_case_writer_hybrid(input_path: Path) -> RunResult:
             "writing_pack_json_path": str(drafted["writing_pack_json_path"]),
             "review_trace_path": str(drafted["review_trace_path"]),
             "quality_gate_notice_path": str(drafted["quality_gate_notice_path"]) if drafted["quality_gate_notice_path"] else "",
+            "chosen_structure": drafted["chosen_structure"],
+            "upstream_guidance": drafted["upstream_guidance"],
             "publish_ready": drafted["publish_ready"],
             "score": drafted["score"],
             "scores": drafted["scores"],
@@ -493,7 +539,95 @@ def render_humanizer_zh(input_path: Path) -> RunResult:
             "report_path": str(humanized["report_path"]),
             "ai_trace_risk": humanized["ai_trace_risk"],
             "changed_line_count": humanized["changed_line_count"],
+            "sentence_metrics": humanized["sentence_metrics"],
         },
+    )
+
+
+def render_content_brief_builder(input_path: Path) -> RunResult:
+    brief_runtime = load_content_brief_builder_runtime()
+    built = brief_runtime.build_content_brief(input_path, workspace_root=ROOT)
+    return RunResult(
+        "content-brief-builder",
+        str(built["brief_path"]),
+        {
+            "slug": built["slug"],
+            "topic": built["topic"],
+            "target_reader": built["target_reader"],
+            "publish_goal": built["publish_goal"],
+            "source_path": built["source_path"],
+            "recommended_framework": built["recommended_framework"],
+            "recommended_formula": built["recommended_formula"],
+            "timely_topic": built["timely_topic"],
+            "source_type": built.get("source_type", "generic-note"),
+            "selected_angle": built.get("selected_angle", ""),
+            "title_directions": built.get("title_directions", []),
+        },
+        run_status="completed",
+        blocking=False,
+        message="Brief generated and saved to inbox.",
+        next_action="Review the brief, then feed it into case-writer-hybrid.",
+    )
+
+
+def render_adversarial_content_review(input_path: Path) -> RunResult:
+    review_runtime = load_adversarial_content_review_runtime()
+    reviewed = review_runtime.run_adversarial_content_review(input_path, workspace_root=ROOT)
+    return RunResult(
+        "adversarial-content-review",
+        str(reviewed["report_path"]),
+        {
+            "slug": reviewed["slug"],
+            "title": reviewed["title"],
+            "review_json_path": str(reviewed["review_json_path"]),
+            "total_score": reviewed["total_score"],
+            "verdict": reviewed["verdict"],
+            "dimension_scores": reviewed["dimension_scores"],
+        },
+        run_status=reviewed["run_status"],
+        blocking=bool(reviewed["blocking"]),
+        message=f"Adversarial review verdict: {reviewed['verdict']}.",
+        next_action=str(reviewed["next_action"]),
+    )
+
+
+def render_topic_radar(input_path: Path) -> RunResult:
+    radar_runtime = load_topic_radar_runtime()
+    radar = radar_runtime.run_topic_radar(input_path, workspace_root=ROOT)
+    return RunResult(
+        "topic-radar",
+        str(radar["report_path"]),
+        {
+            "slug": radar["slug"],
+            "topic": radar["topic"],
+            "radar_json_path": str(radar["radar_json_path"]),
+            "recommended_angle": radar["recommended_angle"],
+            "angle_count": radar["angle_count"],
+        },
+        run_status=radar["run_status"],
+        blocking=False,
+        message="Topic angles generated.",
+        next_action="Pick an angle, then run content-brief-builder.",
+    )
+
+
+def render_script_writer_short(input_path: Path) -> RunResult:
+    script_runtime = load_script_writer_short_runtime()
+    scripted = script_runtime.run_script_writer_short(input_path, workspace_root=ROOT)
+    return RunResult(
+        "script-writer-short",
+        str(scripted["script_path"]),
+        {
+            "slug": scripted["slug"],
+            "title": scripted["title"],
+            "script_json_path": str(scripted["script_json_path"]),
+            "duration_seconds": scripted["duration_seconds"],
+            "estimated_cn_chars": scripted["estimated_cn_chars"],
+        },
+        run_status=scripted["run_status"],
+        blocking=False,
+        message="Short video script generated.",
+        next_action="Review the oral script, then hand it to TTS or video production.",
     )
 
 
@@ -765,6 +899,9 @@ def render_wechat_formatter(input_path: Path) -> RunResult:
 
 
 EXECUTORS = {
+    "content_brief_builder_v1": render_content_brief_builder,
+    "topic_radar_v1": render_topic_radar,
+    "script_writer_short_v1": render_script_writer_short,
     "wechat_collect_v1": render_wechat_collect,
     "news_collect_v1": render_news_collect,
     "topic_research_v1": render_topic_research,
@@ -772,6 +909,7 @@ EXECUTORS = {
     "feishu_user_auth_v1": render_feishu_user_auth,
     "feishu_bitable_sync_v1": render_feishu_bitable_sync,
     "case_writer_hybrid_v1": render_case_writer_hybrid,
+    "adversarial_content_review_v1": render_adversarial_content_review,
     "humanizer_zh_v1": render_humanizer_zh,
     "generate_image_card_v1": render_generate_image,
     "wechat_formatter_v1": render_wechat_formatter,
