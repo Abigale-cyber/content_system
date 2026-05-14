@@ -8,6 +8,7 @@ import copy
 import importlib.util
 import json
 import mimetypes
+import os
 import re
 import shutil
 import subprocess
@@ -84,6 +85,8 @@ IMAGE_SECTION_SELECT_RE = re.compile(r"^/api/articles/(?P<slug>[^/]+)/images/sec
 IMAGE_INLINE_RE = re.compile(r"^/api/articles/(?P<slug>[^/]+)/images/inline$")
 IMAGE_INLINE_SELECT_RE = re.compile(r"^/api/articles/(?P<slug>[^/]+)/images/inline/select$")
 IMAGE_INLINE_DELETE_RE = re.compile(r"^/api/articles/(?P<slug>[^/]+)/images/inline/delete$")
+IMAGE_COVER_UPLOAD_RE = re.compile(r"^/api/articles/(?P<slug>[^/]+)/images/cover/upload$")
+IMAGE_INLINE_UPLOAD_RE = re.compile(r"^/api/articles/(?P<slug>[^/]+)/images/inline/upload$")
 TEXT_BLOCK_UPDATE_RE = re.compile(r"^/api/articles/(?P<slug>[^/]+)/text-block$")
 EDITOR_TEXT_RE = re.compile(r"^/api/articles/(?P<slug>[^/]+)/editor/text$")
 EDITOR_HIGHLIGHT_RE = re.compile(r"^/api/articles/(?P<slug>[^/]+)/editor/highlight$")
@@ -91,10 +94,25 @@ EDITOR_DELETE_RE = re.compile(r"^/api/articles/(?P<slug>[^/]+)/editor/delete$")
 EDITOR_IMAGE_SLOT_INSERT_RE = re.compile(r"^/api/articles/(?P<slug>[^/]+)/editor/image-slot/insert$")
 EDITOR_IMAGE_SLOT_MOVE_RE = re.compile(r"^/api/articles/(?P<slug>[^/]+)/editor/image-slot/move$")
 EDITOR_IMAGE_SLOT_DELETE_RE = re.compile(r"^/api/articles/(?P<slug>[^/]+)/editor/image-slot/delete$")
+EDITOR_MARKDOWN_IMAGE_DELETE_RE = re.compile(r"^/api/articles/(?P<slug>[^/]+)/editor/markdown-image/delete$")
 DRAFT_IMPORT_RE = re.compile(r"^/api/articles/import$")
 ARTICLE_DELETE_RE = re.compile(r"^/api/articles/(?P<slug>[^/]+)/delete$")
 DRAFT_PUSH_RE = re.compile(r"^/api/articles/(?P<slug>[^/]+)/draft$")
 IMAGE_SLOT_MARKER_RE = re.compile(r"^\[\[IMAGE_SLOT:(slot-\d+)\]\]$")
+ALLOWED_UPLOAD_IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp", ".gif"}
+FORBIDDEN_DRAFT_TEXT_PATTERNS = (
+    "xiumi-winter-ins",
+    "xiumi-spring-letter",
+    "xiumi",
+    "XIUMI",
+    "秀米模板",
+    "秀米",
+    "OPC专属排版",
+    "OPC专属",
+    "模板",
+    "排版",
+    "风格",
+)
 
 
 def load_generate_image_runtime() -> Any:
@@ -887,6 +905,17 @@ def import_warnings_from_markdown(markdown_text: str) -> list[str]:
 
 
 def parse_markdown_upload(body: bytes, content_type_header: str) -> tuple[str, bytes]:
+    fields, files = parse_multipart_upload(body, content_type_header)
+    file_item = files.get("file")
+    if not file_item:
+        raise RuntimeError("没有收到 Markdown 文件。")
+    filename, payload = file_item
+    if not filename:
+        raise RuntimeError("上传文件缺少文件名。")
+    return filename, payload
+
+
+def parse_multipart_upload(body: bytes, content_type_header: str) -> tuple[dict[str, str], dict[str, tuple[str, bytes]]]:
     if "multipart/form-data" not in content_type_header:
         raise RuntimeError("上传请求必须使用 multipart/form-data。")
     message = BytesParser(policy=email_policy_default).parsebytes(
@@ -894,16 +923,40 @@ def parse_markdown_upload(body: bytes, content_type_header: str) -> tuple[str, b
     )
     if not message.is_multipart():
         raise RuntimeError("上传内容解析失败。")
+    fields: dict[str, str] = {}
+    files: dict[str, tuple[str, bytes]] = {}
     for part in message.iter_parts():
         filename = part.get_filename() or ""
         field_name = part.get_param("name", header="content-disposition") or ""
-        if field_name != "file":
+        if not field_name:
             continue
         payload = part.get_payload(decode=True) or b""
-        if not filename:
-            raise RuntimeError("上传文件缺少文件名。")
-        return filename, payload
-    raise RuntimeError("没有收到 Markdown 文件。")
+        if filename:
+            files[field_name] = (filename, payload)
+        else:
+            fields[field_name] = payload.decode(part.get_content_charset() or "utf-8", errors="replace")
+    return fields, files
+
+
+def image_upload_extension(filename: str) -> str:
+    suffix = Path(filename or "").suffix.lower()
+    if suffix == ".jpeg":
+        return ".jpg"
+    if suffix not in ALLOWED_UPLOAD_IMAGE_EXTENSIONS:
+        raise RuntimeError("只支持上传 png、jpg、jpeg、webp 或 gif 图片。")
+    return suffix
+
+
+def save_uploaded_image_file(article_dir: Path, filename: str, file_bytes: bytes, *, prefix: str) -> Path:
+    if not file_bytes:
+        raise RuntimeError("上传图片为空。")
+    extension = image_upload_extension(filename)
+    article_asset_dir(article_dir).mkdir(parents=True, exist_ok=True)
+    base = sanitize_filename(Path(filename).stem)
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S-%f")
+    output_path = article_asset_dir(article_dir) / f"{prefix}-{timestamp}-{base}{extension}"
+    output_path.write_bytes(file_bytes)
+    return output_path
 
 
 def unique_article_directory(name_hint: str) -> Path:
@@ -1225,6 +1278,7 @@ def build_render_metadata(
     return {
         "hero_image": hero_url,
         "cover_module_image": cover_module_url or hero_url,
+        "draft_publish_safe": mode == "draft",
         "cover_date": article_date_label(article_dir),
         "cover_left_label": "",
         "cover_right_label": "",
@@ -1410,7 +1464,7 @@ def cover_module_styles() -> list[dict[str, str]]:
         {
             "id": "poster-quiet",
             "label": "留白海报",
-            "description": "更克制的单图海报感，适合散文和轻生活方式排版。",
+            "description": "更克制的单图海报感，适合散文和轻生活方式正文。",
         },
     ]
 
@@ -1435,15 +1489,23 @@ def section_style_options() -> list[dict[str, str]]:
 def settings_status() -> dict[str, Any]:
     config = safe_load_config()
     workspace_preferences = load_workspace_preferences()
+    image_defaults = load_generate_image_runtime().default_image_backend()
     wechat = config.get("wechat", {})
     api = config.get("api", {})
     if not isinstance(wechat, dict):
         wechat = {}
     if not isinstance(api, dict):
         api = {}
-    image_key = str(api.get("image_key", "")).strip()
+    image_key = str(api.get("image_key", "")).strip() or str(os.environ.get("IMAGE_API_KEY", "")).strip()
     appid = str(wechat.get("appid", "")).strip()
     secret = str(wechat.get("secret", "")).strip()
+    configured_provider = str(api.get("image_provider", "")).strip() or "未设置"
+    configured_model = str(api.get("image_model", "")).strip() or "未设置"
+    configured_api_base = (
+        str(api.get("image_api_base", "")).strip()
+        or str(api.get("image_base_url", "")).strip()
+        or "未设置"
+    )
     default_cover = DEFAULT_COVER_RELATIVE if DEFAULT_COVER_PATH.exists() else ""
     return {
         "workspace": str(ROOT),
@@ -1464,8 +1526,16 @@ def settings_status() -> dict[str, Any]:
         },
         "image": {
             "configured": bool(image_key),
-            "provider": str(api.get("image_provider", "openai") or "openai"),
-            "model": str(api.get("image_model", "")).strip() or "未设置",
+            "provider": image_defaults["provider"],
+            "model": image_defaults["model"],
+            "configuredProvider": configured_provider,
+            "configuredModel": configured_model,
+            "configuredApiBase": configured_api_base,
+            "effectiveProvider": image_defaults["provider"],
+            "effectiveApiBase": image_defaults["apiBase"],
+            "effectiveModel": image_defaults["model"],
+            "modelSource": image_defaults["modelSource"],
+            "loginUrl": image_defaults["loginUrl"],
             "size": str(api.get("image_size", "")).strip() or "默认",
         },
     }
@@ -1610,7 +1680,11 @@ def extract_editor_blocks(markdown_text: str) -> list[dict[str, Any]]:
     list_start: int | None = None
     list_buffer: list[str] = []
     list_ordered = False
-    in_code = False
+    code_start: int | None = None
+    code_language = ""
+    code_buffer: list[str] = []
+    quote_start: int | None = None
+    quote_buffer: list[str] = []
 
     def flush_paragraph(line_end: int) -> None:
         nonlocal paragraph_start, paragraph_buffer
@@ -1663,19 +1737,90 @@ def extract_editor_blocks(markdown_text: str) -> list[dict[str, Any]]:
         list_buffer = []
         list_ordered = False
 
+    def flush_quote(line_end: int) -> None:
+        nonlocal quote_start, quote_buffer
+        if quote_start is None:
+            return
+        quote_lines = [re.sub(r"^>\s?", "", raw_line).rstrip() for raw_line in quote_buffer]
+        raw_text = "\n".join(quote_lines).strip()
+        if raw_text:
+            blocks.append(
+                {
+                    "id": editable_text_block_id("quote", quote_start),
+                    "kind": "quote",
+                    "text": raw_text,
+                    "rawText": "\n".join(quote_buffer),
+                    "htmlText": html_escape(raw_text),
+                    "lineStart": quote_start,
+                    "lineEnd": max(quote_start, line_end - 1),
+                }
+            )
+        quote_start = None
+        quote_buffer = []
+
+    def flush_code(line_end: int) -> None:
+        nonlocal code_start, code_language, code_buffer
+        if code_start is None:
+            return
+        raw_text = "\n".join(code_buffer).strip("\n")
+        blocks.append(
+            {
+                "id": editable_text_block_id("code", code_start),
+                "kind": "code",
+                "language": code_language,
+                "text": raw_text,
+                "rawText": raw_text,
+                "htmlText": html_escape(raw_text),
+                "lineStart": code_start,
+                "lineEnd": max(code_start, line_end - 1),
+            }
+        )
+        code_start = None
+        code_language = ""
+        code_buffer = []
+
     for index, line in enumerate(lines):
         stripped = line.strip()
         if stripped.startswith("```"):
             flush_paragraph(index)
             flush_list(index)
-            in_code = not in_code
+            flush_quote(index)
+            if code_start is None:
+                code_start = index
+                code_language = stripped[3:].strip()
+                code_buffer = []
+            else:
+                flush_code(index + 1)
             continue
-        if in_code:
+        if code_start is not None:
+            code_buffer.append(line)
+            continue
+        image_match = re.match(r"^!\[([^\]]*)\]\(([^)]+)\)$", stripped)
+        if image_match:
+            flush_paragraph(index)
+            flush_list(index)
+            flush_quote(index)
+            alt_text = image_match.group(1).strip()
+            image_url = image_match.group(2).strip()
+            blocks.append(
+                {
+                    "id": editable_text_block_id("image", index),
+                    "kind": "image",
+                    "alt": alt_text,
+                    "url": image_url,
+                    "text": alt_text or "正文图片",
+                    "rawText": stripped,
+                    "htmlText": html_escape(stripped),
+                    "lineStart": index,
+                    "lineEnd": index,
+                }
+            )
             continue
         slot_match = IMAGE_SLOT_MARKER_RE.match(stripped)
         if slot_match:
             flush_paragraph(index)
             flush_list(index)
+            flush_quote(index)
             slot_id = slot_match.group(1)
             blocks.append(
                 {
@@ -1694,6 +1839,7 @@ def extract_editor_blocks(markdown_text: str) -> list[dict[str, Any]]:
         if heading:
             flush_paragraph(index)
             flush_list(index)
+            flush_quote(index)
             raw_text = heading.group(2).strip()
             text = plain_editor_text(raw_text)
             if text:
@@ -1713,6 +1859,7 @@ def extract_editor_blocks(markdown_text: str) -> list[dict[str, Any]]:
         list_match = re.match(r"^(?P<marker>(?:[-*+])|\d+\.)\s+.+$", stripped)
         if list_match:
             flush_paragraph(index)
+            flush_quote(index)
             ordered = bool(re.match(r"^\d+\.", list_match.group("marker")))
             if list_start is None:
                 list_start = index
@@ -1723,22 +1870,38 @@ def extract_editor_blocks(markdown_text: str) -> list[dict[str, Any]]:
                 list_ordered = ordered
             list_buffer.append(line)
             continue
+        if stripped.startswith(">"):
+            flush_paragraph(index)
+            flush_list(index)
+            if quote_start is None:
+                quote_start = index
+            quote_buffer.append(line)
+            continue
         if is_non_editable_markdown_line(stripped):
             flush_paragraph(index)
             flush_list(index)
+            flush_quote(index)
             continue
         flush_list(index)
+        flush_quote(index)
         if paragraph_start is None:
             paragraph_start = index
         paragraph_buffer.append(line)
 
+    if code_start is not None:
+        flush_code(len(lines))
     flush_paragraph(len(lines))
     flush_list(len(lines))
+    flush_quote(len(lines))
     return blocks
 
 
 def extract_editable_text_blocks(markdown_text: str) -> list[dict[str, Any]]:
-    return [block for block in extract_editor_blocks(markdown_text) if block.get("kind") in {"heading", "paragraph"}]
+    return [
+        block
+        for block in extract_editor_blocks(markdown_text)
+        if block.get("kind") in {"heading", "paragraph", "quote", "code", "list"}
+    ]
 
 
 def rebuild_markdown_from_lines(frontmatter: str, body_lines: list[str]) -> str:
@@ -1759,18 +1922,36 @@ def update_markdown_text_block(markdown_text: str, block_id: str, new_text: str)
     frontmatter, body = split_frontmatter_text(markdown_text)
     body_lines = body.splitlines()
     block = locate_editor_block(markdown_text, block_id)
-    if str(block.get("kind", "")).strip() not in {"heading", "paragraph"}:
+    block_kind = str(block.get("kind", "")).strip()
+    if block_kind not in {"heading", "paragraph", "quote", "code", "list"}:
         raise RuntimeError("当前块不支持直接改字。")
 
-    clean_text = re.sub(r"\s+", " ", str(new_text or "").strip())
+    preserve_lines = block_kind in {"quote", "code", "list"}
+    clean_text = str(new_text or "").replace("\r\n", "\n").replace("\r", "\n").strip()
+    if not preserve_lines:
+        clean_text = re.sub(r"\s+", " ", clean_text)
     line_start = int(block.get("lineStart") or 0)
     line_end = int(block.get("lineEnd") or line_start)
     if not clean_text:
         body_lines[line_start : line_end + 1] = []
         return rebuild_markdown_from_lines(frontmatter, body_lines)
-    if str(block.get("kind", "")).strip() == "heading":
+    if block_kind == "heading":
         level = max(2, min(4, int(block.get("level") or 2)))
         body_lines[line_start] = f"{'#' * level} {clean_text}"
+    elif block_kind == "quote":
+        body_lines[line_start : line_end + 1] = [f"> {line}" if line else ">" for line in clean_text.split("\n")]
+    elif block_kind == "code":
+        language = str(block.get("language") or "").strip()
+        body_lines[line_start : line_end + 1] = [f"```{language}", *clean_text.split("\n"), "```"]
+    elif block_kind == "list":
+        ordered = bool(block.get("ordered"))
+        replacement = []
+        for index, line in enumerate([item.strip() for item in clean_text.split("\n") if item.strip()], start=1):
+            item_text = re.sub(r"^[-*+]\s+", "", line)
+            item_text = re.sub(r"^\d+\.\s+", "", item_text).strip()
+            marker = f"{index}." if ordered else "-"
+            replacement.append(f"{marker} {item_text}")
+        body_lines[line_start : line_end + 1] = replacement
     else:
         body_lines[line_start : line_end + 1] = [clean_text]
     return rebuild_markdown_from_lines(frontmatter, body_lines)
@@ -1778,7 +1959,7 @@ def update_markdown_text_block(markdown_text: str, block_id: str, new_text: str)
 
 def update_markdown_text_selection(markdown_text: str, block_id: str, start: int, end: int, *, mode: str) -> str:
     block = locate_editor_block(markdown_text, block_id)
-    if str(block.get("kind", "")).strip() not in {"heading", "paragraph"}:
+    if str(block.get("kind", "")).strip() not in {"heading", "paragraph", "quote", "code", "list"}:
         raise RuntimeError("当前块不支持文字操作。")
     text = str(block.get("text", "") or "")
     max_length = len(text)
@@ -1799,14 +1980,15 @@ def update_markdown_text_selection(markdown_text: str, block_id: str, start: int
 
 def insert_image_slot_marker(markdown_text: str, block_id: str, offset: int, slot_id: str) -> str:
     block = locate_editor_block(markdown_text, block_id)
-    if str(block.get("kind", "")).strip() not in {"heading", "paragraph"}:
-        raise RuntimeError("请选择标题或正文段落中的位置插入插图位。")
+    block_kind = str(block.get("kind", "")).strip()
+    if block_kind not in {"heading", "paragraph", "quote", "list"}:
+        raise RuntimeError("请选择正文中的位置插入插图位。")
     frontmatter, body = split_frontmatter_text(markdown_text)
     body_lines = body.splitlines()
     marker_line = f"[[IMAGE_SLOT:{slot_id}]]"
     line_start = int(block.get("lineStart") or 0)
     line_end = int(block.get("lineEnd") or line_start)
-    if str(block.get("kind", "")).strip() == "heading":
+    if block_kind in {"heading", "quote", "list"}:
         body_lines[line_end + 1 : line_end + 1] = [marker_line]
         return rebuild_markdown_from_lines(frontmatter, body_lines)
 
@@ -1834,6 +2016,18 @@ def delete_image_slot_marker(markdown_text: str, slot_id: str) -> str:
     return rebuild_markdown_from_lines(frontmatter, next_lines)
 
 
+def delete_markdown_image_block(markdown_text: str, block_id: str) -> str:
+    frontmatter, body = split_frontmatter_text(markdown_text)
+    body_lines = body.splitlines()
+    block = locate_editor_block(markdown_text, block_id)
+    if str(block.get("kind", "")).strip() != "image":
+        raise RuntimeError("请选择正文里的图片删除。")
+    line_start = int(block.get("lineStart") or 0)
+    line_end = int(block.get("lineEnd") or line_start)
+    body_lines[line_start : line_end + 1] = []
+    return rebuild_markdown_from_lines(frontmatter, body_lines)
+
+
 def move_image_slot_marker(markdown_text: str, slot_id: str, block_id: str, offset: int) -> str:
     blocks = extract_editor_blocks(markdown_text)
     marker_block = next(
@@ -1849,8 +2043,9 @@ def move_image_slot_marker(markdown_text: str, slot_id: str, block_id: str, offs
     target_block = next((item for item in blocks if str(item.get("id", "")).strip() == block_id), None)
     if not target_block:
         raise RuntimeError("找不到新的插图位置。")
-    if str(target_block.get("kind", "")).strip() not in {"heading", "paragraph"}:
-        raise RuntimeError("请选择标题或正文段落中的位置。")
+    target_kind = str(target_block.get("kind", "")).strip()
+    if target_kind not in {"heading", "paragraph", "quote", "list"}:
+        raise RuntimeError("请选择正文中的位置。")
 
     frontmatter, body = split_frontmatter_text(markdown_text)
     body_lines = body.splitlines()
@@ -1863,7 +2058,7 @@ def move_image_slot_marker(markdown_text: str, slot_id: str, block_id: str, offs
         target_line_start -= 1
         target_line_end -= 1
 
-    if str(target_block.get("kind", "")).strip() == "heading":
+    if target_kind in {"heading", "quote", "list"}:
         body_lines[target_line_end + 1 : target_line_end + 1] = [f"[[IMAGE_SLOT:{slot_id}]]"]
         return rebuild_markdown_from_lines(frontmatter, body_lines)
 
@@ -2493,6 +2688,14 @@ def article_updated_at(article_dir: Path) -> str:
     return format_mtime(latest)
 
 
+def article_updated_timestamp(article_dir: Path) -> float:
+    candidates = [article_dir / "publish-pack.json", article_dir / "doocs.md", article_state_path(article_dir)]
+    existing = [path for path in candidates if path.exists()]
+    if not existing:
+        return 0.0
+    return max(path.stat().st_mtime for path in existing)
+
+
 def first_paragraph(markdown_text: str, *, limit: int = 80) -> str:
     _, body = split_frontmatter(markdown_text)
     for block in re.split(r"\n\s*\n", body):
@@ -2549,6 +2752,7 @@ def article_summary(article_dir: Path) -> dict[str, Any]:
         "author": author,
         "charCount": len(markdown),
         "updatedAt": article_updated_at(article_dir),
+        "updatedTimestamp": article_updated_timestamp(article_dir),
         "path": relative_to_root(article_dir),
         "status": {
             "hasTheme": bool(state.get("layout", {}).get("themeFile") or state.get("layout", {}).get("referenceUrl")),
@@ -2569,6 +2773,7 @@ def build_articles_list() -> list[dict[str, Any]]:
         if not (article_dir / "publish-pack.json").exists() or not (article_dir / "doocs.md").exists():
             continue
         items.append(article_summary(article_dir))
+    items.sort(key=lambda item: float(item.get("updatedTimestamp") or 0), reverse=True)
     return items
 
 
@@ -2591,16 +2796,27 @@ def render_preview_for_article(article_dir: Path, state: dict[str, Any]) -> dict
         template_name=None,
         wechat_safe=True,
     )
+    cleaned_html = {
+        key: remove_forbidden_draft_text(str(rendered.get(key, "")), preserve_whitespace=True)
+        for key in (
+            "bodyHtml",
+            "standaloneHtml",
+            "sourceHtml",
+            "wechatSafeBodyHtml",
+            "wechatSafeStandaloneHtml",
+            "wechatSafeSourceHtml",
+        )
+    }
     return {
         "title": str(pack.get("title", article_dir.name)).strip() or article_dir.name,
         "summary": summary,
         "charCount": len(preview_markdown),
-        "bodyHtml": rendered["bodyHtml"],
-        "standaloneHtml": rendered["standaloneHtml"],
-        "sourceHtml": rendered["sourceHtml"],
-        "wechatSafeBodyHtml": rendered["wechatSafeBodyHtml"],
-        "wechatSafeStandaloneHtml": rendered["wechatSafeStandaloneHtml"],
-        "wechatSafeSourceHtml": rendered["wechatSafeSourceHtml"],
+        "bodyHtml": cleaned_html["bodyHtml"],
+        "standaloneHtml": cleaned_html["standaloneHtml"],
+        "sourceHtml": cleaned_html["sourceHtml"],
+        "wechatSafeBodyHtml": cleaned_html["wechatSafeBodyHtml"],
+        "wechatSafeStandaloneHtml": cleaned_html["wechatSafeStandaloneHtml"],
+        "wechatSafeSourceHtml": cleaned_html["wechatSafeSourceHtml"],
         "theme": rendered["theme"],
         "template": template_name,
         "themeFile": str(layout.get("themeFile", "")).strip(),
@@ -2612,6 +2828,182 @@ def render_preview_for_article(article_dir: Path, state: dict[str, Any]) -> dict
         "typography": state.get("typography", {}),
         "themeName": theme_name,
         "editableBlocks": extract_editable_text_blocks(markdown),
+    }
+
+
+def workflow_asset_ready(item: Any) -> bool:
+    if not isinstance(item, dict):
+        return False
+    return bool(
+        str(item.get("localPath", "")).strip()
+        or str(item.get("localPreviewUrl", "")).strip()
+        or str(item.get("previewUrl", "")).strip()
+        or str(item.get("draftUrl", "")).strip()
+    )
+
+
+def build_workflow_snapshot(
+    *,
+    article: dict[str, Any],
+    preview: dict[str, Any],
+    editor_blocks: list[dict[str, Any]],
+    inline_slots: list[dict[str, Any]],
+    cover_candidate_path: str,
+    draft: dict[str, Any],
+) -> dict[str, Any]:
+    title = str(article.get("title", "")).strip()
+    summary = str(article.get("summary", "")).strip()
+    preview_ready = bool(preview.get("ready"))
+    has_blocks = bool(editor_blocks)
+    has_cover = bool(str(cover_candidate_path or "").strip())
+    draft_done = bool(str(draft.get("mediaId", "")).strip())
+
+    total_slots = len(inline_slots)
+    ready_slots = sum(
+        1
+        for slot in inline_slots
+        if isinstance(slot, dict) and workflow_asset_ready(slot.get("currentItem"))
+    )
+    inline_done = total_slots == 0 or ready_slots == total_slots
+
+    draft_status_text = "未开始"
+    draft_status = "pending"
+    draft_missing: list[str] = []
+    if has_blocks:
+        draft_status_text = "已完成" if preview_ready else "进行中"
+        draft_status = "done" if preview_ready else "active"
+        if not preview_ready:
+            draft_missing.append("请先刷新一次最终预览，确认正文样式。")
+    else:
+        draft_missing.append("当前还没有可编辑正文，请先导入或整理正文内容。")
+
+    assets_status_text = "未完成"
+    assets_status = "pending"
+    assets_missing: list[str] = []
+    if has_cover and inline_done:
+        assets_status_text = "已完成"
+        assets_status = "done"
+    elif has_cover or ready_slots > 0:
+        assets_status_text = "进行中"
+        assets_status = "active"
+    if not has_cover:
+        assets_missing.append("请先确认封面图。")
+    if total_slots and ready_slots < total_slots:
+        assets_missing.append(f"还有 {total_slots - ready_slots} 个插图位未完成。")
+
+    publish_status_text = "待确认"
+    publish_status = "pending"
+    publish_missing: list[str] = []
+    if draft_done:
+        publish_status_text = "已完成"
+        publish_status = "done"
+    elif preview_ready and has_cover and inline_done:
+        publish_status_text = "待发布"
+        publish_status = "ready"
+        publish_missing.append("检查无误后即可推送到微信草稿箱。")
+    else:
+        if not preview_ready:
+            publish_missing.append("预览还没锁定。")
+        if not has_cover:
+            publish_missing.append("封面还没确认。")
+        if not inline_done:
+            publish_missing.append("正文配图还没全部准备好。")
+
+    current_stage = "publish"
+    if not preview_ready:
+        current_stage = "draft"
+    elif not has_cover or not inline_done:
+        current_stage = "assets"
+    elif draft_done:
+        current_stage = "publish"
+
+    publish_checks = [
+        {
+            "key": "title",
+            "ok": bool(title),
+            "text": "标题已确认" if title else "标题为空，请先确认文章标题。",
+        },
+        {
+            "key": "summary",
+            "ok": bool(summary),
+            "text": "摘要已生成" if summary else "摘要为空，请补充摘要。",
+        },
+        {
+            "key": "preview",
+            "ok": preview_ready,
+            "text": "公众号预览已生成" if preview_ready else "请先刷新并生成最终预览。",
+        },
+        {
+            "key": "cover",
+            "ok": has_cover,
+            "text": "封面已确认" if has_cover else "封面尚未确认。",
+        },
+        {
+            "key": "inline",
+            "ok": inline_done,
+            "text": "正文插图状态已确认" if inline_done else f"还有 {total_slots - ready_slots} 个插图位未处理。",
+        },
+        {
+            "key": "draft",
+            "ok": draft_done,
+            "text": "草稿箱已推送" if draft_done else "尚未推送到草稿箱。",
+        },
+    ]
+
+    completed = sum(
+        1
+        for is_done in (
+            preview_ready and has_blocks,
+            has_cover and inline_done,
+            draft_done,
+        )
+        if is_done
+    )
+
+    return {
+        "currentStage": current_stage,
+        "progress": {
+            "completed": completed,
+            "total": 3,
+        },
+        "flags": {
+            "hasBlocks": has_blocks,
+            "previewReady": preview_ready,
+            "hasCover": has_cover,
+            "inlineState": {
+                "total": total_slots,
+                "ready": ready_slots,
+            },
+            "inlineDone": inline_done,
+            "draftDone": draft_done,
+        },
+        "stages": {
+            "draft": {
+                "id": "draft",
+                "label": "正文定稿",
+                "status": draft_status,
+                "statusText": draft_status_text,
+                "done": draft_status == "done",
+                "missing": draft_missing,
+            },
+            "assets": {
+                "id": "assets",
+                "label": "封面与配图",
+                "status": assets_status,
+                "statusText": assets_status_text,
+                "done": assets_status == "done",
+                "missing": assets_missing,
+            },
+            "publish": {
+                "id": "publish",
+                "label": "发布检查",
+                "status": publish_status,
+                "statusText": publish_status_text,
+                "done": publish_status == "done",
+                "missing": publish_missing,
+            },
+        },
+        "publishChecks": publish_checks,
     }
 
 
@@ -2766,17 +3158,28 @@ def article_detail(slug: str) -> dict[str, Any]:
             "statusText": "上传后默认不自动生成预览。先选风格和配色，再点“立即刷新预览”。",
         }
 
+    article_payload = {
+        "id": article_dir.name,
+        "title": str(pack.get("title", article_dir.name)).strip() or article_dir.name,
+        "summary": resolved_summary,
+        "author": str(pack.get("author", "")).strip(),
+        "charCount": len(markdown),
+        "updatedAt": article_updated_at(article_dir),
+        "path": relative_to_root(article_dir),
+        "sourceFiles": source_files,
+    }
+    editor_blocks = extract_editor_blocks(markdown)
+    workflow = build_workflow_snapshot(
+        article=article_payload,
+        preview=preview,
+        editor_blocks=editor_blocks,
+        inline_slots=inline_slots,
+        cover_candidate_path=cover_candidate,
+        draft=state.get("draft", {}),
+    )
+
     return {
-        "article": {
-            "id": article_dir.name,
-            "title": str(pack.get("title", article_dir.name)).strip() or article_dir.name,
-            "summary": resolved_summary,
-            "author": str(pack.get("author", "")).strip(),
-            "charCount": len(markdown),
-            "updatedAt": article_updated_at(article_dir),
-            "path": relative_to_root(article_dir),
-            "sourceFiles": source_files,
-        },
+        "article": article_payload,
         "source": state.get("source", {}),
         "layout": {
             "theme": str(layout.get("theme", DEFAULT_THEME)).strip() or DEFAULT_THEME,
@@ -2819,8 +3222,9 @@ def article_detail(slug: str) -> dict[str, Any]:
         },
         "draft": state.get("draft", {}),
         "preview": preview,
+        "workflow": workflow,
         "editor": {
-            "blocks": extract_editor_blocks(markdown),
+            "blocks": editor_blocks,
             "imageSlots": inline_slots,
         },
     }
@@ -2876,6 +3280,9 @@ def generate_image_asset(
     article_path: Path,
     preset: str,
     style: str,
+    image_provider: str | None = None,
+    image_api_base: str | None = None,
+    image_model: str | None = None,
 ) -> dict[str, Any]:
     return load_generate_image_runtime().generate_image_asset(
         title=title,
@@ -2884,29 +3291,61 @@ def generate_image_asset(
         preset=preset,
         style=style,
         workspace_root=ROOT.parent,
+        image_provider=image_provider,
+        image_api_base=image_api_base,
+        image_model=image_model,
     )
 
 
-def generate_cover_module_asset(*, source_path: Path, output_path: Path, style_id: str) -> None:
-    if not IMAGE_VENV_PYTHON.exists():
-        raise RuntimeError(f"封面模块图环境未就绪：{IMAGE_VENV_PYTHON}")
-    if not COLLAGE_SCRIPT.exists():
-        raise RuntimeError(f"封面模块图脚本不存在：{COLLAGE_SCRIPT}")
-    result = subprocess.run(
-        [
-            str(IMAGE_VENV_PYTHON),
-            str(COLLAGE_SCRIPT),
-            str(source_path),
-            str(output_path),
-            "--style",
-            style_id,
-        ],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
-    if result.returncode != 0:
-        raise RuntimeError((result.stderr or result.stdout or "封面模块图生成失败").strip())
+def requested_image_option(payload: dict[str, Any], snake_case: str, camel_case: str) -> str | None:
+    raw = payload.get(snake_case)
+    if raw is None:
+        raw = payload.get(camel_case)
+    value = str(raw or "").strip()
+    return value or None
+
+
+def generate_cover_module_asset(*, source_path: Path, output_path: Path, style_id: str, accent_color: str) -> None:
+    try:
+        from PIL import Image, ImageDraw
+    except Exception as error:  # noqa: BLE001
+        raise RuntimeError("当前环境缺少 Pillow，无法合成封面发布图。") from error
+
+    if not source_path.exists():
+        raise RuntimeError("封面原图不存在，无法合成发布图。")
+
+    accent = hex_to_rgb(normalize_hex_color(accent_color, "#7987cd"))
+    style = str(style_id or "").strip()
+    image = Image.open(source_path).convert("RGB")
+    max_width = 1280
+    if image.width > max_width:
+        ratio = max_width / image.width
+        image = image.resize((max_width, max(1, round(image.height * ratio))), Image.Resampling.LANCZOS)
+
+    if style == "poster-quiet":
+        outer_left = max(18, round(image.width * 0.025))
+        outer_bottom = max(18, round(image.height * 0.035))
+        inner_pad = max(20, round(image.width * 0.03))
+    else:
+        outer_left = max(24, round(image.width * 0.035))
+        outer_bottom = max(22, round(image.height * 0.04))
+        inner_pad = max(28, round(image.width * 0.04))
+
+    border = max(4, round(image.width * 0.003))
+    frame_width = image.width + inner_pad * 2
+    frame_height = image.height + inner_pad * 2
+    canvas = Image.new("RGB", (outer_left + frame_width, frame_height + outer_bottom), accent)
+    frame = Image.new("RGB", (frame_width, frame_height), "#ffffff")
+    frame.paste(image, (inner_pad, inner_pad))
+    draw = ImageDraw.Draw(frame)
+    for inset in range(border):
+        draw.rectangle(
+            [inset, inset, frame_width - 1 - inset, frame_height - 1 - inset],
+            outline="#202224",
+        )
+    canvas.paste(frame, (outer_left, 0))
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    canvas.save(output_path, format="PNG", optimize=True)
     if not output_path.exists():
         raise RuntimeError("封面模块图生成失败：未找到输出文件。")
 
@@ -3023,6 +3462,9 @@ def generate_cover_candidate_record(
     custom_prompt: str,
     prompt_override: str,
     style_id: str,
+    image_provider: str | None = None,
+    image_api_base: str | None = None,
+    image_model: str | None = None,
 ) -> dict[str, Any]:
     title = str(pack.get("title", article_dir.name)).strip() or article_dir.name
     summary = resolve_article_summary(markdown_text, str(pack.get("summary", "")).strip()) or "无"
@@ -3044,6 +3486,9 @@ def generate_cover_candidate_record(
         article_path=article_dir / "doocs.md",
         preset=preset,
         style=style,
+        image_provider=image_provider,
+        image_api_base=image_api_base,
+        image_model=image_model,
     )
     filename = f"cover-{style_id}-{datetime.now().strftime('%Y%m%d-%H%M%S')}.png"
     local_path = article_asset_dir(article_dir) / filename
@@ -3071,6 +3516,9 @@ def generate_cover(slug: str, payload: dict[str, Any]) -> dict[str, Any]:
     custom_prompt = str(payload.get("prompt") or state.get("cover", {}).get("customPrompt", "")).strip()
     requested_style_id = str(payload.get("styleId") or "").strip()
     prompt_override = str(payload.get("promptOverride") or "").strip()
+    requested_image_provider = requested_image_option(payload, "image_provider", "imageProvider")
+    requested_image_api_base = requested_image_option(payload, "image_api_base", "imageApiBase")
+    requested_image_model = requested_image_option(payload, "image_model", "imageModel")
     if prompt_override and not requested_style_id:
         requested_style_id = str(state.get("cover", {}).get("generated", {}).get("styleId", "")).strip()
     style_ids = [requested_style_id] if requested_style_id else [item["id"] for item in COVER_STYLE_CHOICES]
@@ -3083,6 +3531,9 @@ def generate_cover(slug: str, payload: dict[str, Any]) -> dict[str, Any]:
             custom_prompt=custom_prompt,
             prompt_override=prompt_override if requested_style_id else "",
             style_id=style_id,
+            image_provider=requested_image_provider,
+            image_api_base=requested_image_api_base,
+            image_model=requested_image_model,
         )
         for style_id in style_ids
     ]
@@ -3109,6 +3560,7 @@ def generate_cover(slug: str, payload: dict[str, Any]) -> dict[str, Any]:
 def generate_cover_module(slug: str, payload: dict[str, Any]) -> dict[str, Any]:
     article_dir = resolve_article_dir(slug)
     state = load_studio_state(article_dir)
+    update_editor_state_from_payload(state, payload)
     source_relative = current_cover_candidate(state)
     if not source_relative:
         raise RuntimeError("请先选择一张封面图，再处理封面风格。")
@@ -3116,9 +3568,12 @@ def generate_cover_module(slug: str, payload: dict[str, Any]) -> dict[str, Any]:
     style_id = str(payload.get("style") or state.get("coverModules", {}).get("style") or "collage-editorial").strip() or "collage-editorial"
     filename = f"cover-module-{datetime.now().strftime('%Y%m%d-%H%M%S')}.png"
     local_path = article_asset_dir(article_dir) / filename
-    generate_cover_module_asset(source_path=source_path, output_path=local_path, style_id=style_id)
+    resolved_theme, _theme_name, _template_name, _theme_file = resolve_render_theme(state)
+    generate_cover_module_asset(source_path=source_path, output_path=local_path, style_id=style_id, accent_color=resolved_theme.primary)
     item = {
         "style": style_id,
+        "sourcePath": source_relative,
+        "accentColor": resolved_theme.primary,
         "localPath": relative_to_root(local_path),
         "createdAt": now_text(),
     }
@@ -3174,6 +3629,95 @@ def select_cover_candidate(slug: str, payload: dict[str, Any]) -> dict[str, Any]
     state["cover"]["updatedAt"] = now_text()
     save_studio_state(article_dir, state)
     return action_response(slug, "当前封面候选已更新。")
+
+
+def save_uploaded_cover_asset(article_dir: Path, state: dict[str, Any], *, filename: str, file_bytes: bytes) -> dict[str, Any]:
+    normalize_state_inplace(state)
+    local_path = save_uploaded_image_file(article_dir, filename, file_bytes, prefix="cover-upload")
+    record = {
+        "localPath": relative_to_root(local_path),
+        "createdAt": now_text(),
+        "source": "upload",
+        "preset": "uploaded-cover",
+        "styleLabel": "上传封面",
+        "label": Path(filename).stem or "上传封面",
+    }
+    cover_state = state.get("cover", {})
+    if not isinstance(cover_state, dict):
+        cover_state = {}
+        state["cover"] = cover_state
+    history = cover_state.get("history", [])
+    if not isinstance(history, list):
+        history = []
+    cover_state["candidatePath"] = record["localPath"]
+    cover_state["generated"] = copy.deepcopy(record)
+    cover_state["history"] = merge_asset_history(history, [record], limit=24)
+    cover_state["updatedAt"] = now_text()
+    save_studio_state(article_dir, state)
+    return record
+
+
+def upload_cover_asset(slug: str, filename: str, file_bytes: bytes) -> dict[str, Any]:
+    article_dir = resolve_article_dir(slug)
+    state = load_studio_state(article_dir)
+    save_uploaded_cover_asset(article_dir, state, filename=filename, file_bytes=file_bytes)
+    return action_response(slug, "封面图已上传并设为当前封面。")
+
+
+def save_uploaded_inline_asset(
+    article_dir: Path,
+    state: dict[str, Any],
+    *,
+    slot_id: str,
+    filename: str,
+    file_bytes: bytes,
+) -> dict[str, Any]:
+    normalize_state_inplace(state)
+    slot_id = str(slot_id or "").strip()
+    if not slot_id:
+        raise RuntimeError("需要提供正文插图位。")
+    inline_state = state.get("inlineImages", {})
+    if not isinstance(inline_state, dict):
+        inline_state = {}
+        state["inlineImages"] = inline_state
+    slots = inline_state.get("slots", [])
+    if not isinstance(slots, list):
+        slots = []
+        inline_state["slots"] = slots
+    target_slot = next((slot for slot in slots if isinstance(slot, dict) and str(slot.get("slotId", "")).strip() == slot_id), None)
+    if not target_slot:
+        raise RuntimeError("找不到对应的插图位。")
+
+    local_path = save_uploaded_image_file(article_dir, filename, file_bytes, prefix=f"inline-{slot_id}-upload")
+    order = int(target_slot.get("order") or slot_numeric_index(slot_id) or 0)
+    record = {
+        "localPath": relative_to_root(local_path),
+        "createdAt": now_text(),
+        "source": "upload",
+        "preset": "uploaded-inline",
+        "slotId": slot_id,
+        "slot": order,
+        "label": Path(filename).stem or (f"插图 {order}" if order else "正文插图"),
+    }
+    slot_history = target_slot.get("history", [])
+    if not isinstance(slot_history, list):
+        slot_history = []
+    target_slot["currentItem"] = copy.deepcopy(record)
+    target_slot["selectedLocalPath"] = record["localPath"]
+    target_slot["history"] = merge_asset_history(slot_history, [record], limit=24)
+    target_slot["updatedAt"] = now_text()
+    inline_state["updatedAt"] = now_text()
+    save_studio_state(article_dir, state)
+    return record
+
+
+def upload_inline_asset(slug: str, slot_id: str, filename: str, file_bytes: bytes) -> dict[str, Any]:
+    article_dir = resolve_article_dir(slug)
+    state = load_studio_state(article_dir)
+    markdown = read_text(article_dir / "doocs.md")
+    ensure_inline_slot_state(article_dir, markdown, state)
+    save_uploaded_inline_asset(article_dir, state, slot_id=slot_id, filename=filename, file_bytes=file_bytes)
+    return action_response(slug, "正文图片已上传并替换当前插图。")
 
 
 def resolve_article_asset_path(article_dir: Path, relative_path: str) -> tuple[Path, str]:
@@ -3257,6 +3801,9 @@ def generate_inline_item(
     slot_id: str,
     slot_order: int,
     state: dict[str, Any],
+    image_provider: str | None = None,
+    image_api_base: str | None = None,
+    image_model: str | None = None,
 ) -> dict[str, Any]:
     title = str(pack.get("title", article_dir.name)).strip() or article_dir.name
     label = str(target_label or "").strip() or f"正文段落 {slot_order}"
@@ -3273,6 +3820,9 @@ def generate_inline_item(
         article_path=article_dir / "doocs.md",
         preset=preset,
         style=style,
+        image_provider=image_provider,
+        image_api_base=image_api_base,
+        image_model=image_model,
     )
     filename = f"inline-{slot_id}-{datetime.now().strftime('%Y%m%d-%H%M%S')}.png"
     local_path = article_asset_dir(article_dir) / filename
@@ -3311,6 +3861,9 @@ def generate_inline_images(slug: str, payload: dict[str, Any]) -> dict[str, Any]
     preset = str(payload.get("preset") or inline_preset_for_archetype(archetype)).strip()
     requested_slot_id = str(payload.get("slotId") or "").strip()
     legacy_slot = clamp_int(payload.get("slot"), 0, 999, 0)
+    requested_image_provider = requested_image_option(payload, "image_provider", "imageProvider")
+    requested_image_api_base = requested_image_option(payload, "image_api_base", "imageApiBase")
+    requested_image_model = requested_image_option(payload, "image_model", "imageModel")
     inline_state = state.get("inlineImages", {})
     slots = [slot for slot in inline_state.get("slots", []) if isinstance(slot, dict)]
     if legacy_slot and not requested_slot_id:
@@ -3358,6 +3911,9 @@ def generate_inline_images(slug: str, payload: dict[str, Any]) -> dict[str, Any]
             slot_id=slot_id,
             slot_order=slot_order,
             state=state,
+            image_provider=requested_image_provider,
+            image_api_base=requested_image_api_base,
+            image_model=requested_image_model,
         )
         item["batchId"] = batch_id
         items.append(item)
@@ -3611,6 +4167,19 @@ def delete_article_image_slot(slug: str, payload: dict[str, Any]) -> dict[str, A
     return action_response(slug, "插图位已删除。")
 
 
+def delete_article_markdown_image(slug: str, payload: dict[str, Any]) -> dict[str, Any]:
+    article_dir = resolve_article_dir(slug)
+    markdown_text = read_text(article_dir / "doocs.md")
+    block_id = str(payload.get("blockId", "")).strip()
+    if not block_id:
+        raise RuntimeError("需要提供要删除的图片块。")
+    updated_markdown = delete_markdown_image_block(markdown_text, block_id)
+    write_article_markdown(article_dir, updated_markdown)
+    state = load_studio_state(article_dir)
+    save_studio_state(article_dir, state)
+    return action_response(slug, "正文图片已删除。")
+
+
 def generate_section_modules(slug: str, payload: dict[str, Any]) -> dict[str, Any]:
     article_dir = resolve_article_dir(slug)
     state = load_studio_state(article_dir)
@@ -3619,6 +4188,9 @@ def generate_section_modules(slug: str, payload: dict[str, Any]) -> dict[str, An
     preset = str(payload.get("preset") or "cover-minimal").strip()
     custom_prompt = str(payload.get("prompt") or state.get("sectionModules", {}).get("customPrompt", "")).strip()
     title = str(pack.get("title", article_dir.name)).strip() or article_dir.name
+    requested_image_provider = requested_image_option(payload, "image_provider", "imageProvider")
+    requested_image_api_base = requested_image_option(payload, "image_api_base", "imageApiBase")
+    requested_image_model = requested_image_option(payload, "image_model", "imageModel")
     targets = compute_section_targets(markdown, limit=6)
     if not targets:
         raise RuntimeError("当前文章还没有可生成分节图的 H2 小节。")
@@ -3639,6 +4211,9 @@ def generate_section_modules(slug: str, payload: dict[str, Any]) -> dict[str, An
             article_path=article_dir / "doocs.md",
             preset=preset,
             style=style,
+            image_provider=requested_image_provider,
+            image_api_base=requested_image_api_base,
+            image_model=requested_image_model,
         )
         filename = f"section-{index}-{datetime.now().strftime('%Y%m%d-%H%M%S')}.png"
         local_path = article_asset_dir(article_dir) / filename
@@ -3667,7 +4242,7 @@ def generate_section_modules(slug: str, payload: dict[str, Any]) -> dict[str, An
     state["sectionModules"]["history"] = merge_asset_history(existing_history if isinstance(existing_history, list) else [], items, limit=48)
     state["sectionModules"]["updatedAt"] = now_text()
     save_studio_state(article_dir, state)
-    return action_response(slug, "分节条图已生成，并用于当前模板预览。")
+    return action_response(slug, "分节条图已生成，并用于当前预览。")
 
 
 def select_section_module(slug: str, payload: dict[str, Any]) -> dict[str, Any]:
@@ -3717,20 +4292,34 @@ def ensure_text_limit(text: str, limit: int) -> str:
     return clean[: limit - 1].rstrip() + "…"
 
 
+def remove_forbidden_draft_text(text: str, *, preserve_whitespace: bool = False) -> str:
+    clean = str(text or "")
+    for pattern in FORBIDDEN_DRAFT_TEXT_PATTERNS:
+        clean = clean.replace(pattern, "")
+    if not preserve_whitespace:
+        clean = re.sub(r"\s{2,}", " ", clean)
+    clean = re.sub(r"([，、；：])\s*([，、；：])+", r"\1", clean)
+    clean = clean.replace("（）", "").replace("()", "")
+    return clean.strip()
+
+
 def build_wechat_article_payload(
     pack: dict[str, Any],
     markdown_text: str,
     thumb_media_id: str,
     html: str,
 ) -> dict[str, Any]:
-    title = ensure_text_limit(str(pack.get("title", "")).strip(), 32)
-    digest = ensure_text_limit(resolve_article_summary(markdown_text, str(pack.get("summary", "")).strip(), limit=128), 128)
-    author = ensure_text_limit(str(pack.get("author", "")).strip(), 16)
+    title = ensure_text_limit(remove_forbidden_draft_text(str(pack.get("title", "")).strip()), 32)
+    digest = ensure_text_limit(
+        remove_forbidden_draft_text(resolve_article_summary(markdown_text, str(pack.get("summary", "")).strip(), limit=128)),
+        128,
+    )
+    author = ensure_text_limit(remove_forbidden_draft_text(str(pack.get("author", "")).strip()), 16)
     return {
         "title": title,
         "author": author,
         "digest": digest,
-        "content": html,
+        "content": remove_forbidden_draft_text(html, preserve_whitespace=True),
         "thumb_media_id": thumb_media_id,
         "show_cover_pic": 1,
         "need_open_comment": 0,
@@ -3868,10 +4457,17 @@ def push_article_draft(slug: str, payload: dict[str, Any]) -> dict[str, Any]:
         state["preview"]["initialized"] = True
         state["preview"]["updatedAt"] = now_text()
         save_studio_state(article_dir, state)
-    except Exception as error:  # noqa: BLE001
-        state["draft"]["lastError"] = str(error)
+    except BaseException as error:  # noqa: BLE001
+        if isinstance(error, (KeyboardInterrupt, GeneratorExit)):
+            raise
+        error_message = str(error) or error.__class__.__name__
+        draft_state = state.get("draft", {})
+        if not isinstance(draft_state, dict):
+            draft_state = {}
+            state["draft"] = draft_state
+        draft_state["lastError"] = error_message
         save_studio_state(article_dir, state)
-        raise
+        raise RuntimeError(error_message) from error
 
     return action_response(slug, "已推送到公众号草稿箱。")
 
@@ -3934,6 +4530,32 @@ class AppHandler(SimpleHTTPRequestHandler):
             self.send_json(response)
             return
 
+        if match := IMAGE_COVER_UPLOAD_RE.match(path):
+            try:
+                _fields, files = parse_multipart_upload(raw_body, self.headers.get("Content-Type", ""))
+                filename, file_bytes = files.get("file") or ("", b"")
+                if not filename:
+                    raise RuntimeError("没有收到封面图片。")
+                response = upload_cover_asset(match.group("slug"), filename, file_bytes)
+            except Exception as error:  # noqa: BLE001
+                self.send_error_json(str(error), status=HTTPStatus.BAD_REQUEST)
+                return
+            self.send_json(response)
+            return
+
+        if match := IMAGE_INLINE_UPLOAD_RE.match(path):
+            try:
+                fields, files = parse_multipart_upload(raw_body, self.headers.get("Content-Type", ""))
+                filename, file_bytes = files.get("file") or ("", b"")
+                if not filename:
+                    raise RuntimeError("没有收到正文图片。")
+                response = upload_inline_asset(match.group("slug"), fields.get("slotId", ""), filename, file_bytes)
+            except Exception as error:  # noqa: BLE001
+                self.send_error_json(str(error), status=HTTPStatus.BAD_REQUEST)
+                return
+            self.send_json(response)
+            return
+
         try:
             payload = json.loads(raw_body.decode("utf-8") or "{}")
         except json.JSONDecodeError:
@@ -3960,7 +4582,7 @@ class AppHandler(SimpleHTTPRequestHandler):
                 state["preview"]["initialized"] = True
                 state["preview"]["updatedAt"] = now_text()
                 save_studio_state(article_dir, state)
-                response = action_response(match.group("slug"), "排版预览已刷新。")
+                response = action_response(match.group("slug"), "预览已刷新。")
             elif match := IMAGE_COVER_RE.match(path):
                 response = generate_cover(match.group("slug"), payload)
             elif match := IMAGE_COVER_SELECT_RE.match(path):
@@ -3993,6 +4615,8 @@ class AppHandler(SimpleHTTPRequestHandler):
                 response = move_article_image_slot(match.group("slug"), payload)
             elif match := EDITOR_IMAGE_SLOT_DELETE_RE.match(path):
                 response = delete_article_image_slot(match.group("slug"), payload)
+            elif match := EDITOR_MARKDOWN_IMAGE_DELETE_RE.match(path):
+                response = delete_article_markdown_image(match.group("slug"), payload)
             elif match := TEXT_BLOCK_UPDATE_RE.match(path):
                 response = update_article_text_block(match.group("slug"), payload)
             elif match := ARTICLE_DELETE_RE.match(path):

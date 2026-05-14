@@ -6,7 +6,7 @@
 
 **填写说明**：见 [skill-io-guide.md](./skill-io-guide.md)。
 
-**归类规则**：`generate-video` 固定归入排版与视觉层；`auto-curate`、`wechat-full` 各自独立计数。本文档同时记录**已实现**与**规划中**的 Skill，其中 collect 层当前已实现 `wechat-collect`、`news-collect`、`topic-research`、`wechat-report` 四个入口。
+**归类规则**：`generate-video` 固定归入排版与视觉层；`auto-curate`、`wechat-full` 各自独立计数。本文档同时记录**已实现**与**规划中**的 Skill，其中 collect 层当前已实现 `content-brief-builder`、`topic-radar`、`wechat-collect`、`news-collect`、`topic-research`、`wechat-report` 六个入口。
 
 ---
 
@@ -48,10 +48,12 @@
 
 ---
 
-## 采集层（10；已实现 4，规划中 6）
+## 采集层（13；已实现 6，规划中 7）
 
 | Skill | 状态 | 功能说明 | 输入 | 输出 | 触发语 |
 |------|------|----------|------|------|--------|
+| `content-brief-builder` | 已实现 | 把题目草稿、结构化笔记或一段选题说明整理成主链路兼容的 `阶段 1` brief，自动补齐 SCQA、风险提醒、素材来源可信度，并在备注中写入推荐框架、推荐选题公式、热点判断与四维打分 | `topic_or_notes_markdown`（题目、草稿、会议笔记、选题说明） | `inbox/YYYYMMDD-*-gzh-brief.md` | 「整理 brief」「先定方向再写」「把这个题整理成可写 brief」 |
+| `topic-radar` | 已实现 | 把热点、粗笔记或趋势说明转成 3 个候选写作切口，并输出四维打分、选题公式、推荐结构、标题方向和素材缺口 | `topic_or_hotspot_markdown` | `topics/*-topic-radar.md` + `topics/*-topic-radar.json` | 「这个热点能怎么写」「先帮我拆几个选题角度」「做选题雷达」 |
 | `daily-content-curator` | 规划中 | 从预配置的 YouTube 频道和小宇宙播客自动抓取音视频，获取字幕/转录文本并改写 | 预配置频道/订阅；可选「日期范围」或「只跑今日」 | `inbox/*-transcript.md`、改写摘要或报告 | 「跑今日播客采集」「同步小宇宙转写」 |
 | `x-viral-collector` | 规划中 | 通过 Apify 采集 X（Twitter）上 AI 相关的高互动推文和长文，生成热门内容报告 | Apify 可用；关键词或列表 ID；可选时间窗 | `inbox/*-x-viral-report.md` | 「抓本周 X 上 AI 热门长文」「生成 X 热门报告」 |
 | `ai-income-stories` | 规划中 | 从 X 采集「用 AI 编程工具赚钱」的真实故事，提取收入、工具、背景等结构化数据 | 搜索关键词或种子账号；条数上限 | 结构化表格/Markdown（收入、工具、背景字段） | 「采集 AI 赚钱故事」「导出收入案例表」 |
@@ -72,13 +74,15 @@
 
 若本机 Skill 目录仍为 `baoyu-translate`，可与上表视为同一能力，仅命名不同。
 
-## 创作层（9）
+## 创作层（11）
 
 | Skill | 功能说明 | 输入 | 输出 | 触发语 |
 |------|----------|------|------|--------|
 | `article-rewriter` | 外文 URL 精读 → 讨论角度 → 三写手竞争创作 → 审稿 → 选稿 → 信息图 → 公众号 HTML | 外文文章 URL（直接吃原文，不需先翻译）；可选角度偏好 | `ready/*-wechat.html`（或链上中间稿 `drafts/*` + 终版 HTML） | 「精读这篇 URL 写成公众号」「外文长文改写成可发版本」 |
 | `case-writer-hybrid` | 结构化 brief → 选题评分 → 框架路由 → writer / critic / judge 多轮对抗 → 轻量去 AI 味 → 主稿 + 写作包 + 审稿轨迹；三轮不过线即中断并通知人工处理 | `brief_markdown`（含 `topic`、`target_reader`、`core_view`、`arguments`、`cases`） | `drafts/*-article.md` + `drafts/*-writing-pack.md` + `drafts/*-writing-pack.json` + `drafts/*-review-trace.json` | 「用这个 brief 出主稿」「跑写作闭环」「如果不过线就停下来」 |
+| `adversarial-content-review` | 对已完成 Markdown 稿件做三角色审稿：笔杆子审、参谋审、裁判裁定；输出五维度评分、发布结论和具体修改建议 | `drafts/*-article.md` 或任意文章 Markdown | `reviews/*-review-report.md` + `reviews/*-review-report.json` | 「审一下这篇」「这篇能发吗」「发布前做对抗审稿」 |
 | `humanizer-zh` | 对中文正文做受约束的去 AI 味清洗，保留事实、结构、标题和核心论点，同时输出命中规则报告 | `markdown_or_text` | `drafts/*-humanized.md` + `drafts/*-humanizer-report.json` | 「去一下 AI 味」「把这篇洗得更像人写的」 |
+| `script-writer-short` | 将公众号长文、brief 或选题稿压缩成 60-180 秒短视频口播脚本，按 Hook / Introduction / Body / Summary / 拍摄提示输出 | `drafts/*-article.md`、brief 或选题 Markdown | `drafts/*-script.md` + `drafts/*-script.json` | 「把这篇改成口播稿」「做 90 秒短视频版本」「转成视频号脚本」 |
 | `solo-writer` | 播客文字稿 → 精读 → 讨论角度 → 单写手写作（去 AI 味）→ 信息图 → 公众号 HTML | `inbox/*-transcript.md`、已翻译稿 `drafts/*-zh.md`、或粘贴转写 | `drafts/*-article.md` 与/或 `ready/*-wechat.html` | 「把这段播客转写成公众号」「单写手去 AI 味」 |
 | `interview` | 多轮深度访谈挖掘用户故事 → 智能推荐文章方向 → 输出公众号爆款文章 | 访谈逐字稿或录音转写；可选人物背景 | `drafts/*-interview-article.md` | 「根据访谈稿写人物稿」「从访谈里出一篇爆款」 |
 | `ad-writing` | 读取广告主 PDF Brief → 设计测试用例 → 输出约 3000 字公众号推广文章 | 广告主 PDF Brief 路径或上传 | `drafts/*-ad-article.md` | 「按这个 Brief 写推广文」「读 PDF 写约 3000 字软文」 |

@@ -95,6 +95,23 @@
 
 下表保留全量蓝图，但每个条目都明确当前状态与备注。备注优先记录：`已接 runtime`、`已有样例产物`、`需用户确认`、`依赖外部平台`。
 
+所有**已完成** skill 的详细说明、安装方式和运行示例，统一写在各自目录下的 `README.md`。如果你想快速判断“这个 skill 到底是干什么的、怎么装、怎么用”，优先看下面这张导航表。
+
+### 2.0 已完成 Skills 文档导航
+
+| Skill | 这项技能到底做什么 | 说明文档 |
+|------|--------------------|----------|
+| `case-writer-hybrid` | 把结构化 brief 写成可继续排版的公众号长文主稿，并产出写作包与审稿轨迹 | [README](../skills/case-writer-hybrid/README.md) |
+| `wechat-collect` | 把公众号文章链接转成可继续写作的 brief，并归档原始 HTML | [README](../skills/wechat-collect/README.md) |
+| `news-collect` | 做一轮宽资讯扫描，把结果沉淀成本地 `news-report.md` 和 raw JSON | [README](../skills/news-collect/README.md) |
+| `topic-research` | 围绕一个选题做二跳深研，输出带写作判断的 `research.md` | [README](../skills/topic-research/README.md) |
+| `wechat-report` | 围绕一个主题收集多篇公众号文章，生成对比报告和结构化 raw JSON | [README](../skills/wechat-report/README.md) |
+| `feishu-user-auth` | 为飞书同步做一次性浏览器授权，缓存用户 token | [README](../skills/feishu-user-auth/README.md) |
+| `feishu-bitable-sync` | 把 `wechat-report` 结果同步到飞书多维表，失败时导出 CSV 兜底 | [README](../skills/feishu-bitable-sync/README.md) |
+| `humanizer-zh` | 对中文正文做受约束的去 AI 味清洗，并输出修改报告 | [README](../skills/humanizer-zh/README.md) |
+| `generate-image` | 从文章主稿生成公众号配图；外部生成失败时自动降级到本地信息图 | [README](../skills/generate-image/README.md) |
+| `wechat-formatter` | 把 Markdown 主稿排版成微信公众号可用 HTML，并消费 writing-pack sidecar | [README](../skills/wechat-formatter/README.md) |
+
 ### 2.1 采集层（11）
 
 | Skill | 状态 | 功能说明 | 备注 |
@@ -103,10 +120,10 @@
 | `x-viral-collector` | 规划中 | 通过 Apify 采集 X 上 AI 相关的高互动推文和长文，生成热门内容报告 | 依赖 Apify / X 数据源 |
 | `ai-income-stories` | 规划中 | 从 X 采集“用 AI 编程工具赚钱”的真实故事，提取收入、工具、背景等结构化数据 | 依赖 X 数据抓取与结构化抽取 |
 | `attentionvc-ai-daily` | 规划中 | 从 AttentionVC.ai 抓取 X 上 AI 热门长文，用 Jina Reader 获取全文，生成日报 | 依赖站点可访问性与外部抓取 |
-| `wechat-collect` | 已完成（原有） | 公众号文章采集，输出可直接交给 `case-writer-hybrid` 的 brief，并归档原始 HTML | 已接 runtime；`stage2-wechat-pipeline` 已验证；已有 brief 与 raw HTML 样例 |
-| `news-collect` | 已完成（新增） | 基于 repo-local `news-aggregator-skill` 做宽扫描，统一写成本地 `news-report.md` 与 raw JSON | 已接 runtime；已有 `news-report.md` 与 raw JSON 样例；依赖 vendor skill |
-| `topic-research` | 已完成（新增） | 基于 repo-local `tavily-research` 对选定主题做二跳深研，输出本地 `research.md` 与 raw JSON | 已接 runtime；已有 `research.md` 与 raw JSON 样例；依赖 Tavily CLI |
-| `wechat-report` | 已完成（新增） | 围绕一个主题收集多篇公众号原文，输出文章总表、互动对比表、内容结构表与写法拆解 | 已接 runtime；已有本地报告与 raw JSON；后续飞书同步需用户确认 |
+| `wechat-collect` | 已完成（原有） | 把单篇公众号文章 URL 转成阶段 1 可直接消费的 brief，同时把原始 HTML 落盘归档，方便后续复盘与抽取调优 | 已接 runtime；`stage2-wechat-pipeline` 已验证；已有 brief 与 raw HTML 样例；[说明文档](../skills/wechat-collect/README.md) |
+| `news-collect` | 已完成（新增） | 对海外 / 国内资讯源做一轮宽扫描，把结果标准化为 `news-report.md`，并补“值不值得写、从什么角度写”的轻量判断 | 已接 runtime；已有 `news-report.md` 与 raw JSON 样例；依赖 vendor skill；[说明文档](../skills/news-collect/README.md) |
+| `topic-research` | 已完成（新增） | 针对一个已经选中的主题做二跳深研，补足证据、风险、写作框架和标题方向，输出 `research.md` 与 raw JSON | 已接 runtime；已有 `research.md` 与 raw JSON 样例；依赖 Tavily CLI；[说明文档](../skills/topic-research/README.md) |
+| `wechat-report` | 已完成（新增） | 针对同一主题汇总多篇公众号文章，抽正文、互动、结构和爆款写法，生成一份可读报告和一份结构化 raw JSON | 已接 runtime；已有本地报告与 raw JSON；后续飞书同步需用户确认；[说明文档](../skills/wechat-report/README.md) |
 | `wechat-subscribe` | 规划中 | 公众号订阅管理 | 规划中的长期监控前置能力 |
 | `wechat-topic-monitor` | 规划中 | 公众号选题监控（主菜单入口） | 规划中的监控入口，尚未落地 |
 | `meme-search` | 规划中 | 全网梗图搜索：多策略并行检索，返回相关梗图集合及解读 | 规划中的素材入口，未接 runtime |
@@ -122,8 +139,8 @@
 | Skill | 状态 | 功能说明 | 备注 |
 |------|------|----------|------|
 | `article-rewriter` | 规划中 | 外文 URL 精读 -> 讨论角度 -> 三写手竞争创作 -> 审稿 -> 选稿 -> 信息图 -> 公众号 HTML | 与翻译层形成两种外文入口方案 |
-| `case-writer-hybrid` | 已完成（原有） | 结构化 brief -> writer / critic / judge 多轮对抗 -> 主稿 + 写作包 + 审稿轨迹 | 已接 runtime；`stage1-pipeline` 与 `stage2-wechat-pipeline` 已验证；三轮不过线时会中断 |
-| `humanizer-zh` | 已完成（新增） | 对中文正文做受约束的去 AI 味清洗，保留事实、结构、标题和核心论点，同时输出命中规则报告 | 已接 runtime；当前是独立辅助创作节点；尚未纳入默认 workflow |
+| `case-writer-hybrid` | 已完成（原有） | 把结构化 brief 变成公众号长文主稿，并在本地跑 writer / critic / humanizer / judge 质量回路，产出主稿、写作包与审稿轨迹 | 已接 runtime；`stage1-pipeline` 与 `stage2-wechat-pipeline` 已验证；三轮不过线时会中断；[说明文档](../skills/case-writer-hybrid/README.md) |
+| `humanizer-zh` | 已完成（新增） | 对已经写好的中文稿件做受约束清洗，尽量去掉机械感和 AI 痕迹，但不改事实、结构和核心判断 | 已接 runtime；当前是独立辅助创作节点；尚未纳入默认 workflow；[说明文档](../skills/humanizer-zh/README.md) |
 | `solo-writer` | 规划中 | 播客文字稿 -> 精读 -> 讨论角度 -> 单写手写作（去 AI 味）-> 信息图 -> 公众号 HTML | 与 `daily-content-curator`、`tiered-translate` 相关联 |
 | `interview` | 规划中 | 多轮深度访谈挖掘用户故事 -> 推荐文章方向 -> 输出公众号爆款文章 | 规划中的人物稿 / 采访稿能力 |
 | `ad-writing` | 规划中 | 读取广告主 PDF Brief -> 设计测试用例 -> 输出约 3000 字公众号推广文章 | 依赖 PDF 读取与商业化写作流程 |
@@ -136,8 +153,8 @@
 
 | Skill | 状态 | 功能说明 | 备注 |
 |------|------|----------|------|
-| `wechat-formatter` | 已完成（原有） | 将 Markdown 转为微信公众号可粘贴的 HTML，支持 writing-pack sidecar | 已接 runtime；`stage1-pipeline` 与 `stage2-wechat-pipeline` 已验证；可被 `wechat-studio` 复用 |
-| `generate-image` | 已完成（原有） | AI 图片生成与变换 | 已接 runtime；已有文章配图样例；当前允许本地 fallback，仍按“已完成”计入 |
+| `wechat-formatter` | 已完成（原有） | 把 Markdown 主稿排版成微信公众号 HTML；如果旁边有 writing-pack，还会自动把摘要、金句和 CTA 一起挂上去 | 已接 runtime；`stage1-pipeline` 与 `stage2-wechat-pipeline` 已验证；可被 `wechat-studio` 复用；[说明文档](../skills/wechat-formatter/README.md) |
+| `generate-image` | 已完成（原有） | 从文章主稿提取主题和关键信息，生成公众号配图；外部生成不可用时自动回退到本地信息图渲染 | 已接 runtime；已有文章配图样例；当前允许本地 fallback，仍按“已完成”计入；[说明文档](../skills/generate-image/README.md) |
 | `cover-generator` | 规划中 | 上传照片 + 参考封面 -> 交互式弹框 -> 多尺寸专业视频封面 | 规划中的视频封面能力 |
 | `cover-4styles` | 规划中 | 上传头像 + 标题 -> 一键批量生成 4 种预设风格视频封面 | 规划中的模板化封面能力 |
 | `xhs-cover-template` | 规划中 | 小红书封面（Premium Split 风格：上深下白） | 与阶段 3 的小红书分发相关联 |
@@ -157,8 +174,8 @@
 
 | Skill | 状态 | 功能说明 | 备注 |
 |------|------|----------|------|
-| `feishu-user-auth` | 已完成（新增） | 一次性拉起飞书浏览器授权，缓存 `user_access_token + refresh_token`，供后续多维表同步复用 | 已接 runtime；已有授权回执；依赖浏览器回调与飞书网页应用配置 |
-| `feishu-bitable-sync` | 已完成（新增） | 将 `wechat-report` 本地报告同步到飞书多维表格，按 `source_url` 去重，一篇文章一行 | 已接 runtime；已有同步回执；需先用户确认；直写失败时导出 CSV 兜底 |
+| `feishu-user-auth` | 已完成（新增） | 通过浏览器完成一次飞书 OAuth，把用户级 token 缓存在本机，后续同步多维表时直接复用，不再每次重新授权 | 已接 runtime；已有授权回执；依赖浏览器回调与飞书网页应用配置；[说明文档](../skills/feishu-user-auth/README.md) |
+| `feishu-bitable-sync` | 已完成（新增） | 读取 `wechat-report` 的 Markdown 或 raw JSON，把文章逐条同步到飞书多维表，并按 `source_url` 去重更新 | 已接 runtime；已有同步回执；需先用户确认；直写失败时导出 CSV 兜底；[说明文档](../skills/feishu-bitable-sync/README.md) |
 | `xiaohongshu-note-generator` | 规划中 | 从飞书多维表格拉取内容 -> 转化为小红书爆款图文笔记 | 阶段 3 的关键缺口，当前未落地 |
 | `obsidian-to-x` | 规划中 | 发布内容到 X（Twitter），支持常规推文、X Articles、公众号 HTML | 当前优先级低于公众号 / 小红书 |
 | `auto-curate` | 规划中 | 一体化编排：`daily-content-curator` + `feishu-bitable-sync` | 组合型 skill，待采集层更完整后再做 |

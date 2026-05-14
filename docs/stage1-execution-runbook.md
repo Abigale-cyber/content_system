@@ -4,6 +4,13 @@
 
 `观点 brief` -> `case-writer-hybrid` -> `generate-image` -> `wechat-formatter`
 
+当前有两个常用入口：
+
+1. 你已经有结构化 brief：
+   直接跑 `stage1-pipeline`
+2. 你只有题目草稿或选题说明：
+   直接跑 `topic-to-wechat-pipeline`
+
 ## 1. 本阶段要完成什么
 
 阶段 1 不是追求一次写出完美文章，而是先验证这条链路可以重复跑通，并且每次都能留下标准产物。
@@ -28,6 +35,20 @@
 - 目标读者必须明确
 - 至少给出 3 条论证方向
 - 最好提供 2 到 3 个案例线索
+
+如果还没有结构化 brief，可以先运行：
+
+```bash
+.venv/bin/python -m skill_runtime.cli run-skill content-brief-builder \
+  --input notes/my-topic.md
+```
+
+如果你想从题目草稿一口气跑到微信 HTML，可以直接运行：
+
+```bash
+.venv/bin/python -m skill_runtime.cli run-workflow topic-to-wechat-pipeline \
+  --input notes/my-topic.md
+```
 
 ## 步骤 2：执行 `case-writer-hybrid`
 
@@ -127,3 +148,19 @@
 - 同一条链路至少跑通 1 次
 - 产物都按约定路径落盘
 - 新开一个会话，仅看 `docs/` 也知道该怎么继续跑
+
+## 6. 推荐命令
+
+只有题目草稿时：
+
+```bash
+.venv/bin/python -m skill_runtime.cli run-workflow topic-to-wechat-pipeline \
+  --input notes/my-topic.md
+```
+
+已有结构化 brief 时：
+
+```bash
+.venv/bin/python -m skill_runtime.cli run-workflow stage1-pipeline \
+  --input content-production/inbox/YYYYMMDD-<slug>-gzh-brief.md
+```

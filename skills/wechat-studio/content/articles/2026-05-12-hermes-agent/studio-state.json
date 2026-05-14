@@ -1,0 +1,134 @@
+{
+  "source": {
+    "originalName": "hermes-agent-install-guide-v2.md",
+    "markdownPath": "content/articles/2026-05-12-hermes-agent/source.md",
+    "uploadedAt": "2026-05-12 23:38:50",
+    "warnings": [
+      "已导入文章。请先选择风格、配色并确认提示词，再手动生成预览、封面和正文配图。"
+    ]
+  },
+  "layout": {
+    "theme": "winter-slate",
+    "template": "xiumi-winter-ins",
+    "themeFile": "",
+    "referenceUrl": "",
+    "warning": "",
+    "extractionMeta": {},
+    "updatedAt": "2026-05-13 15:29:00"
+  },
+  "tone": {
+    "theme": "winter-slate",
+    "primaryColor": "#7987cd",
+    "saturation": 100,
+    "opacity": 88,
+    "updatedAt": "2026-05-13 15:29:00"
+  },
+  "typography": {
+    "template": "xiumi-winter-ins",
+    "titleStyle": "standard",
+    "bodySize": 16,
+    "lineHeight": 1.9,
+    "paragraphGap": 16,
+    "sectionStyle": "editorial",
+    "imageRadius": 24,
+    "imageSpacing": 22,
+    "updatedAt": "2026-05-13 15:29:00"
+  },
+  "cover": {
+    "candidatePath": "content/articles/2026-05-12-hermes-agent/studio-assets/yuque-cover.png",
+    "generated": {
+      "localPath": "content/articles/2026-05-12-hermes-agent/studio-assets/cover-upload-20260513-094326-784934-174c7cef-afa1-4844-86a4-bce0e4479ce2.png",
+      "createdAt": "2026-05-13 09:43:26",
+      "source": "upload",
+      "preset": "uploaded-cover",
+      "styleLabel": "上传封面",
+      "label": "174c7cef-afa1-4844-86a4-bce0e4479ce2"
+    },
+    "history": [
+      {
+        "localPath": "content/articles/2026-05-12-hermes-agent/studio-assets/cover-upload-20260513-094326-784934-174c7cef-afa1-4844-86a4-bce0e4479ce2.png",
+        "createdAt": "2026-05-13 09:43:26",
+        "source": "upload",
+        "preset": "uploaded-cover",
+        "styleLabel": "上传封面",
+        "label": "174c7cef-afa1-4844-86a4-bce0e4479ce2"
+      },
+      {
+        "localPath": "content/articles/2026-05-12-hermes-agent/studio-assets/yuque-cover.png",
+        "preset": "imported-yuque-image",
+        "styleId": "source-image",
+        "styleLabel": "语雀原图",
+        "prompt": "Imported from the Yuque article source image."
+      }
+    ],
+    "customPrompt": "",
+    "updatedAt": "2026-05-13 09:43:26"
+  },
+  "coverModules": {
+    "current": {
+      "style": "collage-editorial",
+      "sourcePath": "content/articles/2026-05-12-hermes-agent/studio-assets/yuque-cover.png",
+      "accentColor": "#7987cd",
+      "localPath": "content/articles/2026-05-12-hermes-agent/studio-assets/cover-module-20260513-131533.png",
+      "createdAt": "2026-05-13 13:15:33"
+    },
+    "history": [
+      {
+        "style": "collage-editorial",
+        "sourcePath": "content/articles/2026-05-12-hermes-agent/studio-assets/yuque-cover.png",
+        "accentColor": "#7987cd",
+        "localPath": "content/articles/2026-05-12-hermes-agent/studio-assets/cover-module-20260513-131533.png",
+        "createdAt": "2026-05-13 13:15:33"
+      },
+      {
+        "style": "collage-editorial",
+        "sourcePath": "content/articles/2026-05-12-hermes-agent/studio-assets/yuque-cover.png",
+        "accentColor": "#7987cd",
+        "localPath": "content/articles/2026-05-12-hermes-agent/studio-assets/cover-module-20260513-125316.png",
+        "createdAt": "2026-05-13 12:53:17"
+      },
+      {
+        "style": "collage-editorial",
+        "localPath": "content/articles/2026-05-12-hermes-agent/studio-assets/cover-module-20260513-125224.png",
+        "createdAt": "2026-05-13 12:52:24"
+      },
+      {
+        "style": "collage-editorial",
+        "localPath": "content/articles/2026-05-12-hermes-agent/studio-assets/cover-module-20260513-125214.png",
+        "createdAt": "2026-05-13 12:52:14"
+      }
+    ],
+    "style": "collage-editorial",
+    "updatedAt": "2026-05-13 13:15:33"
+  },
+  "inlineImages": {
+    "items": [],
+    "history": [],
+    "archivedHistory": [],
+    "positions": {},
+    "promptOverrides": {},
+    "customPrompt": "",
+    "slots": [],
+    "nextSlotIndex": 2,
+    "updatedAt": "2026-05-13 11:47:39"
+  },
+  "sectionModules": {
+    "items": [],
+    "history": [],
+    "customPrompt": "",
+    "updatedAt": ""
+  },
+  "draft": {
+    "mediaId": "YZiaWkQEcudqYwi5TLHu4IGqzBOOOcRR6Bz1BP3q9tWZhz4o7ZL0nNvb2hPTZUX_",
+    "title": "养虾转养马第一步：把 Hermes Agent 装起来",
+    "pushedAt": "2026-05-13 13:29:41",
+    "lastError": "",
+    "theme": "winter-slate",
+    "themeFile": "",
+    "template": "xiumi-winter-ins"
+  },
+  "preview": {
+    "initialized": true,
+    "updatedAt": "2026-05-13 15:29:00"
+  }
+}

@@ -137,6 +137,7 @@
         "slotId": "slot-2"
       }
     ],
+    "archivedHistory": [],
     "positions": {
       "1": "h2:1",
       "2": "h2:14"
@@ -150,6 +151,7 @@
         "prompt": "theme style winter-slate, primary color #2d7b45, saturation 100 percent, opacity 88 percent, title style standard, section heading style editorial; article companion image; section focus: 2. 撕掉标签：那些高频黑话到底在说什么？; user direction: 绿色调",
         "anchorBlockId": "heading:13",
         "targetLabel": "2. 撕掉标签：那些高频黑话到底在说什么？",
+        "nearestHeading": "2. 撕掉标签：那些高频黑话到底在说什么？",
         "selectedLocalPath": "content/articles/2026-03-29-ai/studio-assets/inline-2-20260329-175156.png",
         "currentItem": {
           "slot": 2,
@@ -197,7 +199,7 @@
       }
     ],
     "nextSlotIndex": 3,
-    "updatedAt": "2026-04-06 00:16:29"
+    "updatedAt": "2026-05-01 14:04:46"
   },
   "sectionModules": {
     "items": [],
