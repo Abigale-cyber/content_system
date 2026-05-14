@@ -1,0 +1,9 @@
+{
+  "id": "alex-benchmark-research",
+  "name": "Alex Benchmark Research",
+  "layer": "analyze",
+  "executor": "alex_benchmark_research_v1",
+  "input_kind": "benchmark_request_markdown",
+  "output_kind": "benchmark_report",
+  "description": "Turn benchmark samples into account positioning, recurring columns, narrative patterns, topic density, and Alex-ready strategic takeaways."
+}

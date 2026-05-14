@@ -1,0 +1,9 @@
+{
+  "id": "alex-account-positioning",
+  "name": "Alex Account Positioning",
+  "layer": "analyze",
+  "executor": "alex_account_positioning_v1",
+  "input_kind": "positioning_request_markdown",
+  "output_kind": "positioning_report",
+  "description": "Turn creator goals, audience clues, benchmark notes, and business constraints into a sharp account positioning report and reusable positioning pack."
+}

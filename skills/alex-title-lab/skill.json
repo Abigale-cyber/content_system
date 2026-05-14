@@ -1,0 +1,9 @@
+{
+  "id": "alex-title-lab",
+  "name": "Alex Title Lab",
+  "layer": "analyze",
+  "executor": "alex_title_lab_v1",
+  "input_kind": "title_request_markdown",
+  "output_kind": "title_report",
+  "description": "Analyze title samples into patterns and drivers, then generate Alex-ready title variants for a chosen topic or angle."
+}

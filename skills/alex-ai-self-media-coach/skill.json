@@ -1,0 +1,9 @@
+{
+  "id": "alex-ai-self-media-coach",
+  "name": "Alex AI Self-Media Coach",
+  "layer": "analyze",
+  "executor": "alex_ai_self_media_coach_v1",
+  "input_kind": "alex_coach_request_markdown",
+  "output_kind": "route_report",
+  "description": "Route a self-media request to the best next Alex skill or content_system workflow step, with strategic notes and next-step recommendations."
+}
